@@ -48,8 +48,8 @@ public class VariableJoystick : Joystick
 
         base.OnPointerUp(eventData);
 
-        GameObject playerGO = GameManager.Instance.GetTurnPlayer();
-        playerGO.GetComponent<BallMove>().Shoot();
+        //조이스틱의 버튼을 떼는 순간 게임매니저를 통해 발사 이벤트를 실행
+        GameManager.Instance.Shoot();
     }
 
     protected override void HandleInput(float magnitude, Vector2 normalised, Vector2 radius, Camera cam)
