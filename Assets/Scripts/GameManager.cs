@@ -1,34 +1,34 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-//¸ñÀû1 : °ÔÀÓ¿¡ ÅÏÀ» ÁöÁ¤ÇØ¼­ ÀÚ½ÅÀÇ ÅÏÀÎ ÇÃ·¹ÀÌ¾î¸¸ Á¶ÀÛÀ» ÇÒ ¼ö ÀÖµµ·Ï ÇÑ´Ù.
-//¼Ó¼º1 : ÇöÀç ÅÏ, °ÔÀÓÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ® ÁýÇÕ
-//¼Ó¼ºÃß°¡ : °øÀ» ¹ß»çÇÑ ÀÌÈÄºÎÅÍ °øÀÌ ¸ðµÎ ¸ØÃß°í ÅÏÀ» ³Ñ°ÜÁÖ´Â »çÀÌ¿¡µµ Á¶ÀÛÇÒ ¼ö ¾øµµ·Ï ÇÏ±â À§ÇØ¼­ bool º¯¼ö·Î isNobodyMove ¼±¾ð
-//¼ø¼­1-1. °ÔÀÓ ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®¸¦ ¸ðµÎ Ã£¾Æ¼­ ÁýÇÕ¿¡ ³Ö´Â´Ù.
-//¼ø¼­1-2. ÁýÇÕ¿¡ ¼ø¼­¿¡ µû¶ó °¢ ÇÃ·¹ÀÌ¾î¿¡°Ô ÅÏÀ» ¹èÁ¤ÇÑ´Ù.
-//¼ø¼­1-3. Á¶ÀÌ½ºÆ½¿¡¼­ Shoot()À» È£ÃâÇßÀ» ¶§ ¿òÁ÷ÀÌ´Â °øÀÌ ¾ø´Ù¸é ÇöÀç ÇÃ·¹ÀÌ¾î¿¡ ÇØ´çÇÏ´Â °øÀÇ Shoot()À» ½ÇÇàÇÑ´Ù.
-//¼ø¼­1-4. Shoot()À» ½ÇÇàÇÑ ÀÌÈÄ¿¡ ¸ðµç °øÀÌ ¸ØÃß¸é isNobodyMove°ªÀ» ÅëÇØ ¸ØÃèÀ½À» ¾Ë·ÁÁØ´Ù.
+//ëª©ì 1 : ê²Œìž„ì— í„´ì„ ì§€ì •í•´ì„œ ìžì‹ ì˜ í„´ì¸ í”Œë ˆì´ì–´ë§Œ ì¡°ìž‘ì„ í•  ìˆ˜ ìžˆë„ë¡ í•œë‹¤.
+//ì†ì„±1 : í˜„ìž¬ í„´, ê²Œìž„í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ ì§‘í•©
+//ì†ì„±ì¶”ê°€ : ê³µì„ ë°œì‚¬í•œ ì´í›„ë¶€í„° ê³µì´ ëª¨ë‘ ë©ˆì¶”ê³  í„´ì„ ë„˜ê²¨ì£¼ëŠ” ì‚¬ì´ì—ë„ ì¡°ìž‘í•  ìˆ˜ ì—†ë„ë¡ í•˜ê¸° ìœ„í•´ì„œ bool ë³€ìˆ˜ë¡œ isNobodyMove ì„ ì–¸
+//ìˆœì„œ1-1. ê²Œìž„ í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ë¥¼ ëª¨ë‘ ì°¾ì•„ì„œ ì§‘í•©ì— ë„£ëŠ”ë‹¤.
+//ìˆœì„œ1-2. ì§‘í•©ì— ìˆœì„œì— ë”°ë¼ ê° í”Œë ˆì´ì–´ì—ê²Œ í„´ì„ ë°°ì •í•œë‹¤.
+//ìˆœì„œ1-3. ì¡°ì´ìŠ¤í‹±ì—ì„œ Shoot()ì„ í˜¸ì¶œí–ˆì„ ë•Œ ì›€ì§ì´ëŠ” ê³µì´ ì—†ë‹¤ë©´ í˜„ìž¬ í”Œë ˆì´ì–´ì— í•´ë‹¹í•˜ëŠ” ê³µì˜ Shoot()ì„ ì‹¤í–‰í•œë‹¤.
+//ìˆœì„œ1-4. Shoot()ì„ ì‹¤í–‰í•œ ì´í›„ì— ëª¨ë“  ê³µì´ ë©ˆì¶”ë©´ isNobodyMoveê°’ì„ í†µí•´ ë©ˆì·„ìŒì„ ì•Œë ¤ì¤€ë‹¤.
 
-//¸ñÀû2 : °ÔÀÓ¿¡ ÅÏ°ú °¢ ÅÏ¿¡ ÇØ´çÇÏ´Â ÇÃ·¹ÀÌ¾î¸¦ UI·Î Ãâ·ÂÇÑ´Ù.
-//¼Ó¼º2 : ÇöÀç ÅÏ UI, ÅÏ ÇÃ·¹ÀÌ¾î UI
-//¼ø¼­2-1. °ÔÀÓ ½ÃÀÛÇÒ ¶§ °¢ ÅÏ¿¡ ÇØ´çÇÏ´Â ÇÃ·¹ÀÌ¾î¿Í ÇöÀç ÅÏÀ» ³Ö¾îÁØ´Ù.
-//¼ø¼­2-2. ÅÏÀÌ ¹Ù²î¸é ÇöÀç ÅÏÀÇ °ªÀ» ¹Ù²ãÁØ´Ù.
+//ëª©ì 2 : ê²Œìž„ì— í„´ê³¼ ê° í„´ì— í•´ë‹¹í•˜ëŠ” í”Œë ˆì´ì–´ë¥¼ UIë¡œ ì¶œë ¥í•œë‹¤.
+//ì†ì„±2 : í˜„ìž¬ í„´ UI, í„´ í”Œë ˆì´ì–´ UI
+//ìˆœì„œ2-1. ê²Œìž„ ì‹œìž‘í•  ë•Œ ê° í„´ì— í•´ë‹¹í•˜ëŠ” í”Œë ˆì´ì–´ì™€ í˜„ìž¬ í„´ì„ ë„£ì–´ì¤€ë‹¤.
+//ìˆœì„œ2-2. í„´ì´ ë°”ë€Œë©´ í˜„ìž¬ í„´ì˜ ê°’ì„ ë°”ê¿”ì¤€ë‹¤.
 
 public class GameManager : MonoBehaviour
 {
-    //½Ì±ÛÅæÀ» ÀÌ¿ëÇØ¼­ ½±°Ô »ç¿ëÇÒ ¼ö ÀÖµµ·Ï ÇÔ
+    //ì‹±ê¸€í†¤ì„ ì´ìš©í•´ì„œ ì‰½ê²Œ ì‚¬ìš©í•  ìˆ˜ ìžˆë„ë¡ í•¨
     public static GameManager Instance;
 
-    //¼Ó¼º1 : ÇöÀç ÅÏ, °ÔÀÓÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ® ÁýÇÕ
+    //ì†ì„±1 : í˜„ìž¬ í„´, ê²Œìž„í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ ì§‘í•©
     public int turn;
     protected GameObject[] gamePlayers;
 
-    //¼Ó¼ºÃß°¡ : °øÀ» ¹ß»çÇÑ ÀÌÈÄºÎÅÍ °øÀÌ ¸ðµÎ ¸ØÃß°í ÅÏÀ» ³Ñ°ÜÁÖ´Â »çÀÌ¿¡µµ Á¶ÀÛÇÒ ¼ö ¾øµµ·Ï ÇÏ±â À§ÇØ¼­ bool º¯¼ö·Î isNobodyMove ¼±¾ð
+    //ì†ì„±ì¶”ê°€ : ê³µì„ ë°œì‚¬í•œ ì´í›„ë¶€í„° ê³µì´ ëª¨ë‘ ë©ˆì¶”ê³  í„´ì„ ë„˜ê²¨ì£¼ëŠ” ì‚¬ì´ì—ë„ ì¡°ìž‘í•  ìˆ˜ ì—†ë„ë¡ í•˜ê¸° ìœ„í•´ì„œ bool ë³€ìˆ˜ë¡œ isNobodyMove ì„ ì–¸
     public bool isNobodyMove = true;
 
-    //¼Ó¼º2 : ÇöÀç ÅÏ UI, ÅÏ ÇÃ·¹ÀÌ¾î UI
+    //ì†ì„±2 : í˜„ìž¬ í„´ UI, í„´ í”Œë ˆì´ì–´ UI
     public TMP_Text currentTurn;
     public TMP_Text turnTable;
 
@@ -40,47 +40,69 @@ public class GameManager : MonoBehaviour
         }
 
         turn = 0;
-        //¼ø¼­1-1. °ÔÀÓ ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®¸¦ ¸ðµÎ Ã£¾Æ¼­ ÁýÇÕ¿¡ ³Ö´Â´Ù.
+        //ìˆœì„œ1-1. ê²Œìž„ í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸ë¥¼ ëª¨ë‘ ì°¾ì•„ì„œ ì§‘í•©ì— ë„£ëŠ”ë‹¤.
         gamePlayers = GameObject.FindGameObjectsWithTag("Player");
 
-        //¼ø¼­1-2. ÁýÇÕ¿¡ ¼ø¼­¿¡ µû¶ó °¢ ÇÃ·¹ÀÌ¾î¿¡°Ô ÅÏÀ» ¹èÁ¤ÇÑ´Ù.
+        //ìˆœì„œ1-2. ì§‘í•©ì— ìˆœì„œì— ë”°ë¼ ê° í”Œë ˆì´ì–´ì—ê²Œ í„´ì„ ë°°ì •í•œë‹¤.
         for (int i = 0; i < gamePlayers.Length; i++)
         {
             gamePlayers[i].GetComponent<BallMove>().myTurn = i;
+            if(i == 0)
+            {
+                gamePlayers[i].GetComponent<BallMove>().isGuest = false;
+            }
         }
     }
 
     private void Start()
     {
-        //¼ø¼­2-1. °ÔÀÓ ½ÃÀÛÇÒ ¶§ °¢ ÅÏ¿¡ ÇØ´çÇÏ´Â ÇÃ·¹ÀÌ¾î¿Í ÇöÀç ÅÏÀ» ³Ö¾îÁØ´Ù.
+        //ìˆœì„œ2-1. ê²Œìž„ ì‹œìž‘í•  ë•Œ ê° í„´ì— í•´ë‹¹í•˜ëŠ” í”Œë ˆì´ì–´ì™€ í˜„ìž¬ í„´ì„ ë„£ì–´ì¤€ë‹¤.
         currentTurn.text = "Turn" + turn.ToString();
         turnTable.text = "Turn 0 : " + gamePlayers[0].name + "\n" + "Turn 1 : " + gamePlayers[1].name + "\n" + "Turn 2 : " + gamePlayers[2].name;
     }
 
     public void Shoot()
     {
-        //¼ø¼­1-3. Á¶ÀÌ½ºÆ½¿¡¼­ Shoot()À» È£ÃâÇßÀ» ¶§ ¿òÁ÷ÀÌ´Â °øÀÌ ¾ø´Ù¸é ÇöÀç ÇÃ·¹ÀÌ¾î¿¡ ÇØ´çÇÏ´Â °øÀÇ Shoot()À» ½ÇÇàÇÑ´Ù.
+        //ìˆœì„œ1-3. ì¡°ì´ìŠ¤í‹±ì—ì„œ Shoot()ì„ í˜¸ì¶œí–ˆì„ ë•Œ ì›€ì§ì´ëŠ” ê³µì´ ì—†ë‹¤ë©´ í˜„ìž¬ í”Œë ˆì´ì–´ì— í•´ë‹¹í•˜ëŠ” ê³µì˜ Shoot()ì„ ì‹¤í–‰í•œë‹¤.
         if (isNobodyMove)
         {
-            gamePlayers[turn].GetComponent<BallMove>().Shoot();
+            if (gamePlayers[turn].GetComponent<BallMove>().isGuest)
+            {
+                gamePlayers[0].transform.position = new Vector3(5, 0.5f, 5);
+                gamePlayers[1].transform.position = new Vector3(0, 0.5f, 0);
+                gamePlayers[2].transform.position = new Vector3(-5, 0.5f, 5);
 
-            //¼ø¼­1-4. Shoot()À» ½ÇÇàÇÑ ÀÌÈÄ¿¡ ¸ðµç °øÀÌ ¸ØÃß¸é ÄÚ·çÆ¾À» ÅëÇØ¼­ isNobodyMove°ªÀ» ÅëÇØ ¸ØÃèÀ½À» ¾Ë·ÁÁØ´Ù.
+                gamePlayers[0].GetComponent<BallMove>().isMove = true;
+                gamePlayers[0].GetComponent<BallMove>().isGuest = true;
+                gamePlayers[0].GetComponent<BallMove>().Shoot();
+                //GameObject PlayerGO = gamePlayers[0];
+                //GameObject PlayerGO2 = gamePlayers[turn];
+                //PlayerGO2.GetComponent<BallMove>().positions = PlayerGO.GetComponent<BallMove>().positions;
+                //PlayerGO2.GetComponent<BallMove>().velocities = PlayerGO.GetComponent<BallMove>().velocities;
+                //PlayerGO2.GetComponent<BallMove>().times = PlayerGO.GetComponent<BallMove>().times;
+                //PlayerGO2.GetComponent<BallMove>().isMove = true;
+            }
+            else
+            {
+                gamePlayers[turn].GetComponent<BallMove>().Shoot();
+            }
+            //ìˆœì„œ1-4. Shoot()ì„ ì‹¤í–‰í•œ ì´í›„ì— ëª¨ë“  ê³µì´ ë©ˆì¶”ë©´ ì½”ë£¨í‹´ì„ í†µí•´ì„œ isNobodyMoveê°’ì„ í†µí•´ ë©ˆì·„ìŒì„ ì•Œë ¤ì¤€ë‹¤.
             StartCoroutine(EndTurn());
         }
         return;
     }
 
-    //¼ø¼­1-4. Shoot()À» ½ÇÇàÇÑ ÀÌÈÄ¿¡ ¸ðµç °øÀÌ ¸ØÃß¸é isNobodyMove°ªÀ» ÅëÇØ ¸ØÃèÀ½À» ¾Ë·ÁÁØ´Ù.
+    //ìˆœì„œ1-4. Shoot()ì„ ì‹¤í–‰í•œ ì´í›„ì— ëª¨ë“  ê³µì´ ë©ˆì¶”ë©´ isNobodyMoveê°’ì„ í†µí•´ ë©ˆì·„ìŒì„ ì•Œë ¤ì¤€ë‹¤.
     IEnumerator EndTurn()
     {
-        //ÀÌ ÄÚ·çÆ¾Àº °øÀ» ½ð ÈÄ¿¡ ½ÇÇàµÇ¹Ç·Î isNobodyMove¸¦ false·Î ¼³Á¤ÇÑ´Ù.
+        //ì´ ì½”ë£¨í‹´ì€ ê³µì„ ìœ í›„ì— ì‹¤í–‰ë˜ë¯€ë¡œ isNobodyMoveë¥¼ falseë¡œ ì„¤ì •í•œë‹¤.
         isNobodyMove = false;
 
-        //¸ðµç °øÀÌ ¸ØÃâ¶§ ±îÁö ¹Ýº¹
+        //ëª¨ë“  ê³µì´ ë©ˆì¶œë•Œ ê¹Œì§€ ë°˜ë³µ
         while(!isNobodyMove)
         {
             yield return new WaitForSeconds(1f);
-            //¸ðµç °øÀÇ ¼Óµµ¸¦ ÃøÁ¤ÇØ¼­ 0.05º¸´Ù ÀÛ´Ù¸é isNobodyMove¿¡ true°ªÀ» ±×´ë·Î ³Ö°í ¼Óµµ°¡ 0.05º¸´Ù Å« °øÀÌ ÀÖ´Ù¸é isNobodyMove¿¡ false¸¦ ³Ö°í break¸¦ ÅëÇØ ¹Ýº¹¹®À» ³ª¿Â´Ù.
+            //ëª¨ë“  ê³µì˜ ì†ë„ë¥¼ ì¸¡ì •í•´ì„œ 0.05ë³´ë‹¤ ìž‘ë‹¤ë©´ isNobodyMoveì— trueê°’ì„ ê·¸ëŒ€ë¡œ ë„£ê³  ì†ë„ê°€ 0.05ë³´ë‹¤ í° ê³µì´ ìžˆë‹¤ë©´ isNobodyMoveì— falseë¥¼ ë„£ê³  breakë¥¼ í†µí•´ ë°˜ë³µë¬¸ì„ ë‚˜ì˜¨ë‹¤.
             for (int i = 0; i < gamePlayers.Length; i++)
             {
                 isNobodyMove = true;
@@ -93,7 +115,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        //¸ðµç °øÀÌ ¿òÁ÷ÀÓÀ» ¸ØÃß°í ¹Ýº¹¹®ÀÌ Á¾·áÇÑ ÀÌÈÄ¿¡ ÅÏÀ» ÁøÇà½ÃÅ²´Ù.
+        //ëª¨ë“  ê³µì´ ì›€ì§ìž„ì„ ë©ˆì¶”ê³  ë°˜ë³µë¬¸ì´ ì¢…ë£Œí•œ ì´í›„ì— í„´ì„ ì§„í–‰ì‹œí‚¨ë‹¤.
         if(turn < gamePlayers.Length-1)
         {
             turn++;
@@ -103,7 +125,7 @@ public class GameManager : MonoBehaviour
             turn = 0;
         }
 
-        //¼ø¼­2-2. ÅÏÀÌ ¹Ù²î¸é ÇöÀç ÅÏÀÇ °ªÀ» ¹Ù²ãÁØ´Ù.
+        //ìˆœì„œ2-2. í„´ì´ ë°”ë€Œë©´ í˜„ìž¬ í„´ì˜ ê°’ì„ ë°”ê¿”ì¤€ë‹¤.
         currentTurn.text = "Turn" + turn.ToString();
     }
 }
