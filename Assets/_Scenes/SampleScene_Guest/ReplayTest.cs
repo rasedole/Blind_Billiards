@@ -8,6 +8,8 @@ public class ReplayTest : MonoBehaviour
 
     public void Foos()
     {
+        moves = GameManager.Instance.ballMoveData;
+
         for (int i = 0; i < moves.Count; i++)
         {
             MoveData temp = moves[i];

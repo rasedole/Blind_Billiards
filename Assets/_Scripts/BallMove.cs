@@ -18,7 +18,12 @@ using UnityEngine;
 
 //목적3 : 게임매니저에 현재 턴을 지정하고 자신의 턴이 아닐 때는 작동하지 않도록 한다.
 //속성3 : 내가 조작할 수 있는 턴
+//속성추가 : 자신의 턴 중에도 한번 공을 발사한 후 멈추기 전까지는 추가로 발사하지 못하도록 하기위해 isMove bool변수를 사용
 //순서3-1. 내 턴이 아니면 return한다.
+
+//목적4 : 공이 충돌할 때 마다 자신의 MoveData를 게임 매니저에게 전달한다.
+//속성4 : MoveData
+
 
 public class BallMove : MonoBehaviour
 {
@@ -42,17 +47,29 @@ public class BallMove : MonoBehaviour
     //속성3 : 내가 조작할 수 있는 턴
     public int myTurn;
 
-    //게스트용 추가
+    //속성4 : MoveData
+    public MoveData moveData
+    {
+        get
+        {
+            _moveData.startPos = transform.position;
+            _moveData.ballIndex = myTurn;
+            _moveData.startTime = Time.time - GameManager.Instance.shootTime;
+
+            return _moveData;
+        }
+    }
+
+    private MoveData _moveData;
+
     public bool isMove = false;
-    float currentTime = 0;
-    int counter = 0;
-    public bool isGuest = true;
-    public GameObject host;
-    public float shootTime;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        _moveData = new MoveData();
+
         rigidbody = GetComponent<Rigidbody>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.startColor = Color.white;
@@ -65,33 +82,27 @@ public class BallMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //게스트용 추가
+        if (rigidbody.velocity.magnitude < 0.4f && rigidbody.velocity.magnitude != 0)
+        {
+            rigidbody.velocity *= 0.99f;
+        }
+
+        if (rigidbody.velocity.magnitude > 0.4f)
+        {
+            isMove = true;
+        }
+
         if (isMove)
         {
-            transform.position = Vector3.Lerp(positions[counter], positions[counter + 1], (currentTime) / times[counter + 1]);
-            if (currentTime < times[counter])
+            if (rigidbody.velocity.magnitude < 0.4f)
             {
-                currentTime += Time.deltaTime;
-                Debug.Log(times[counter] + "보다 " + currentTime + "이 작습니다.");
-            }
-            else
-            {
-                if (counter < times.Count - 2)
-                {
-                    counter++;
-                    currentTime = 0;
-                }
-                else
-                {
-                    currentTime = 0;
-                    counter = 0;
-                    isMove = false;
-                }
+                isMove = false;
+                GameManager.Instance.ballMoveData.Add(moveData);
             }
         }
 
         //순서3-1. 내 턴이 아니면 return한다.
-        if (GameManager.Instance.turn != myTurn || !GameManager.Instance.isNobodyMove)
+        if (GameManager.Instance.turn != myTurn || !GameManager.Instance.isNobodyMove || GuestReplayer.replaying)
         {
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position);
@@ -124,31 +135,16 @@ public class BallMove : MonoBehaviour
 
     public void Shoot()
     {
-        //게스트용 추가
-        if (!isGuest)
-        {
-            //순서1-4. 해당 방향을 향해 날리는 힘을 곱해서 힘을 가한다.
-            rigidbody.AddForce(direction * power, ForceMode.Impulse);
-            shootTime = Time.time;
-            positions.Add(transform.position);
-            velocities.Add(rigidbody.velocity);
-            times.Add(Time.time - shootTime);
-        }
-        else
-        {
-            //host.GetComponent<HostCalculation>().GetGuestInformation(direction, power, transform.position, Time.time, out positions, out velocities, out times);
-            //isMove = true;
-        }
+        rigidbody.AddForce(direction * power, ForceMode.Impulse);
     }
 
-    //2023/08/29 기준 OnColiisionEnter는 오브젝트가 부딫힐 때의 여러 값을 Console에 표시하기 위해서 사용하므로 주석처리함
-    private void OnCollisionEnter(Collision collision)
+
+    //충돌이 발생할 시 MoveDate구조체를 게임데이터에게 쌓는다.
+    private void OnCollisionEnter()
     {
-        if(isGuest == false)
+        if(!GameManager.Instance.isNobodyMove)
         {
-            positions.Add(transform.position);
-            velocities.Add(rigidbody.velocity);
-            times.Add(Time.time - shootTime);
+            GameManager.Instance.ballMoveData.Add(moveData);
         }
     }
 }

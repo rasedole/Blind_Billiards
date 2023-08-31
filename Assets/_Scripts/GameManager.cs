@@ -16,6 +16,9 @@ using UnityEngine;
 //순서2-1. 게임 시작할 때 각 턴에 해당하는 플레이어와 현재 턴을 넣어준다.
 //순서2-2. 턴이 바뀌면 현재 턴의 값을 바꿔준다.
 
+//목적3 : 호스트에 의해서 실행된 움직임을 저장하고 게스트에게 해당 값을 보내서 리플레이 시킨다.
+//속성3 : MoveData List, 공을 발사했을 때의 시간
+
 public class GameManager : MonoBehaviour
 {
     //싱글톤을 이용해서 쉽게 사용할 수 있도록 함
@@ -32,6 +35,10 @@ public class GameManager : MonoBehaviour
     public TMP_Text currentTurn;
     public TMP_Text turnTable;
 
+    //속성3 : MoveData List, 공을 발사했을 때의 시간
+    public List<MoveData>ballMoveData;
+    public float shootTime;
+
     private void Awake()
     {
         if(Instance == null)
@@ -47,10 +54,6 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < gamePlayers.Length; i++)
         {
             gamePlayers[i].GetComponent<BallMove>().myTurn = i;
-            if(i == 0)
-            {
-                gamePlayers[i].GetComponent<BallMove>().isGuest = false;
-            }
         }
     }
 
@@ -64,32 +67,24 @@ public class GameManager : MonoBehaviour
     public void Shoot()
     {
         //순서1-3. 조이스틱에서 Shoot()을 호출했을 때 움직이는 공이 없다면 현재 플레이어에 해당하는 공의 Shoot()을 실행한다.
-        if (isNobodyMove)
+        if (!GuestReplayer.replaying)
         {
-            if (gamePlayers[turn].GetComponent<BallMove>().isGuest)
+            if (isNobodyMove)
             {
-                gamePlayers[0].transform.position = new Vector3(5, 0.5f, 5);
-                gamePlayers[1].transform.position = new Vector3(0, 0.5f, 0);
-                gamePlayers[2].transform.position = new Vector3(-5, 0.5f, 5);
+                shootTime = Time.time;
 
-                gamePlayers[0].GetComponent<BallMove>().isMove = true;
-                gamePlayers[0].GetComponent<BallMove>().isGuest = true;
-                gamePlayers[0].GetComponent<BallMove>().Shoot();
-                //GameObject PlayerGO = gamePlayers[0];
-                //GameObject PlayerGO2 = gamePlayers[turn];
-                //PlayerGO2.GetComponent<BallMove>().positions = PlayerGO.GetComponent<BallMove>().positions;
-                //PlayerGO2.GetComponent<BallMove>().velocities = PlayerGO.GetComponent<BallMove>().velocities;
-                //PlayerGO2.GetComponent<BallMove>().times = PlayerGO.GetComponent<BallMove>().times;
-                //PlayerGO2.GetComponent<BallMove>().isMove = true;
-            }
-            else
-            {
+                ballMoveData.Clear();
+                for(int i = 0; i < gamePlayers.Length; i++)
+                {
+                    ballMoveData.Add(gamePlayers[i].GetComponent<BallMove>().moveData);
+                }
+
                 gamePlayers[turn].GetComponent<BallMove>().Shoot();
+                //순서1-4. Shoot()을 실행한 이후에 모든 공이 멈추면 코루틴을 통해서 isNobodyMove값을 통해 멈췄음을 알려준다.
+                StartCoroutine(EndTurn());
             }
-            //순서1-4. Shoot()을 실행한 이후에 모든 공이 멈추면 코루틴을 통해서 isNobodyMove값을 통해 멈췄음을 알려준다.
-            StartCoroutine(EndTurn());
+            return;
         }
-        return;
     }
 
     //순서1-4. Shoot()을 실행한 이후에 모든 공이 멈추면 isNobodyMove값을 통해 멈췄음을 알려준다.
@@ -124,7 +119,7 @@ public class GameManager : MonoBehaviour
         {
             turn = 0;
         }
-
+        
         //순서2-2. 턴이 바뀌면 현재 턴의 값을 바꿔준다.
         currentTurn.text = "Turn" + turn.ToString();
     }
