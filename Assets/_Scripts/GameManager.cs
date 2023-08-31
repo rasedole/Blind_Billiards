@@ -24,7 +24,10 @@ using UnityEngine.SceneManagement;
 //목적4 : 정렬된 스코어를 기준으로 플레이어와 점수를 표시한다
 //속성4 : 스코어UI
 //순서4-1. 게임 시작시 턴 순서에 따라서 0점으로 초기화된 점수를 표시한다
-//순서4-2. 점수가 바뀌면 바뀐 점수를 순위에 따라서 표시한다.
+//순서4-2. 점수가 바뀌면 바뀐 점수를 순위에 따라서 표시한다..
+
+//목적5 : 공의 색상을 랜덤하게 설정해준다.
+//속성5 : 색상 리스트
 
 public class GameManager : MonoBehaviour
 {
@@ -49,6 +52,9 @@ public class GameManager : MonoBehaviour
     //속성4 : 스코어UI
     public TMP_Text scoreUI;
 
+    //속성5 : 색상 리스트
+    public List<Material> ballColors;
+
     private void Awake()
     {
         if (Instance == null)
@@ -64,14 +70,21 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < gamePlayers.Length; i++)
         {
             gamePlayers[i].GetComponent<BallMove>().myTurn = i;
+            int randomColor = Random.Range(0, ballColors.Count);
+            gamePlayers[i].GetComponent<MeshRenderer>().material = ballColors[randomColor];
+            ballColors.Remove(ballColors[randomColor]);
         }
     }
 
     private void Start()
     {
         //순서2-1. 게임 시작할 때 각 턴에 해당하는 플레이어와 현재 턴을 넣어준다.
-        currentTurn.text = "Turn" + turn.ToString();
-        turnTable.text = "Turn 0 : " + gamePlayers[0].name + "\n" + "Turn 1 : " + gamePlayers[1].name + "\n" + "Turn 2 : " + gamePlayers[2].name;
+        currentTurn.text = "Turn" + (turn + 1).ToString();
+        turnTable.text = "";
+        for (int i = 0; i < gamePlayers.Length; i++)
+        {
+            turnTable.text += "Turn " + (i + 1) + " : " + gamePlayers[i].name + "\n";
+        }
 
         //순서4-1. 게임 시작시 턴 순서에 따라서 0점으로 초기화된 점수를 표시한다
         scoreUI.text = "";
@@ -138,7 +151,7 @@ public class GameManager : MonoBehaviour
         }
 
         //순서2-2. 턴이 바뀌면 현재 턴의 값을 바꿔준다.
-        currentTurn.text = "Turn" + turn.ToString();
+        currentTurn.text = "Turn" + (turn + 1).ToString();
     }
 
     //순서4-2. 점수가 바뀌면 바뀐 점수를 순위에 따라서 표시한다.

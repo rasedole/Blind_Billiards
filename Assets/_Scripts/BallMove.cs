@@ -43,7 +43,7 @@ public class BallMove : MonoBehaviour
     public VariableJoystick joystick;
     public Vector3 direction;
     protected new Rigidbody rigidbody;
-    public float power = 38;
+    public float power = 50;
     //속성추가 : 조이스틱을 놓는 순간 이벤트가 발생하는데 그러면 조이스틱의 vertical, horizontal 값이 0이 되기에 조이스틱을 놓기 직전 값을 기준으로 날아가기 위해서 tempH, tempV 사용;
     public float temph = 0;
     public float tempv = 0;
@@ -92,8 +92,8 @@ public class BallMove : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.startColor = Color.white;
         lineRenderer.endColor = GetComponent<MeshRenderer>().materials[0].GetColor("_Color");
-        lineRenderer.startWidth = 0.06f;
-        lineRenderer.endWidth = 0.03f;
+        lineRenderer.startWidth = 0.05f;
+        lineRenderer.endWidth = 0.05f;
         //Debug.Log(gameObject.name + "은 " + myTurn + "에 움직인다.");
     }
 
@@ -151,7 +151,8 @@ public class BallMove : MonoBehaviour
         lineRay = new Ray(transform.position, offset.normalized);
 
         //순서6-3. 레이가 오브젝트와 닿으면 길이를 저장해서 LineRender에게 연결해준다.
-        if (Physics.Raycast(lineRay, out hitinfo))
+        int _layerMask = 1 << LayerMask.NameToLayer("Wall");
+        if (Physics.Raycast(lineRay, out hitinfo, 10, _layerMask))
         {
             //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
             lineRenderer.SetPosition(0, transform.position);
