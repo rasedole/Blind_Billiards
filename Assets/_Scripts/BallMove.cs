@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 //목적1 : 조이스틱을 당겼다가 놓으면 당긴 반대 방향으로 공이 날아가도록 한다.
@@ -19,11 +20,22 @@ using UnityEngine;
 //목적3 : 게임매니저에 현재 턴을 지정하고 자신의 턴이 아닐 때는 작동하지 않도록 한다.
 //속성3 : 내가 조작할 수 있는 턴
 //속성추가 : 자신의 턴 중에도 한번 공을 발사한 후 멈추기 전까지는 추가로 발사하지 못하도록 하기위해 isMove bool변수를 사용
+//리플레이 실행중에 실행되지 않도록 ReplayTest.replaying을 함께 사용
 //순서3-1. 내 턴이 아니면 return한다.
 
 //목적4 : 공이 충돌할 때 마다 자신의 MoveData를 게임 매니저에게 전달한다.
 //속성4 : MoveData
 
+//목적5 : 자신의 턴인 플레이어의 공이 다른 공과 부딫히면 스코어를 올린다.
+//속성5 : 스코어
+//순서5-1. 자신의 턴인 공이 다른 공과 부딫힌다.
+//순서5-2. 점수를 올린다.
+
+//목적6 : 레이를 통해서 진행 방향의 끝까지 Line을 연장해서 보여준다.
+//속성6 : 레이, 레이 히트 정보
+//순서6-1. 조이스틱을 당긴다.
+//순서6-2. 조이스틱의 방향에 따라 레이를 발사한다.
+//순서6-3. 레이가 오브젝트와 닿으면 길이를 저장해서 LineRender에게 연결해준다.
 
 public class BallMove : MonoBehaviour
 {
@@ -31,7 +43,7 @@ public class BallMove : MonoBehaviour
     public VariableJoystick joystick;
     public Vector3 direction;
     protected new Rigidbody rigidbody;
-    public float power = 380;
+    public float power = 38;
     //속성추가 : 조이스틱을 놓는 순간 이벤트가 발생하는데 그러면 조이스틱의 vertical, horizontal 값이 0이 되기에 조이스틱을 놓기 직전 값을 기준으로 날아가기 위해서 tempH, tempV 사용;
     public float temph = 0;
     public float tempv = 0;
@@ -59,11 +71,17 @@ public class BallMove : MonoBehaviour
             return _moveData;
         }
     }
-
     private MoveData _moveData;
 
+    //공이 움직임을 체크해서 멈춘 순간에 MoveData럴 전송하기 위한 변수
     public bool isMove = false;
 
+    //속성5 : 스코어
+    public int score;
+
+    //속성6 : 레이, 레이 히트 정보
+    protected Ray lineRay;
+    protected RaycastHit hitinfo = new RaycastHit();
 
     // Start is called before the first frame update
     void Start()
@@ -74,27 +92,28 @@ public class BallMove : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.startColor = Color.white;
         lineRenderer.endColor = GetComponent<MeshRenderer>().materials[0].GetColor("_Color");
-        lineRenderer.startWidth = 0.5f;
-        lineRenderer.endWidth = 0.2f;
+        lineRenderer.startWidth = 0.06f;
+        lineRenderer.endWidth = 0.03f;
         //Debug.Log(gameObject.name + "은 " + myTurn + "에 움직인다.");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (rigidbody.velocity.magnitude < 0.4f && rigidbody.velocity.magnitude != 0)
+        if (rigidbody.velocity.magnitude < 0.04f && rigidbody.velocity.magnitude != 0)
         {
             rigidbody.velocity *= 0.99f;
+            rigidbody.angularVelocity *= 0.99f;
         }
 
-        if (rigidbody.velocity.magnitude > 0.4f)
+        if (rigidbody.velocity.magnitude > 0.04f)
         {
             isMove = true;
         }
 
         if (isMove)
         {
-            if (rigidbody.velocity.magnitude < 0.4f)
+            if (rigidbody.velocity.magnitude < 0.04f)
             {
                 isMove = false;
                 GameManager.Instance.ballMoveData.Add(moveData);
@@ -109,7 +128,7 @@ public class BallMove : MonoBehaviour
             return;
         }
 
-
+        //순서6-1. 조이스틱을 당긴다.
         //순서1-1. 조이스틱을 당긴 값을 저장한다.
         float h = joystick.Horizontal;
         float v = joystick.Vertical;
@@ -126,11 +145,24 @@ public class BallMove : MonoBehaviour
         direction = Vector3.left * temph + Vector3.back * tempv;
 
         //순서2-1. 조이스틱을 당긴 값으로 공이 날아갈 방향을 구한다.
-        Vector3 offset = new Vector3(joystick.transform.position.x - joystick.Horizontal * 12, 0, joystick.transform.position.y - joystick.Vertical * 12);
+        Vector3 offset = new Vector3(joystick.transform.position.x - joystick.Horizontal, 0, joystick.transform.position.y - joystick.Vertical);
 
-        //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
-        lineRenderer.SetPosition(0, transform.position);
-        lineRenderer.SetPosition(1, transform.position + offset);
+        //순서6-2. 조이스틱의 방향에 따라 레이를 발사한다.
+        lineRay = new Ray(transform.position, offset.normalized);
+
+        //순서6-3. 레이가 오브젝트와 닿으면 길이를 저장해서 LineRender에게 연결해준다.
+        if (Physics.Raycast(lineRay, out hitinfo))
+        {
+            //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
+            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.SetPosition(1, transform.position + offset * hitinfo.distance);
+        }
+        else
+        {
+            //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
+            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.SetPosition(1, transform.position + offset * 2);
+        }
     }
 
     public void Shoot()
@@ -140,11 +172,21 @@ public class BallMove : MonoBehaviour
 
 
     //충돌이 발생할 시 MoveDate구조체를 게임데이터에게 쌓는다.
-    private void OnCollisionEnter()
+    private void OnCollisionEnter(Collision collision)
     {
-        if(!GameManager.Instance.isNobodyMove)
+        if (!GameManager.Instance.isNobodyMove)
         {
             GameManager.Instance.ballMoveData.Add(moveData);
+        }
+
+        if (collision.gameObject.tag is "Player")
+        {
+            if (GameManager.Instance.turn == myTurn)
+            {
+                score++;
+
+                GameManager.Instance.UpdateScore();
+            }
         }
     }
 }
