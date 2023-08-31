@@ -194,7 +194,7 @@ PrefabInstance:
     - target: {fileID: 6916494868862755162, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: d54e9238f098fd44b86b67bb6a325a0a, type: 2}
+      objectReference: {fileID: 2100000, guid: 03a4c12afc6bd0a46b7930711252bbf4, type: 2}
     - target: {fileID: 7709719001722137087, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Name
       value: Player1Ball
@@ -815,6 +815,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moves: []
+  sampleSceneIsReplayer: 0
+--- !u!114 &572513800 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1215664215390987376, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
+  m_PrefabInstance: {fileID: 1063205276}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60c16ec2ca812924496492d7e92382d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &578804706
 GameObject:
   m_ObjectHideFlags: 0
@@ -993,6 +1005,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
+  - component: {fileID: 705507996}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -1077,6 +1090,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 90.390015, y: -30, z: 0}
+--- !u!114 &705507996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &727826373
 GameObject:
   m_ObjectHideFlags: 0
@@ -1086,7 +1122,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 727826375}
-  - component: {fileID: 727826374}
+  - component: {fileID: 727826376}
   m_Layer: 0
   m_Name: GuestReplayer
   m_TagString: Untagged
@@ -1094,22 +1130,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &727826374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 727826373}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1eb26676fb0ef834fbaad26978d7ed50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  balls:
-  - {fileID: 24412464}
-  - {fileID: 6806846147171205529}
-  - {fileID: 1445971225}
 --- !u!4 &727826375
 Transform:
   m_ObjectHideFlags: 0
@@ -1125,6 +1145,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &727826376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 727826373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1eb26676fb0ef834fbaad26978d7ed50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  balls:
+  - {fileID: 24412464}
+  - {fileID: 1445971225}
+  - {fileID: 6806846147171205529}
+  - {fileID: 1003442819}
+  - {fileID: 572513800}
 --- !u!1 &935385773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1493,6 +1531,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1003442819 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1215664215390987376, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
+  m_PrefabInstance: {fileID: 2076147060}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60c16ec2ca812924496492d7e92382d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1063205276
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1560,7 +1609,7 @@ PrefabInstance:
     - target: {fileID: 6916494868862755162, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ea069aa52e8677346aadbb934fbe5959, type: 2}
+      objectReference: {fileID: 2100000, guid: 03a4c12afc6bd0a46b7930711252bbf4, type: 2}
     - target: {fileID: 7709719001722137087, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Name
       value: Player5Ball
@@ -1993,7 +2042,7 @@ PrefabInstance:
     - target: {fileID: 6916494868862755162, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 143f385f572a35e428fe8c25fe5374bb, type: 2}
+      objectReference: {fileID: 2100000, guid: 03a4c12afc6bd0a46b7930711252bbf4, type: 2}
     - target: {fileID: 7709719001722137087, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Name
       value: Player2Ball
@@ -2394,7 +2443,7 @@ PrefabInstance:
     - target: {fileID: 6916494868862755162, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: c8558854b3a17134e8abb73c9785352d, type: 2}
+      objectReference: {fileID: 2100000, guid: 03a4c12afc6bd0a46b7930711252bbf4, type: 2}
     - target: {fileID: 7709719001722137087, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Name
       value: Player4Ball
@@ -2475,7 +2524,7 @@ PrefabInstance:
     - target: {fileID: 6916494868862755162, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 2361b490ed3020b458790d37665289a9, type: 2}
+      objectReference: {fileID: 2100000, guid: 03a4c12afc6bd0a46b7930711252bbf4, type: 2}
     - target: {fileID: 7709719001722137087, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Name
       value: Player3Ball

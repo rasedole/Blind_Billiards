@@ -5,10 +5,14 @@ using UnityEngine;
 public class ReplayTest : MonoBehaviour
 {
     public List<MoveData> moves;
+    public bool sampleSceneIsReplayer;
 
     public void Foos()
     {
-        moves = GameManager.Instance.ballMoveData;
+        if(!sampleSceneIsReplayer)
+        {
+            moves = GameManager.Instance.ballMoveData;
+        }
 
         for (int i = 0; i < moves.Count; i++)
         {

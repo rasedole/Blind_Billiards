@@ -635,6 +635,7 @@ MonoBehaviour:
     ballIndex: 2
     startPos: {x: 0, y: 0, z: 3}
     startTime: 3
+  sampleSceneIsReplayer: 1
 --- !u!1 &866079122
 GameObject:
   m_ObjectHideFlags: 0
