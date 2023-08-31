@@ -1,13 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class BallDoll : MonoBehaviour
 {
+    private static readonly float hideTime = 1f;
+
+    public Color showcaseColor;
+
+    [SerializeField] 
+    private MeshRenderer ballRenderer;
+    [SerializeField]
+    private Animator ballAnimator;
+    [SerializeField]
+    private ParticleSystem particle;
+    [SerializeField]
+    private BallShowMode showMode;
+
+    private IEnumerator enumerator;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        // Just for main menu
+        if (showMode == BallShowMode.Showcase)
+        {
+            Init(showcaseColor, showMode);
+        }
     }
 
     // Update is called once per frame
@@ -16,13 +36,61 @@ public class BallDoll : MonoBehaviour
 
     }
 
-    public void Init()
+    public void Init(Color baseColor, BallShowMode _mode)
     {
-        Debug.Log(gameObject.name + ".Init()");
+        // Set color
+        Material material = ballRenderer.material;
+        material.SetColor("_BaseColor", baseColor);
+
+        MainModule particleMain = particle.main;
+        particleMain.startColor = baseColor;
+
+        // Set animation
+        showMode = _mode;
+        if (showMode == BallShowMode.MyPlayer)
+        {
+            ballAnimator.Play("Moving");
+        }
+        else if (showMode == BallShowMode.Showcase)
+        {
+            ballAnimator.Play("PopLoop");
+        }
     }
 
     public void CollisionEvent()
     {
-        Debug.Log(gameObject.name + ".CollisionEvent()\n" + transform.position);
+        if(showMode != BallShowMode.Showcase)
+        {
+            ballAnimator.Play("Pop");
+        }
+        particle.Stop();
+        particle.Play();
+
+        if (showMode == BallShowMode.OtherPlayer)
+        {
+            if (enumerator != null)
+            {
+                StopCoroutine(enumerator);
+                enumerator = null;
+            }
+            enumerator = Hide();
+            StartCoroutine(enumerator);
+        }
     }
+
+    private IEnumerator Hide()
+    {
+        yield return new WaitForSeconds(hideTime);
+        if(showMode == BallShowMode.OtherPlayer)
+        {
+            ballAnimator.Play("Hide");
+        }
+    }
+}
+
+public enum BallShowMode
+{
+    OtherPlayer,
+    MyPlayer,
+    Showcase,
 }
