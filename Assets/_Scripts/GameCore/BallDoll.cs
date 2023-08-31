@@ -17,6 +17,8 @@ public class BallDoll : MonoBehaviour
     private ParticleSystem particle;
     [SerializeField]
     private BallShowMode showMode;
+    [SerializeField]
+    private Rigidbody _rigidbody;
 
     private IEnumerator enumerator;
 
@@ -47,9 +49,11 @@ public class BallDoll : MonoBehaviour
 
         // Set animation
         showMode = _mode;
+        _rigidbody.isKinematic = true;
         if (showMode == BallShowMode.MyPlayer)
         {
             ballAnimator.Play("Moving");
+            _rigidbody.isKinematic = false;
         }
         else if (showMode == BallShowMode.Showcase)
         {

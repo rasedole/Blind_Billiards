@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6154982019669369757}
   - component: {fileID: 5367225450477488458}
   - component: {fileID: 1121280473825484668}
+  - component: {fileID: -8231418191345802099}
   m_Layer: 0
   m_Name: RedBall
   m_TagString: Player
@@ -98,11 +99,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60c16ec2ca812924496492d7e92382d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {r: 1, g: 0, b: 0, a: 0}
-  mine: 1
+  showcaseColor: {r: 0, g: 0, b: 0, a: 0}
   ballRenderer: {fileID: 6154982019669369757}
   ballAnimator: {fileID: 1121280473825484668}
   particle: {fileID: 3852170369487147325}
+  showMode: 0
+  _rigidbody: {fileID: -8231418191345802099}
 --- !u!95 &1121280473825484668
 Animator:
   serializedVersion: 5
@@ -124,6 +126,33 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!54 &-8231418191345802099
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2298742380195284636}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 4
+  m_CollisionDetection: 0
 --- !u!1001 &9017500625071125233
 PrefabInstance:
   m_ObjectHideFlags: 0

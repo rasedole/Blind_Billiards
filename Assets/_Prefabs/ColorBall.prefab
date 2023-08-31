@@ -281,6 +281,7 @@ MonoBehaviour:
   ballAnimator: {fileID: 8419513002033838462}
   particle: {fileID: 9129642932442869137}
   showMode: 0
+  _rigidbody: {fileID: 119677186653749396}
 --- !u!95 &8419513002033838462
 Animator:
   serializedVersion: 5
