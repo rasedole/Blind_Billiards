@@ -64,7 +64,10 @@ public class BallMove : MonoBehaviour
     {
         get
         {
-            _moveData.startPos = transform.position;
+            if (isMove)
+            {
+                _moveData.startPos = transform.position;
+            }
             _moveData.ballIndex = myTurn;
             _moveData.startTime = Time.time - GameManager.Instance.shootTime;
 
@@ -73,7 +76,7 @@ public class BallMove : MonoBehaviour
     }
     private MoveData _moveData;
 
-    //공이 움직임을 체크해서 멈춘 순간에 MoveData럴 전송하기 위한 변수
+    //공이 움직임을 체크해서 멈춘 순간에 MoveData를 전송하기 위한 변수
     public bool isMove = false;
 
     //속성5 : 스코어
@@ -87,6 +90,7 @@ public class BallMove : MonoBehaviour
     void Start()
     {
         _moveData = new MoveData();
+        _moveData.startPos = gameObject.transform.position;
 
         rigidbody = GetComponent<Rigidbody>();
         lineRenderer = GetComponent<LineRenderer>();
@@ -115,8 +119,11 @@ public class BallMove : MonoBehaviour
         {
             if (rigidbody.velocity.magnitude < 0.04f)
             {
+                if (!GuestReplayer.replaying)
+                {
+                    GameManager.Instance.ballMoveData.Add(moveData);
+                }
                 isMove = false;
-                GameManager.Instance.ballMoveData.Add(moveData);
             }
         }
 
@@ -177,7 +184,10 @@ public class BallMove : MonoBehaviour
     {
         if (!GameManager.Instance.isNobodyMove)
         {
-            GameManager.Instance.ballMoveData.Add(moveData);
+            if(!GuestReplayer.replaying)
+            {
+                GameManager.Instance.ballMoveData.Add(moveData);
+            }
         }
 
         if (collision.gameObject.tag is "Player")
