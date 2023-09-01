@@ -1,0 +1,19 @@
+<mxfile host="Electron" modified="2023-08-30T07:38:13.030Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.5 Chrome/114.0.5735.243 Electron/25.3.1 Safari/537.36" etag="pdxqcrJ20usBVJnr6K-S" version="21.6.5" type="device">
+  <diagram name="페이지-1" id="xkYmsRdoyPVqwTJOcZpl">
+    <mxGraphModel dx="978" dy="571" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KaM9ba5RFQA-t93WWY4j-1" value="MoveData" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="40" width="200" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="KaM9ba5RFQA-t93WWY4j-2" value="&lt;div&gt;[HideInInspector]&lt;/div&gt;&lt;div&gt;public int index&lt;/div&gt;&lt;div&gt;시간순으로 정렬되는 진행순서&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;public int ballIndex&lt;/div&gt;&lt;div&gt;몇번째 플레이어 공인지&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;public Vector3 startPos&lt;/div&gt;&lt;div&gt;충돌 당시의 위치&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;public float startTime&lt;/div&gt;&lt;div&gt;충돌 당시의 시간&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="KaM9ba5RFQA-t93WWY4j-1" vertex="1">
+          <mxGeometry y="50" width="200" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="KaM9ba5RFQA-t93WWY4j-5" value="공 데이터를 받은 게스트 플레이어의 화면에 공 이동을 진행시키는 코드&lt;br&gt;GuestReplayer.ReplayTurn(List&amp;lt;MoveData&amp;gt; moves);&lt;br&gt;&lt;br&gt;이때, 컴포넌트&amp;nbsp;GuestReplayer가 오브젝트에 할당되어있고, &lt;br&gt;모든 플레이어 공의 리스트가&amp;nbsp;List&amp;lt;BallDoll&amp;gt;의 형태로 할당되어 있어야 함.&lt;br&gt;&lt;br&gt;여기서 공의 리스트 자동 할당 코드를 작성할 예정(아직 미구현, 현재 수작업으로 작성 필요)&lt;br&gt;BallDoll은 공이 충돌했을 때, 그래픽 처리라든가 공 색을 입힌다던가 하는 자잘한 일을 할 스크립트임.&lt;br&gt;&lt;br&gt;GuestReplayer.replaying으로 현재 공 움직임을 재생중인지를 판별 가능.&lt;br&gt;아직 호스트측이나 다른 부분에서 쓰일지는 몰?루" style="shape=note;size=20;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+          <mxGeometry x="280" y="40" width="550" height="200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

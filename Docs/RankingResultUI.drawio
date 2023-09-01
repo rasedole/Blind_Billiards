@@ -1,0 +1,243 @@
+<mxfile host="Electron" modified="2023-08-29T04:33:01.919Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.5 Chrome/114.0.5735.243 Electron/25.3.1 Safari/537.36" etag="vYytaTWqBYjwuf0EeMI8" version="21.6.5" type="device">
+  <diagram name="페이지-1" id="xkYmsRdoyPVqwTJOcZpl">
+    <mxGraphModel dx="1793" dy="1055" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000000" pageHeight="200000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-1" value="RankingResultUI" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="39" width="380" height="181" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-2" value="private static&amp;nbsp;RankingResultUI instance&lt;br&gt;&lt;br&gt;* (선택사항) 한 행 구조체 리스트&lt;br&gt;&lt;br&gt;[SerializeField]&lt;br&gt;private int maxRankingRow&lt;br&gt;&lt;br&gt;public static void RankShow(List&amp;lt;RankData&amp;gt; 게임 한 판의 데이터)" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-1">
+          <mxGeometry y="50" width="380" height="131" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-3" value="Ranking (n people mode)" style="shape=table;startSize=30;container=1;collapsible=0;childLayout=tableLayout;strokeColor=default;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="109" width="370" height="83" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-4" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-3">
+          <mxGeometry y="30" width="370" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-16" value="Order" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-4">
+          <mxGeometry width="72" height="27" as="geometry">
+            <mxRectangle width="72" height="27" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-5" value="PlayTime" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-4">
+          <mxGeometry x="72" width="206" height="27" as="geometry">
+            <mxRectangle width="206" height="27" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-6" value="Score" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-4">
+          <mxGeometry x="278" width="92" height="27" as="geometry">
+            <mxRectangle width="92" height="27" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-8" value="" style="shape=tableRow;horizontal=0;startSize=0;swimlaneHead=0;swimlaneBody=0;strokeColor=inherit;top=0;left=0;bottom=0;right=0;collapsible=0;dropTarget=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-3">
+          <mxGeometry y="57" width="370" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-17" value="1" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-8">
+          <mxGeometry width="72" height="26" as="geometry">
+            <mxRectangle width="72" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-9" value="2023.08.29 / 12:00 00:00" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-8">
+          <mxGeometry x="72" width="206" height="26" as="geometry">
+            <mxRectangle width="206" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-10" value="1234" style="shape=partialRectangle;html=1;whiteSpace=wrap;connectable=0;strokeColor=inherit;overflow=hidden;fillColor=none;top=0;left=0;bottom=0;right=0;pointerEvents=1;fontSize=16;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-8">
+          <mxGeometry x="278" width="92" height="26" as="geometry">
+            <mxRectangle width="92" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-23" value="랭킹화면 예상도 (변동 가능)" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.rectCallout;dx=161.76;dy=12;boundedLbl=1;direction=east;flipH=1;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="39" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-24" value="인원수별 랭킹 구분" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.rectCallout;dx=28.93;dy=11;boundedLbl=1;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="39" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-25" value="" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="103" width="50" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-26" value="틀" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="990" y="138" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-27" value="" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;flipH=1;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="159" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-28" value="틀 안의 행" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1550" y="164" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-29" value="하나의 행 마다 관리를 쉽게 하기 위한&lt;br&gt;별도 컴포넌트가 있어도 좋을듯 합니다&lt;br&gt;(선택사항)" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="199" width="340" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-30" value="이 예시에서 한 행은 다음과 같은 UI 요소가 존재&lt;br&gt;각 UI 요소는 TextMeshProUGUI로 텍스트 제어&lt;br&gt;&lt;br&gt;게임 등수 (Order, 프레임 요소로 전환 가능)&lt;br&gt;게임일자 (PlayTime)&amp;nbsp;&lt;br&gt;점수 (Score)&lt;br&gt;&lt;br&gt;추가될 것이 있을 때마다, 한 행이 가진 UI 요소는 변경될 수 있음" style="whiteSpace=wrap;html=1;shape=mxgraph.basic.rectCallout;dx=30;dy=15;boundedLbl=1;flipV=1;flipH=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="960" y="203" width="350" height="146" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-32" value="&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; 씬에 미리 세팅해놓은 구조체를 리스트로 받고 리스트 개수로 최대 표시 등수 조절&lt;br&gt;VS&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; 행 구조체 프리팹, 생성할 위치, 최대 표시 등수를 변수로 받고, 실시간 오브젝트 생성" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.calloutArrow;dy=4.67;dx=19.17;notch=464.52;arrowHead=10;flipH=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="68" width="490" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-33" value="RankData" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="240" width="240" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-34" value="랭킹화면의 한 행에 해당되는 게임 데이터" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-33">
+          <mxGeometry y="50" width="240" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-35" value="&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; 게임 참가자 전체를 리스트로 전달?&lt;br&gt;VS&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;게임 한 판에서 우승한 1명의 데이터만 전달?" style="html=1;shadow=0;dashed=0;align=center;verticalAlign=middle;shape=mxgraph.arrows2.calloutArrow;dy=4.67;dx=19.17;notch=260.2;arrowHead=10;flipH=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="210" width="290" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="LIMBnB06t9ZuuN3gc_Ec-36" target="LIMBnB06t9ZuuN3gc_Ec-38">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-36" value="RankShow" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_2;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="187.5" y="360" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="LIMBnB06t9ZuuN3gc_Ec-37" target="LIMBnB06t9ZuuN3gc_Ec-38">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="17.5" y="481" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="70.5" y="441" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-37" value="DB" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.database;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="40" y="591" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="LIMBnB06t9ZuuN3gc_Ec-38" target="LIMBnB06t9ZuuN3gc_Ec-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-38" value="데이터 로드" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="187.5" y="421" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="LIMBnB06t9ZuuN3gc_Ec-41" target="LIMBnB06t9ZuuN3gc_Ec-66">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-41" value="한 판 데이터를 불러온 랭킹 데이터에 추가" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="100" y="480.5" width="275" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-43" value="불러온 데이터" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="361" width="120" height="156" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-44" value="1 : 1000" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-43">
+          <mxGeometry y="26" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-45" value="2 : 500" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-43">
+          <mxGeometry y="52" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-46" value="3 : 300" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-43">
+          <mxGeometry y="78" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-48" value="4 : 150" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-43">
+          <mxGeometry y="104" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-47" value="5 : 50" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-43">
+          <mxGeometry y="130" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-49" value="" style="shape=cross;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="402" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-50" value="한 판 데이터" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="640" y="402" width="120" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-51" value="1 : 200" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-50">
+          <mxGeometry y="26" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-52" value="2 : 70" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-50">
+          <mxGeometry y="52" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-56" value="불러온 데이터" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="612" width="120" height="208" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-57" value="1 : 1000" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-56">
+          <mxGeometry y="26" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-58" value="2 : 500" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-56">
+          <mxGeometry y="52" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-59" value="3 : 300" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-56">
+          <mxGeometry y="78" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-60" value="4 : 150" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-56">
+          <mxGeometry y="104" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-61" value="5 : 50" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-56">
+          <mxGeometry y="130" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-64" value="6 : 200" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-56">
+          <mxGeometry y="156" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-65" value="7 : 70" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-56">
+          <mxGeometry y="182" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-62" value="" style="shape=singleArrow;direction=south;whiteSpace=wrap;html=1;arrowWidth=0.41212121212119357;arrowSize=0.5545454545454537;" vertex="1" parent="1">
+          <mxGeometry x="430" y="532" width="60" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-89" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="LIMBnB06t9ZuuN3gc_Ec-66" target="LIMBnB06t9ZuuN3gc_Ec-88">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-66" value="데이터 정렬" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="187.5" y="541" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-69" value="정렬된 데이터" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="560" y="612" width="120" height="208" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-70" value="1 : 1000" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-69">
+          <mxGeometry y="26" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-71" value="2 : 500" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-69">
+          <mxGeometry y="52" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-72" value="3 : 300" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-69">
+          <mxGeometry y="78" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-75" value="4 : 200" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-69">
+          <mxGeometry y="104" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-73" value="5 : 150" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-69">
+          <mxGeometry y="130" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-76" value="6 : 70" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-69">
+          <mxGeometry y="156" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-74" value="7 : 50" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-69">
+          <mxGeometry y="182" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-78" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="LIMBnB06t9ZuuN3gc_Ec-60" target="LIMBnB06t9ZuuN3gc_Ec-75">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-79" value="저장할 데이터" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="612" width="120" height="156" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-80" value="1 : 1000" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-79">
+          <mxGeometry y="26" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-81" value="2 : 500" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-79">
+          <mxGeometry y="52" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-82" value="3 : 300" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-79">
+          <mxGeometry y="78" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-83" value="4 : 200" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-79">
+          <mxGeometry y="104" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-84" value="5 : 150" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="LIMBnB06t9ZuuN3gc_Ec-79">
+          <mxGeometry y="130" width="120" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-87" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="LIMBnB06t9ZuuN3gc_Ec-75" target="LIMBnB06t9ZuuN3gc_Ec-83">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-91" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="LIMBnB06t9ZuuN3gc_Ec-88" target="LIMBnB06t9ZuuN3gc_Ec-37">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-94" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.495;entryY=-0.005;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="LIMBnB06t9ZuuN3gc_Ec-88" target="LIMBnB06t9ZuuN3gc_Ec-92">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-88" value="데이터 저장" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="187.5" y="601" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="LIMBnB06t9ZuuN3gc_Ec-92" value="UI 표시 과정" style="shape=tape;whiteSpace=wrap;html=1;strokeWidth=2;size=0.18461538461538463;" vertex="1" parent="1">
+          <mxGeometry x="187.5" y="681" width="100" height="49" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
