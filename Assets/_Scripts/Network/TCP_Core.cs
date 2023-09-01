@@ -173,7 +173,7 @@ public class TCP_Core : MonoBehaviour
         client.CloseSocket();
     }
 
-    public void OnSendButton(TextOrHint sendInput)
+    public void OnSendButton(TMP_InputField sendInput)
     {
         if (sendInput.text.Trim() == "") return;
 

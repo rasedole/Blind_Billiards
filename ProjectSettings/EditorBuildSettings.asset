@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Scenes/NetWork_TcpIp.unity
+    guid: 035f2be74ff75c1488ec8ebc3bd4fb5e
+  - enabled: 1
     path: Assets/_Scenes/SampleScene_Lobby/SampleLobbyScene.unity
     guid: 02995eb97847dcc49b6472dc0f90f08f
   - enabled: 1
