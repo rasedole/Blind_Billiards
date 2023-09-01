@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System;
 using System.IO;
+using UnityEngine;
 
 public class TCP_Server 
 {
@@ -36,7 +37,10 @@ public class TCP_Server
 
     public void CloseServer()
     {
-
+        if(server != null)
+        {
+            server.Stop();
+        }
     }
 
     // Must be update everytime.

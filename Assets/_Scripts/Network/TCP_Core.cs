@@ -25,7 +25,7 @@ public class TCP_Core : MonoBehaviour
 
     // Message field, client and server will use to show something.
     [SerializeField]
-    TextMeshProUGUI messageField;
+    TMP_InputField messageField;
     public static void Message(string data)
     {
         if (instance != null)
@@ -163,12 +163,12 @@ public class TCP_Core : MonoBehaviour
         client.ConnectToServer();
     }
 
-    public static void StopServer(int index)
+    public static void StopServer()
     {
-
+        server.CloseServer();
     }
 
-    public static void StopClient(int index)
+    public static void StopClient()
     {
         client.CloseSocket();
     }
