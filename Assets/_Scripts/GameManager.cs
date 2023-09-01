@@ -53,7 +53,8 @@ public class GameManager : MonoBehaviour
     public TMP_Text scoreUI;
 
     //속성5 : 색상 리스트
-    public List<Material> ballColors;
+    //public List<Material> ballColors;
+    public List<Color> ballColors;
 
     private void Awake()
     {
@@ -71,7 +72,17 @@ public class GameManager : MonoBehaviour
         {
             gamePlayers[i].GetComponent<BallMove>().myTurn = i;
             int randomColor = Random.Range(0, ballColors.Count);
-            gamePlayers[i].GetComponent<MeshRenderer>().material = ballColors[randomColor];
+            BallDoll ballDoll = gamePlayers[i].GetComponent<BallDoll>();
+            ballDoll.showcaseColor = ballColors[randomColor];
+            if (turn == gamePlayers[i].GetComponent<BallMove>().myTurn)
+            {
+                ballDoll.Init(ballDoll.showcaseColor, BallShowMode.MyPlayer);
+            }
+            else
+            {
+
+                ballDoll.Init(ballDoll.showcaseColor, BallShowMode.OtherPlayer);
+            }
             ballColors.Remove(ballColors[randomColor]);
         }
     }
@@ -148,6 +159,19 @@ public class GameManager : MonoBehaviour
         else
         {
             turn = 0;
+        }
+
+        for(int i = 0; i < gamePlayers.Length; i++)
+        {
+            BallDoll ballDoll = gamePlayers[i].GetComponent<BallDoll>();
+            if (turn == gamePlayers[i].GetComponent<BallMove>().myTurn)
+            {
+                ballDoll.Init(ballDoll.showcaseColor, BallShowMode.MyPlayer);
+            }
+            else
+            {
+                ballDoll.Init(ballDoll.showcaseColor, BallShowMode.OtherPlayer);
+            }
         }
 
         //순서2-2. 턴이 바뀌면 현재 턴의 값을 바꿔준다.

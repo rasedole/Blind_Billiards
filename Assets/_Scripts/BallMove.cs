@@ -95,7 +95,7 @@ public class BallMove : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.startColor = Color.white;
-        lineRenderer.endColor = GetComponent<MeshRenderer>().materials[0].GetColor("_Color");
+        lineRenderer.endColor = gameObject.GetComponent<BallDoll>().showcaseColor;
         lineRenderer.startWidth = 0.05f;
         lineRenderer.endWidth = 0.05f;
         //Debug.Log(gameObject.name + "은 " + myTurn + "에 움직인다.");
@@ -187,6 +187,8 @@ public class BallMove : MonoBehaviour
             if(!GuestReplayer.replaying)
             {
                 GameManager.Instance.ballMoveData.Add(moveData);
+
+                GetComponent<BallDoll>().CollisionEvent();
             }
         }
 

@@ -133,7 +133,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1215664215390987376, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: showMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3204430388001256556, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_RootOrder
@@ -709,7 +709,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -10, y: 10}
+  m_AnchoredPosition: {x: -10, y: 0}
   m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &538887536
@@ -1162,11 +1162,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   balls:
-  - {fileID: 572513800}
-  - {fileID: 24412464}
-  - {fileID: 6806846147171205529}
   - {fileID: 1445971225}
   - {fileID: 1003442819}
+  - {fileID: 24412464}
+  - {fileID: 6806846147171205529}
+  - {fileID: 572513800}
 --- !u!1 &935385773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1556,7 +1556,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1215664215390987376, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: showMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3204430388001256556, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_RootOrder
@@ -1965,20 +1965,18 @@ MonoBehaviour:
   shootTime: 0
   scoreUI: {fileID: 578804708}
   ballColors:
-  - {fileID: 2100000, guid: c2c00076784063b41936fcf5c78dfaa3, type: 2}
-  - {fileID: 2100000, guid: 2fad3614b062e814fbd7b772df4c8416, type: 2}
-  - {fileID: 2100000, guid: f7bdfabb484d5db4ea226dd87b75dc17, type: 2}
-  - {fileID: 2100000, guid: 86fa881debc19ab439c2d25af17079ba, type: 2}
-  - {fileID: 2100000, guid: 6d9689d1dd27b2a44a1f55346d631153, type: 2}
-  - {fileID: 2100000, guid: 87509f0720849fd43b6af2de33bb2867, type: 2}
-  - {fileID: 2100000, guid: b51424d036c6b9d45978794fa123312e, type: 2}
-  - {fileID: 2100000, guid: bf9ca1d369b6adc4e987e50c526545c9, type: 2}
-  - {fileID: 2100000, guid: c8558854b3a17134e8abb73c9785352d, type: 2}
-  - {fileID: 2100000, guid: d54e9238f098fd44b86b67bb6a325a0a, type: 2}
-  - {fileID: 2100000, guid: ea069aa52e8677346aadbb934fbe5959, type: 2}
-  - {fileID: 2100000, guid: c72787e0f53de5f45889e549c53c4e67, type: 2}
-  - {fileID: 2100000, guid: 2361b490ed3020b458790d37665289a9, type: 2}
-  - {fileID: 2100000, guid: 143f385f572a35e428fe8c25fe5374bb, type: 2}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 1, g: 1, b: 1, a: 0}
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0, g: 1, b: 0, a: 0}
+  - {r: 0, g: 0, b: 1, a: 0}
+  - {r: 1, g: 1, b: 0, a: 0}
+  - {r: 0, g: 1, b: 1, a: 0}
+  - {r: 1, g: 0, b: 1, a: 0}
+  - {r: 0.5411765, g: 0.16862746, b: 0.8862746, a: 0}
+  - {r: 0, g: 0.3921569, b: 0, a: 0}
+  - {r: 1, g: 0.54901963, b: 0, a: 0}
+  - {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0}
 --- !u!1001 &1445971224
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2398,7 +2396,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1215664215390987376, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: showMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3204430388001256556, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_RootOrder
@@ -2479,7 +2477,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1215664215390987376, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: showMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3204430388001256556, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_RootOrder
