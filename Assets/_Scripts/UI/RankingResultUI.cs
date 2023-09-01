@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using static RankingResultUI;
 
 public class RankingResultUI : MonoBehaviour
 {
@@ -33,17 +32,6 @@ public class RankingResultUI : MonoBehaviour
     {
         maxRankingRow = rankObj.Length;
         savedRankDatas = new List<RankData>();
-
-        List<RankData> testRankDatas = new List<RankData>();
-
-        DateTime nowDate = DateTime.Now;
-        testRankDatas.Add(new RankData { playTime = nowDate, score = 3252 });
-        testRankDatas.Add(new RankData { playTime = nowDate, score = 1634 });
-        testRankDatas.Add(new RankData { playTime = nowDate, score = 2467 });
-        testRankDatas.Add(new RankData { playTime = nowDate, score = 3436 });
-        testRankDatas.Add(new RankData { playTime = nowDate, score = 1327 });
-        testRankDatas.Add(new RankData { playTime = nowDate, score = 9999 });
-        RankShow(testRankDatas);
     }
 
     public void RankShow(List<RankData> rankDatas)
