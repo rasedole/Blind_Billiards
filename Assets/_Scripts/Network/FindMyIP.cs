@@ -7,30 +7,49 @@ using UnityEngine;
 
 public class FindMyIP : MonoBehaviour
 {
-    private string localIP;
-    private string publicIP;
+    public static string localIP
+    {
+        get
+        {
+            return instance._localIP;
+        }
+    }
+    public static string publicIP
+    {
+        get
+        {
+            return instance._publicIP;
+        }
+    }
+
+    private static FindMyIP instance;
+
+    private string _localIP;
+    private string _publicIP;
 
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
+
         // local
         IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
         foreach (IPAddress ip in ipEntry.AddressList)
         {
             if (ip.AddressFamily == AddressFamily.InterNetwork)
             {
-                localIP = ip.ToString();
+                _localIP = ip.ToString();
             }
         }
 
         // public
-        publicIP = new WebClient().DownloadString("http://ipinfo.io/ip").Trim();
-        if (String.IsNullOrWhiteSpace(publicIP))
+        _publicIP = new WebClient().DownloadString("http://ipinfo.io/ip").Trim();
+        if (String.IsNullOrWhiteSpace(_publicIP))
         {
-            publicIP = localIP;
+            _publicIP = _localIP;
         }
 
-        Debug.Log(localIP + ", " + publicIP);
+        Debug.Log(_localIP + ", " + _publicIP);
     }
 
     // Update is called once per frame
