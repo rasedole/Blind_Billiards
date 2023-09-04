@@ -29,6 +29,9 @@ using UnityEngine.SceneManagement;
 //목적5 : 공의 색상을 랜덤하게 설정해준다.
 //속성5 : 색상 리스트
 
+//목적6 : 게임 진행 중 플레어의 연결이 끊어졌을 경우 해당 플레이어의 이름과 점수를 빨간색으로 변경하고 해당 플레이어의 턴을 자동으로 넘기도록 한다.
+
+
 public class GameManager : MonoBehaviour
 {
     //싱글톤을 이용해서 쉽게 사용할 수 있도록 함
@@ -67,6 +70,9 @@ public class GameManager : MonoBehaviour
         //순서1-1. 게임 플레이어 오브젝트를 모두 찾아서 집합에 넣는다.
         gamePlayers = GameObject.FindGameObjectsWithTag("Player");
 
+        //게스트 리플레이어 balls에 정렬된 순서로 넣어주는 코드
+        //GameObject.Find("GuestReplayer").GetComponent<GuestReplayer>().balls = gamePlayers;
+
         //순서1-2. 집합에 순서에 따라 각 플레이어에게 턴을 배정한다.
         for (int i = 0; i < gamePlayers.Length; i++)
         {
@@ -80,7 +86,6 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-
                 ballDoll.Init(ballDoll.showcaseColor, BallShowMode.OtherPlayer);
             }
             ballColors.Remove(ballColors[randomColor]);
@@ -129,8 +134,9 @@ public class GameManager : MonoBehaviour
     }
 
     //순서1-4. Shoot()을 실행한 이후에 모든 공이 멈추면 isNobodyMove값을 통해 멈췄음을 알려준다.
-    IEnumerator EndTurn()
+    public IEnumerator EndTurn()
     {
+        Debug.Log(0);
         //이 코루틴은 공을 쏜 후에 실행되므로 isNobodyMove를 false로 설정한다.
         isNobodyMove = false;
 
@@ -141,6 +147,7 @@ public class GameManager : MonoBehaviour
             //모든 공의 속도를 측정해서 0.05보다 작다면 isNobodyMove에 true값을 그대로 넣고 속도가 0.05보다 큰 공이 있다면 isNobodyMove에 false를 넣고 break를 통해 반복문을 나온다.
             for (int i = 0; i < gamePlayers.Length; i++)
             {
+                Debug.Log(1);
                 isNobodyMove = true;
                 if (gamePlayers[i].GetComponent<BallMove>().isMove)
                 {
@@ -161,7 +168,7 @@ public class GameManager : MonoBehaviour
             turn = 0;
         }
 
-        for(int i = 0; i < gamePlayers.Length; i++)
+        for (int i = 0; i < gamePlayers.Length; i++)
         {
             BallDoll ballDoll = gamePlayers[i].GetComponent<BallDoll>();
             if (turn == gamePlayers[i].GetComponent<BallMove>().myTurn)
@@ -224,6 +231,24 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < gamePlayers.Length; i++)
         {
             scoreUI.text += (i + 1).ToString() + ". " + playerName[i] + " " + scores[i] + "\n";
+        }
+
+        ReLoadTurnTable();
+    }
+
+    public void ReLoadTurnTable()
+    {
+        turnTable.text = "";
+        for (int i = 0; i < gamePlayers.Length; i++)
+        {
+            if (!gamePlayers[i].GetComponent<BallMove>().isConnected)
+            {
+                turnTable.text += "<color=red>" + "Turn " + (i + 1) + " : " + gamePlayers[i].name + "\n";
+            }
+            else
+            {
+                turnTable.text += "<color=white>" + "Turn " + (i + 1) + " : " + gamePlayers[i].name + "\n";
+            }
         }
     }
 }

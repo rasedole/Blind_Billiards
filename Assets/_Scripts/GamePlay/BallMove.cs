@@ -37,6 +37,8 @@ using UnityEngine;
 //순서6-2. 조이스틱의 방향에 따라 레이를 발사한다.
 //순서6-3. 레이가 오브젝트와 닿으면 길이를 저장해서 LineRender에게 연결해준다.
 
+//속성추가 : 네트워크 연결 bool 변수
+
 public class BallMove : MonoBehaviour
 {
     //속성1 : 조이스틱, 날아갈 방향, 공을 날리기 위한 공의 RigidBody, 날리는 힘
@@ -86,6 +88,9 @@ public class BallMove : MonoBehaviour
     protected Ray lineRay;
     protected RaycastHit hitinfo = new();
 
+    //속성추가 : 네트워크 연결 bool 변수
+    public bool isConnected = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -134,41 +139,53 @@ public class BallMove : MonoBehaviour
             return;
         }
 
-        //순서6-1. 조이스틱을 당긴다.
-        //순서1-1. 조이스틱을 당긴 값을 저장한다.
-        float h = joystick.Horizontal;
-        float v = joystick.Vertical;
-        //조이스틱을 놓는 순간 h와 v값이 0이 되기에 두 값이 0이 아닐 경우에만 temph, tempv를 갱신한다
-        if (h != 0 || v != 0)
+        //연결이 되어 있다면 작동한다.
+        if (isConnected)
         {
-            temph = h;
-            tempv = v;
+            //순서6-1. 조이스틱을 당긴다.
+            //순서1-1. 조이스틱을 당긴 값을 저장한다.
+            float h = joystick.Horizontal;
+            float v = joystick.Vertical;
+            //조이스틱을 놓는 순간 h와 v값이 0이 되기에 두 값이 0이 아닐 경우에만 temph, tempv를 갱신한다
+            if (h != 0 || v != 0)
+            {
+                temph = h;
+                tempv = v;
+            }
+
+            //순서1-2. 조이스틱을 놓는다.     
+            //순서1-3. 조이스틱을 놓기 직전 값을 기준으로 방향을 정한다.
+            //VariableJoyStick에 구현되어 있는 OnPointerUp이 조이스틱을 떼는 순간에 작동하기에 그 함수가 실행될 때 하단에 있는 Shoot()함수를 실행시킴으로서 공을 발사한다.
+            direction = Vector3.left * temph + Vector3.back * tempv;
+
+            //순서2-1. 조이스틱을 당긴 값으로 공이 날아갈 방향을 구한다.
+            Vector3 offset = new Vector3(joystick.transform.position.x - joystick.Horizontal, 0, joystick.transform.position.y - joystick.Vertical);
+
+            //순서6-2. 조이스틱의 방향에 따라 레이를 발사한다.
+            lineRay = new Ray(transform.position, offset.normalized);
+
+            //순서6-3. 레이가 오브젝트와 닿으면 길이를 저장해서 LineRender에게 연결해준다.
+            int _layerMask = 1 << LayerMask.NameToLayer("Wall");
+            if (Physics.Raycast(lineRay, out hitinfo, 10, _layerMask))
+            {
+                //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
+                lineRenderer.SetPosition(0, transform.position);
+                lineRenderer.SetPosition(1, transform.position + offset * hitinfo.distance);
+            }
+            else
+            {
+                //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
+                lineRenderer.SetPosition(0, transform.position);
+                lineRenderer.SetPosition(1, transform.position + offset * 2);
+            }
         }
-
-        //순서1-2. 조이스틱을 놓는다.     
-        //순서1-3. 조이스틱을 놓기 직전 값을 기준으로 방향을 정한다.
-        //VariableJoyStick에 구현되어 있는 OnPointerUp이 조이스틱을 떼는 순간에 작동하기에 그 함수가 실행될 때 하단에 있는 Shoot()함수를 실행시킴으로서 공을 발사한다.
-        direction = Vector3.left * temph + Vector3.back * tempv;
-
-        //순서2-1. 조이스틱을 당긴 값으로 공이 날아갈 방향을 구한다.
-        Vector3 offset = new Vector3(joystick.transform.position.x - joystick.Horizontal, 0, joystick.transform.position.y - joystick.Vertical);
-
-        //순서6-2. 조이스틱의 방향에 따라 레이를 발사한다.
-        lineRay = new Ray(transform.position, offset.normalized);
-
-        //순서6-3. 레이가 오브젝트와 닿으면 길이를 저장해서 LineRender에게 연결해준다.
-        int _layerMask = 1 << LayerMask.NameToLayer("Wall");
-        if (Physics.Raycast(lineRay, out hitinfo, 10, _layerMask))
-        {
-            //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
-            lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, transform.position + offset * hitinfo.distance);
-        }
+        //연결이 끊어졌다면 초기화시키고 턴을 종료한다.
         else
         {
-            //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
             lineRenderer.SetPosition(0, transform.position);
-            lineRenderer.SetPosition(1, transform.position + offset * 2);
+            lineRenderer.SetPosition(1, transform.position);
+            GameManager.Instance.ReLoadTurnTable();
+            GameManager.Instance.Shoot();
         }
     }
 

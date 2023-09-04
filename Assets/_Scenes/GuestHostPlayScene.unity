@@ -1162,11 +1162,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   balls:
-  - {fileID: 1445971225}
-  - {fileID: 1003442819}
-  - {fileID: 24412464}
   - {fileID: 6806846147171205529}
+  - {fileID: 1445971225}
   - {fileID: 572513800}
+  - {fileID: 24412464}
+  - {fileID: 1003442819}
 --- !u!1 &935385773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,6 +1621,10 @@ PrefabInstance:
     - target: {fileID: 7709719001722137087, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
       propertyPath: m_Name
       value: Player5Ball
+      objectReference: {fileID: 0}
+    - target: {fileID: 7709719001722137087, guid: be244dea530d3fe4dbde64fe7d944c13, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
