@@ -67,7 +67,8 @@ MeshRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials: []
+  m_Materials:
+  - {fileID: 2100000, guid: 03a4c12afc6bd0a46b7930711252bbf4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -160,6 +161,7 @@ MonoBehaviour:
   myTurn: 0
   isMove: 0
   score: 0
+  isConnected: 1
 --- !u!120 &2136241029333556777
 LineRenderer:
   serializedVersion: 2

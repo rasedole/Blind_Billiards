@@ -29,6 +29,11 @@ using UnityEngine.SceneManagement;
 //목적5 : 공의 색상을 랜덤하게 설정해준다.
 //속성5 : 색상 리스트
 
+//목적6 : 게임 진행 중 플레어의 연결이 끊어졌을 경우 해당 플레이어의 이름과 점수를 빨간색으로 변경하고 해당 플레이어의 턴을 자동으로 넘기도록 한다.
+
+//목적7 : 플레이어 수에 따라서 스폰포인트에 생성한다.
+//속성7 : 플레이어 스폰포인트, 플레이어 수
+
 public class GameManager : MonoBehaviour
 {
     //싱글톤을 이용해서 쉽게 사용할 수 있도록 함
@@ -56,6 +61,12 @@ public class GameManager : MonoBehaviour
     //public List<Material> ballColors;
     public List<Color> ballColors;
 
+    //속성7 : 플레이어 스폰포인트, 플레이어 수, 플레이어 프리팹
+    public GameObject[] spawnPoints;
+    public int playerNumber = 3;
+    public GameObject playerPrefab;
+    public VariableJoystick playerJoystick;
+
     private void Awake()
     {
         if (Instance == null)
@@ -63,9 +74,19 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
 
+        for (int i = 0; i < playerNumber; i++)
+        {
+            GameObject playerGO = Instantiate(playerPrefab, spawnPoints[i].transform.position, Quaternion.identity);
+            playerGO.name = "TestBall " + i;
+            playerGO.GetComponent<BallMove>().joystick = playerJoystick;    
+        }
+
         turn = 0;
         //순서1-1. 게임 플레이어 오브젝트를 모두 찾아서 집합에 넣는다.
         gamePlayers = GameObject.FindGameObjectsWithTag("Player");
+
+        //게스트 리플레이어 balls에 정렬된 순서로 넣어주는 코드
+        //GameObject.Find("GuestReplayer").GetComponent<GuestReplayer>().balls = gamePlayers;
 
         //순서1-2. 집합에 순서에 따라 각 플레이어에게 턴을 배정한다.
         for (int i = 0; i < gamePlayers.Length; i++)
@@ -80,8 +101,8 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-
                 ballDoll.Init(ballDoll.showcaseColor, BallShowMode.OtherPlayer);
+                ballDoll.GetComponent<Animator>().Play("Hide");
             }
             ballColors.Remove(ballColors[randomColor]);
         }
@@ -129,7 +150,7 @@ public class GameManager : MonoBehaviour
     }
 
     //순서1-4. Shoot()을 실행한 이후에 모든 공이 멈추면 isNobodyMove값을 통해 멈췄음을 알려준다.
-    IEnumerator EndTurn()
+    public IEnumerator EndTurn()
     {
         //이 코루틴은 공을 쏜 후에 실행되므로 isNobodyMove를 false로 설정한다.
         isNobodyMove = false;
@@ -161,7 +182,7 @@ public class GameManager : MonoBehaviour
             turn = 0;
         }
 
-        for(int i = 0; i < gamePlayers.Length; i++)
+        for (int i = 0; i < gamePlayers.Length; i++)
         {
             BallDoll ballDoll = gamePlayers[i].GetComponent<BallDoll>();
             if (turn == gamePlayers[i].GetComponent<BallMove>().myTurn)
@@ -171,6 +192,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 ballDoll.Init(ballDoll.showcaseColor, BallShowMode.OtherPlayer);
+                ballDoll.GetComponent<Animator>().Play("Hide");
             }
         }
 
@@ -224,6 +246,24 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < gamePlayers.Length; i++)
         {
             scoreUI.text += (i + 1).ToString() + ". " + playerName[i] + " " + scores[i] + "\n";
+        }
+
+        ReLoadTurnTable();
+    }
+
+    public void ReLoadTurnTable()
+    {
+        turnTable.text = "";
+        for (int i = 0; i < gamePlayers.Length; i++)
+        {
+            if (!gamePlayers[i].GetComponent<BallMove>().isConnected)
+            {
+                turnTable.text += "<color=red>" + "Turn " + (i + 1) + " : " + gamePlayers[i].name + "\n";
+            }
+            else
+            {
+                turnTable.text += "<color=white>" + "Turn " + (i + 1) + " : " + gamePlayers[i].name + "\n";
+            }
         }
     }
 }

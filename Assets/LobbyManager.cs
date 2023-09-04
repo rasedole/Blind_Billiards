@@ -9,4 +9,9 @@ public class LobbyManager : MonoBehaviour
     {
         SceneManager.LoadScene("GuestHostPlayScene");
     }
+
+    public void JoinRoom()
+    {
+        SceneManager.LoadScene("SampleRoomScene");
+    }
 }

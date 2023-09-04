@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/GuestHostPlayScene.unity
     guid: c41ce48ff3b286e4b9f33315a65c60d2
+  - enabled: 1
+    path: Assets/_Scenes/SampleScene_Lobby/SampleRoomScene.unity
+    guid: eda5a670ea20d3341aaeae89ba944f44
   m_configObjects: {}
