@@ -31,6 +31,8 @@ using UnityEngine.SceneManagement;
 
 //목적6 : 게임 진행 중 플레어의 연결이 끊어졌을 경우 해당 플레이어의 이름과 점수를 빨간색으로 변경하고 해당 플레이어의 턴을 자동으로 넘기도록 한다.
 
+//목적7 : 플레이어 수에 따라서 스폰포인트에 생성한다.
+//속성7 : 플레이어 스폰포인트, 플레이어 수
 
 public class GameManager : MonoBehaviour
 {
@@ -59,11 +61,24 @@ public class GameManager : MonoBehaviour
     //public List<Material> ballColors;
     public List<Color> ballColors;
 
+    //속성7 : 플레이어 스폰포인트, 플레이어 수, 플레이어 프리팹
+    public GameObject[] spawnPoints;
+    public int playerNumber = 3;
+    public GameObject playerPrefab;
+    public VariableJoystick playerJoystick;
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+        }
+
+        for (int i = 0; i < playerNumber; i++)
+        {
+            GameObject playerGO = Instantiate(playerPrefab, spawnPoints[i].transform.position, Quaternion.identity);
+            playerGO.name = "TestBall " + i;
+            playerGO.GetComponent<BallMove>().joystick = playerJoystick;    
         }
 
         turn = 0;
@@ -87,6 +102,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 ballDoll.Init(ballDoll.showcaseColor, BallShowMode.OtherPlayer);
+                ballDoll.GetComponent<Animator>().Play("Hide");
             }
             ballColors.Remove(ballColors[randomColor]);
         }
@@ -136,7 +152,6 @@ public class GameManager : MonoBehaviour
     //순서1-4. Shoot()을 실행한 이후에 모든 공이 멈추면 isNobodyMove값을 통해 멈췄음을 알려준다.
     public IEnumerator EndTurn()
     {
-        Debug.Log(0);
         //이 코루틴은 공을 쏜 후에 실행되므로 isNobodyMove를 false로 설정한다.
         isNobodyMove = false;
 
@@ -147,7 +162,6 @@ public class GameManager : MonoBehaviour
             //모든 공의 속도를 측정해서 0.05보다 작다면 isNobodyMove에 true값을 그대로 넣고 속도가 0.05보다 큰 공이 있다면 isNobodyMove에 false를 넣고 break를 통해 반복문을 나온다.
             for (int i = 0; i < gamePlayers.Length; i++)
             {
-                Debug.Log(1);
                 isNobodyMove = true;
                 if (gamePlayers[i].GetComponent<BallMove>().isMove)
                 {
@@ -178,6 +192,7 @@ public class GameManager : MonoBehaviour
             else
             {
                 ballDoll.Init(ballDoll.showcaseColor, BallShowMode.OtherPlayer);
+                ballDoll.GetComponent<Animator>().Play("Hide");
             }
         }
 
