@@ -106,14 +106,8 @@ public class BallMove : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (rigidbody.velocity.magnitude < 0.04f && rigidbody.velocity.magnitude != 0)
-        {
-            rigidbody.velocity *= 0.99f;
-            rigidbody.angularVelocity *= 0.99f;
-        }
-
         if (rigidbody.velocity.magnitude > 0.04f)
         {
             isMove = true;
@@ -121,6 +115,15 @@ public class BallMove : MonoBehaviour
 
         if (isMove)
         {
+            if (rigidbody.velocity.magnitude < 0.04f && rigidbody.velocity.magnitude != 0)
+            {
+                rigidbody.drag = 0.7f;
+            }
+            else if (rigidbody.velocity.magnitude < 1f)
+            {
+                rigidbody.drag = 0.3f;
+            }
+
             if (rigidbody.velocity.magnitude < 0.04f)
             {
                 if (!GuestReplayer.replaying)
@@ -129,6 +132,10 @@ public class BallMove : MonoBehaviour
                 }
                 isMove = false;
             }
+        }
+        else
+        {
+            rigidbody.drag = 0.1f;
         }
 
         //순서3-1. 내 턴이 아니면 return한다.
@@ -185,6 +192,7 @@ public class BallMove : MonoBehaviour
             lineRenderer.SetPosition(0, transform.position);
             lineRenderer.SetPosition(1, transform.position);
             GameManager.Instance.ReLoadTurnTable();
+            direction = Vector3.zero;
             GameManager.Instance.Shoot();
         }
     }

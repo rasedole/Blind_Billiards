@@ -74,6 +74,8 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
 
+        ShuffleSpawnPoints();
+
         for (int i = 0; i < playerNumber; i++)
         {
             GameObject playerGO = Instantiate(playerPrefab, spawnPoints[i].transform.position, Quaternion.identity);
@@ -264,6 +266,17 @@ public class GameManager : MonoBehaviour
             {
                 turnTable.text += "<color=white>" + "Turn " + (i + 1) + " : " + gamePlayers[i].name + "\n";
             }
+        }
+    }
+
+    public void ShuffleSpawnPoints()
+    {
+        for(int i = 0; i < spawnPoints.Length -1 ; i++) 
+        {
+            int randomIndex = Random.Range(i, spawnPoints.Length);
+            GameObject tempGO = spawnPoints[randomIndex];
+            spawnPoints[randomIndex] = spawnPoints[i];
+            spawnPoints[i] = tempGO;
         }
     }
 }
