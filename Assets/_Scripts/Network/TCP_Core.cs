@@ -188,14 +188,3 @@ public class TCP_Core : MonoBehaviour
     }
 }
 
-public class TCP_Link
-{
-    public TcpClient tcp;
-    public string id;
-
-    public TCP_Link(TcpClient clientSocket)
-    {
-        id = "Guest";
-        tcp = clientSocket;
-    }
-}

@@ -49,7 +49,7 @@ public class FindMyIP : MonoBehaviour
             _publicIP = _localIP;
         }
 
-        Debug.Log(_localIP + ", " + _publicIP);
+        //Debug.Log(_localIP + ", " + _publicIP);
     }
 
     // Update is called once per frame
