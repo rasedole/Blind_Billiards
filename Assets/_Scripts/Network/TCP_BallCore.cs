@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -62,13 +60,17 @@ public class TCP_BallCore : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    }
+
+    private void FixedUpdate()
+    {
         if (TCP_BallClient.ready)
         {
             client.Update();
         }
-        if (true)
+        if (TCP_BallServer.started)
         {
-
+            server.Update();
         }
     }
 
@@ -97,7 +99,7 @@ public class TCP_BallCore : MonoBehaviour
             instance.ui.ConnectFail();
             return false;
         }
-        server = TCP_BallServer.OpenServer(instance.ipInput.text, port, instance.idInput.text);
+        server = TCP_BallServer.OpenServer(instance.ipInput.text, port);
         if (server == null)
         {
             instance.ui.ConnectFail();
@@ -162,7 +164,7 @@ public class TCP_BallCore : MonoBehaviour
         // Connect success
         else if (TCP_BallClient.ready)
         {
-            ui.GoToRoom();
+            client.Send(TCP_BallCommand.ClientOnConnect(instance.idInput.text));
         }
 
         StopCoroutine(connecting);

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class TCP_BallClient
@@ -45,7 +44,6 @@ public class TCP_BallClient
             client.stream = client.socket.GetStream();
             client.writer = new StreamWriter(client.stream);
             client.reader = new StreamReader(client.stream);
-            client.OnConnect();
 
             if (client.id == "")
             {
@@ -121,9 +119,6 @@ public class TCP_BallClient
         }
     }
 
-    private void OnConnect()
-    {
-    }
     private void OnDisconnect()
     {
         

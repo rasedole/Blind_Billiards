@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -18,20 +17,21 @@ public class TCP_BallServer
         }
     }
 
-    private static Dictionary<string, TcpClient> roomPlayer;
-    private static List<TcpClient> pendingClients;
+    private static Dictionary<string, TCP_BallServerConnectClients> roomPlayer;
+    private static List<TCP_BallServerConnectClients> pendingClients;
+    private static List<string> disconnectList;
     private static TCP_BallServer instance;
 
     private TcpListener listener;
 
     private TCP_BallServer() { }
 
-    public static TCP_BallServer OpenServer(string ip, int port, string id)
+    public static TCP_BallServer OpenServer(string ip, int port)
     {
         TCP_BallServer server = new TCP_BallServer();
 
-        roomPlayer = new Dictionary<string, TcpClient>();
-        pendingClients = new List<TcpClient>();
+        roomPlayer = new Dictionary<string, TCP_BallServerConnectClients>();
+        pendingClients = new List<TCP_BallServerConnectClients>();
 
         try
         {
@@ -60,11 +60,14 @@ public class TCP_BallServer
     private void AcceptTcpClient(IAsyncResult ar)
     {
         TcpListener _listener = (TcpListener)ar.AsyncState;
-        pendingClients.Add(_listener.EndAcceptTcpClient(ar));
+        pendingClients.Add
+            (
+                new TCP_BallServerConnectClients(_listener.EndAcceptTcpClient(ar))
+            );
         listener.BeginAcceptTcpClient(AcceptTcpClient, listener);
     }
 
-    private static void CheckID(TcpClient client, string idInput)
+    public static void CheckID(TCP_BallServerConnectClients client, string idInput)
     {
         string idTemp = idInput;
         if (roomPlayer.ContainsKey(idTemp))
@@ -85,7 +88,7 @@ public class TCP_BallServer
                         new CommandData(0, ((int)TCP_BallHeader.SetID).ToString()),
                         new CommandData(1, idTemp)
                     },
-                    new List<TcpClient>
+                    new List<TCP_BallServerConnectClients>
                     {
                         client
                     }
@@ -100,26 +103,30 @@ public class TCP_BallServer
                     new CommandData(0, ((int)TCP_BallHeader.Entry).ToString()),
                     new CommandData(1, idTemp)
                 },
-                new List<TcpClient>
+                new List<TCP_BallServerConnectClients>
                 {
                     client
                 }
             );
 
+        // Entry client to new player
         roomPlayer.Add(idTemp, client);
         pendingClients.Remove(client);
     }
 
-    private static void Broadcast(List<CommandData> datas, List<TcpClient> clients)
+    private static void Broadcast(List<CommandData> datas, List<TCP_BallServerConnectClients> clients)
     {
         string rawData = TCP_BallCommand.ServerBroadcastEvent(datas);
         try
         {
-            foreach (TcpClient client in clients)
+            foreach (TCP_BallServerConnectClients client in clients)
             {
-                StreamWriter writer = new StreamWriter(client.GetStream());
-                writer.WriteLine(rawData);
-                writer.Flush();
+                if (client.writer == null)
+                {
+                    client.writer = new StreamWriter(client.client.GetStream());
+                }
+                client.writer.WriteLine(rawData);
+                client.writer.Flush();
             }
         }
         catch (Exception e)
@@ -135,5 +142,72 @@ public class TCP_BallServer
             listener.Stop();
         }
         listener = null;
+    }
+
+    public void Update()
+    {
+        if(disconnectList != null)
+        {
+            disconnectList.Clear();
+        }
+        disconnectList = new List<string>();
+
+        foreach (KeyValuePair<string, TCP_BallServerConnectClients> pair in roomPlayer)
+        {
+            // Check client connected
+            bool connected;
+            try
+            {
+                if (pair.Value.client != null && pair.Value.client.Client != null && pair.Value.client.Client.Connected)
+                {
+                    if (pair.Value.client.Client.Poll(0, SelectMode.SelectRead))
+                    {
+                        connected = !(pair.Value.client.Client.Receive(new byte[1], SocketFlags.Peek) == 0);
+                    }
+
+                    connected = true;
+                }
+                else
+                {
+                    connected = false;
+                }
+            }
+            catch
+            {
+                connected = false;
+            }
+
+            // Remember client disconnected 
+            if (!connected)
+            {
+                pair.Value.client.Close();
+                disconnectList.Add(pair.Key);
+            }
+            // Listen client send message
+            else
+            {
+                NetworkStream s = pair.Value.client.GetStream();
+                if (s.DataAvailable)
+                {
+                    if(pair.Value.reader == null)
+                    {
+                        pair.Value.reader = new StreamReader(s, true);
+                    }
+                    string data = pair.Value.reader.ReadLine();
+                    if (data != null)
+                    {
+                        List<CommandData> commands = TCP_BallCommand.ServerReceiveEvent(data, pair.Value);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < disconnectList.Count - 1; i++)
+        {
+            //Broadcast($"{disconnectList[i].id} 연결이 끊어졌습니다", clients);
+
+            //clients.Remove(disconnectList[i]);
+            disconnectList.RemoveAt(i);
+        }
     }
 }
