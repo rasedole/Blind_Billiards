@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
@@ -12,13 +13,12 @@ public class TCP_BallClient
     {
         get
         {
-            return instance != null && instance.socket != null && instance.socket.Connected && instance.stream != null && instance.stream.DataAvailable;
+            return instance != null && instance.socket != null && instance.socket.Connected && instance.stream != null;
         }
     }
 
     private TcpClient socket;
     private string id;
-    private int idOffset;
     private NetworkStream stream;
     private StreamWriter writer;
     private StreamReader reader;
@@ -40,10 +40,12 @@ public class TCP_BallClient
         TCP_BallClient client = new TCP_BallClient();
         try
         {
-            client.idOffset = 0;
             client.id = id;
             client.socket = new TcpClient(ip, port);
-            client.socket.BeginConnect(ip, port, (result) => { client.OnConnect(result); }, null);
+            client.stream = client.socket.GetStream();
+            client.writer = new StreamWriter(client.stream);
+            client.reader = new StreamReader(client.stream);
+            client.OnConnect();
 
             if (client.id == "")
             {
@@ -57,6 +59,8 @@ public class TCP_BallClient
         {
             TCP_BallCore.errorEvent.Invoke(e.Message);
             DisconnectClient(client);
+            //TCP_BallCore.messageEvent.Invoke("Can't connect to server!");
+            //DisconnectClient(this);
         }
 
         return null;
@@ -117,26 +121,8 @@ public class TCP_BallClient
         }
     }
 
-    private void OnConnect(IAsyncResult callback)
+    private void OnConnect()
     {
-        if(callback.IsCompleted)
-        {
-            if (socket.Connected)
-            {
-                stream = socket.GetStream();
-                writer = new StreamWriter(stream);
-                reader = new StreamReader(stream);
-            }
-            else
-            {
-                TCP_BallCore.messageEvent.Invoke("Can't connect to server!");
-                DisconnectClient(this);
-            }
-        }
-        else
-        {
-            Debug.Log("not yet testing");
-        }
     }
     private void OnDisconnect()
     {
@@ -145,13 +131,12 @@ public class TCP_BallClient
 
     public void Update()
     {
-        if (ready)
+        if (ready && stream.DataAvailable)
         {
-            // Read data
             string data = reader.ReadLine();
             if (data != null)
             {
-                TCP_BallCore.clientReceiveEvent.Invoke(data);
+                List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
             }
         }
     }

@@ -7,9 +7,9 @@ public class CommandData
     public string text;
     public int command;
 
-    public CommandData(int command_, string text_)
+    public CommandData(int _command, string _text)
     {
-        text = text_;
-        command = command_;
+        text = _text;
+        command = _command;
     }
 }
