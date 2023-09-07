@@ -18,6 +18,8 @@ public class TCP_BallCommand : MonoBehaviour
     private UnityEvent<BallEntryPlayerData> clientAddOtherPlayerEvent;
     [SerializeField]
     private UnityEvent<List<BallEntryPlayerData>> clientGetAllPlayerEvent;
+    [SerializeField]
+    private TCP_BallUI ui;
 
 
     private static TCP_BallCommand instance;
@@ -136,46 +138,26 @@ public class TCP_BallCommand : MonoBehaviour
                         TCP_BallCore.messageEvent.Invoke("No input value!");
                         return null;
                     }
-                    // Check error
-                    if
+
+                    BallEntryPlayerData playerData;
+                    if(TryTranslateEntryPlayer
                         (
-                            datas[1 + index].command != 1 ||
-                            datas[2 + index].command != 3 ||
-                            datas[3 + index].command != 5 ||
-                            datas[4 + index].command != 6 ||
-                            datas[5 + index].command != 7
-                        )
+                            datas[1 + index], 
+                            datas[2 + index], 
+                            datas[3 + index], 
+                            datas[4 + index], 
+                            datas[5 + index], 
+                            out playerData
+                        ))
                     {
-                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        instance.clientAddOtherPlayerEvent.Invoke(playerData);
+                        datas.RemoveRange(index, 6);
+                    }
+                    else
+                    {
                         return null;
                     }
 
-                    BallEntryPlayerData playerData = new BallEntryPlayerData();
-
-                    // ID
-                    playerData.id = datas[1 + index].text;
-
-                    try
-                    {
-                        Color color = new Color();
-
-                        // Turn order(client index)
-                        playerData.index = int.Parse(datas[2 + index].text);
-
-                        // Color RGB
-                        color.r = float.Parse(datas[3 + index].text);
-                        color.g = float.Parse(datas[4 + index].text);
-                        color.b = float.Parse(datas[5 + index].text);
-                        playerData.color = color;
-                    }
-                    catch
-                    {
-                        TCP_BallCore.messageEvent.Invoke("Value error!");
-                        return null;
-                    }
-
-                    instance.clientAddOtherPlayerEvent.Invoke(playerData);
-                    datas.RemoveRange(index, 6);
                     break;
 
                 // Get all player list
@@ -208,15 +190,48 @@ public class TCP_BallCommand : MonoBehaviour
                             ))
                         {
                             allPlayerList.Add(onePlayer);
+                            datas.RemoveRange(index, 5);
                         }
                         else
                         {
                             return null;
                         }
-
-                        instance.clientGetAllPlayerEvent.Invoke(allPlayerList);
                     }
+
+                    // Get server gamestate
+                    if (datas[index].command != 3)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        return null;
+                    }
+                    else
+                    {
+                        switch (Enum.Parse<GameState>(datas[index].text))
+                        {
+                            case GameState.Room:
+                                instance.ui.GoToRoom();
+                                break;
+
+                            case GameState.InGame:
+
+                                break;
+
+                            default:
+                                TCP_BallCore.messageEvent.Invoke("Value error!");
+                                break;
+                        }
+                    }
+                    index--;
+                    datas.RemoveRange(index, 2);
+
+                    instance.clientGetAllPlayerEvent.Invoke(allPlayerList);
                     break;
+
+                // Room is full
+                case TCP_BallHeader.RoomMaxKick:
+                    TCP_BallCore.messageEvent.Invoke("Room is full!");
+                    TCP_BallClient.DisconnectClient();
+                    return null;
 
                 default:
                     break;

@@ -132,20 +132,20 @@ public class TCP_BallUI : MonoBehaviour
         }
 
         _gameState = GameState.Room;
-        room.text = PlayerPrefs.GetString("room", "4");
+        room.text = PlayerPrefs.GetInt("room", 4).ToString();
     }
 
     public void LastClient()
     {
         _gameState = GameState.Connect;
         ip.text = PlayerPrefs.GetString("ipClient", FindMyIP.localIP);
-        port.text = PlayerPrefs.GetString("portClient", "5000");
+        port.text = PlayerPrefs.GetInt("portClient", 5000).ToString();
         id.text = PlayerPrefs.GetString("idClient", "Guest");
     }
     public void SubmitClient()
     {
         PlayerPrefs.SetString("ipClient", ip.text);
-        PlayerPrefs.SetString("portClient", port.text);
+        PlayerPrefs.SetInt("portClient", int.Parse(port.text));
         PlayerPrefs.SetString("idClient", id.text);
     }
 
@@ -153,18 +153,18 @@ public class TCP_BallUI : MonoBehaviour
     {
         _gameState = GameState.Connect;
         ip.text = FindMyIP.localIP;
-        port.text = PlayerPrefs.GetString("portServer", "5000");
+        port.text = PlayerPrefs.GetInt("portServer", 5000).ToString();
         id.text = PlayerPrefs.GetString("idServer", "Guest");
     }
     public void SubmitServer()
     {
-        PlayerPrefs.SetString("portServer", port.text);
+        PlayerPrefs.SetInt("portServer", int.Parse(port.text));
         PlayerPrefs.SetString("idServer", id.text);
     }
 
     public void SubmitRoom()
     {
-        PlayerPrefs.SetString("room", room.text);
+        PlayerPrefs.SetInt("room", int.Parse(room.text));
     }
 
     public void ConnectFail()
@@ -182,5 +182,10 @@ public class TCP_BallUI : MonoBehaviour
 
         TCP_BallCore.CloseServer();
         exitRoomEventNetwork.Invoke();
+    }
+
+    public void SetRoomMaxPlayer(string maxPlayer)
+    {
+        TCP_BallServer.maxPlayerCount = int.Parse(maxPlayer);
     }
 }

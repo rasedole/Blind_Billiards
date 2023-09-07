@@ -9,15 +9,16 @@ public enum TCP_BallHeader
     SetID = 0,
     Entry = 1,
     AllPlayerList = 2,
+    RoomMaxKick = 3,
 
 }
 
 public enum GameState
 {
-    None,
-    Connect,
-    Room,
-    InGame
+    None = -2,
+    Connect = -1,
+    Room = 0,
+    InGame = 1
 }
 
 [Serializable]
