@@ -39,6 +39,8 @@ public class VariableJoystick : Joystick
             background.gameObject.SetActive(true);
         }
         base.OnPointerDown(eventData);
+
+        GetComponent<BallLineRender>().isClicked = true;
     }
 
     public override void OnPointerUp(PointerEventData eventData)
@@ -48,8 +50,9 @@ public class VariableJoystick : Joystick
 
         base.OnPointerUp(eventData);
 
-        //조이스틱의 버튼을 떼는 순간 게임매니저를 통해 발사 이벤트를 실행
-        GameManager.Instance.Shoot();
+        //조이스틱의 버튼을 떼는 순간 BallShoot을 실행
+        GetComponent<BallShoot>().Shoot();
+        GetComponent<BallLineRender>().isClicked = false;
     }
 
     protected override void HandleInput(float magnitude, Vector2 normalised, Vector2 radius, Camera cam)
