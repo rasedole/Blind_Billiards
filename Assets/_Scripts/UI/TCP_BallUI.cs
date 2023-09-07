@@ -110,6 +110,7 @@ public class TCP_BallUI : MonoBehaviour
     public void GoToRoom()
     {
         enterRoomEvent.Invoke();
+        room.readOnly = false;
         if (TCP_BallCore.networkMode == NetworkMode.None)
         {
             mainAnimatorUI.Play("Out");
@@ -123,6 +124,7 @@ public class TCP_BallUI : MonoBehaviour
         else if (TCP_BallCore.networkMode == NetworkMode.Client)
         {
             SubmitClient();
+            room.readOnly = true;
         }
 
         if (TCP_BallCore.networkMode != NetworkMode.None)
@@ -174,6 +176,7 @@ public class TCP_BallUI : MonoBehaviour
 
     public void ExitRoom()
     {
+        room.readOnly = false;
         if (TCP_BallCore.networkMode == NetworkMode.None)
         {
             exitRoomEventSolo.Invoke();

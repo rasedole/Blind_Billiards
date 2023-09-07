@@ -308,6 +308,7 @@ public class TCP_BallServer
                         List<CommandData> commands = TCP_BallCommand.ServerReceiveEvent(data, pendingClients[pendingClientsIndex]);
                     }
                 }
+                pendingClientsIndex++;
             }
         }
     }

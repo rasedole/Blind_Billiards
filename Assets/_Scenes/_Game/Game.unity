@@ -3002,9 +3002,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   command: {fileID: 11400000, guid: dba37d49287c0c14881718d90bd8d5b3, type: 2}
-  clientConnectEvent:
+  clientSetSelfIDEvent:
     m_PersistentCalls:
       m_Calls: []
+  _serverEntryNewClientEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  clientAddOtherPlayerEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  clientGetAllPlayerEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ui: {fileID: 0}
 --- !u!1 &358488707
 GameObject:
   m_ObjectHideFlags: 0
@@ -5714,7 +5724,19 @@ MonoBehaviour:
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 352936290}
+        m_TargetAssemblyTypeName: TCP_BallUI, Assembly-CSharp
+        m_MethodName: SetRoomMaxPlayer
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls: []
