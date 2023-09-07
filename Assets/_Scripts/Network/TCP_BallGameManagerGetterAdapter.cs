@@ -8,8 +8,8 @@ public static class TCP_BallGameManagerGetterAdapter
     {
         get
         {
-            // Edit this
-            return null;
+            //PlayerData of LastPlayer in GameManager
+            return GameManager.Instance.entryPlayerDataList[GameManager.Instance.entryPlayerDataList.Count];
         }
     }
 
@@ -17,8 +17,8 @@ public static class TCP_BallGameManagerGetterAdapter
     {
         get
         {
-            // Edit this
-            return null;
+            //PlayerData of All Player in GameManager
+            return GameManager.Instance.entryPlayerDataList;
         }
     }
 }

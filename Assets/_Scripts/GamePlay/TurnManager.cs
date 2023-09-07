@@ -11,6 +11,8 @@ using UnityEngine;
 //속성2 : 플레이어 공 리스트
 //순서2 : 턴에 해당하는 공을 반환한다.
 
+//솔로플레이 상태일 시 턴이 종료되면 다음 턴 사람을 MyPlayer로 설정한다.
+
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance;
@@ -30,22 +32,35 @@ public class TurnManager : MonoBehaviour
     int _currentTurn;
 
     //속성2 : 플레이어 공 리스트
-    GameObject[] ballList;
+    [SerializeField] List<GameObject> ballList;
 
     //순서1 : 턴을 다음 턴으로 넘긴다.
     public void EndTurn()
     {
         currentTurn++;
-        GameObject.Find("VariableJoystick").GetComponent<BallLineRender>().ResetBallStatus();
+        GameObject.Find("Variable Joystick").GetComponent<BallLineRender>().ResetBallStatus();
+        UIManager.Instance.UpdateTurn(currentTurn);
+        if(TCP_BallCore.networkMode == NetworkMode.None)
+        {
+            GameManager.Instance.SoloPlaySet(currentTurn);
+        }
     }
 
     //순서2 : 턴에 해당하는 공을 반환한다.
     public GameObject GetTurnBall()
     {
+        if(ballList == null)
+        {
+            return null;
+        }
         return ballList[currentTurn];
     }
     public GameObject GetTurnBall(int turn)
     {
+        if(ballList == null)
+        {
+            return null;
+        }
         return ballList[turn];
     }
 
@@ -59,5 +74,10 @@ public class TurnManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public void GetListFromGameManager()
+    {
+        ballList = GameManager.Instance.gamePlayers;
     }
 }

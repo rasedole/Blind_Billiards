@@ -5,6 +5,9 @@ using UnityEngine;
 //목적1 : 조이스틱의 입력에 따라 원하는 방향으로 원하는 힘으로 공을 발사한다.
 //속성1 : 조이스틱, h, v, tempV, tempH, Power, 방향
 
+//서버나 솔로라면 슛 그대로
+//클라이언트라면 슛 정보를 서버에게 보내도록 변경
+
 public class BallShoot : MonoBehaviour
 {
     //속성1 : 조이스틱, h, v, tempV, tempH, Power, 방향
@@ -13,7 +16,6 @@ public class BallShoot : MonoBehaviour
     VariableJoystick joystick;
     float tempV = 0;
     float tempH = 0;
-
     Vector3 direction;
 
     private void Start()
@@ -37,6 +39,48 @@ public class BallShoot : MonoBehaviour
 
     public void Shoot()
     {
-       TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(direction * power, ForceMode.Impulse);
+        if(TCP_BallCore.networkMode != NetworkMode.Client)
+        {
+            if (GameManager.Instance.isNobodyMove)
+            {
+                GameManager.Instance.shootTime = Time.time;
+                Debug.Log("Shoot!");
+                TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(direction * power, ForceMode.Impulse);
+                GameManager.Instance.isNobodyMove = false;
+
+                foreach (var balls in GameManager.Instance.gamePlayers)
+                {
+                    GameManager.Instance.ballMoveData.Add(balls.GetComponent<BallHit>().moveData);
+                }
+                StartCoroutine(GameManager.Instance.CheckMovement(1));
+            }
+        }
+        else
+        {
+            //서버에게 direction값을 보낸다.
+        }
+    }
+
+    //서버용 슛
+    public void Shoot(Vector3 clientDirection)
+    {
+        if(TCP_BallCore.networkMode != NetworkMode.Server)
+        {
+            return;
+        }
+
+        if (GameManager.Instance.isNobodyMove)
+        {
+            GameManager.Instance.shootTime = Time.time;
+            Debug.Log("Shoot!");
+            TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
+            GameManager.Instance.isNobodyMove = false;
+
+            foreach (var balls in GameManager.Instance.gamePlayers)
+            {
+                GameManager.Instance.ballMoveData.Add(balls.GetComponent<BallHit>().moveData);
+            }
+            StartCoroutine(GameManager.Instance.CheckMovement(1));
+        }
     }
 }

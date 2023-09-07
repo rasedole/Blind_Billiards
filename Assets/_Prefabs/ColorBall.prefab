@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 6916494868862755162}
   - component: {fileID: 4900066648609693598}
   - component: {fileID: 119677186653749396}
-  - component: {fileID: 4434253843210708964}
+  - component: {fileID: 6671415208917633182}
+  - component: {fileID: 1621323116299419843}
   - component: {fileID: 2136241029333556777}
   - component: {fileID: 1215664215390987376}
   - component: {fileID: 8419513002033838462}
@@ -138,7 +139,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 0
---- !u!114 &4434253843210708964
+--- !u!114 &6671415208917633182
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,18 +151,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da589c013518b74594b75d28f430ce2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystick: {fileID: 0}
-  direction: {x: 0, y: 0, z: 0}
-  power: 50
-  temph: 0
-  tempv: 0
-  positions: []
-  velocities: []
-  times: []
-  myTurn: 0
   isMove: 0
-  score: 0
-  isConnected: 1
+--- !u!114 &1621323116299419843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7709719001722137087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19256443714ab0d4494783dcd32b36d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballID: 0
 --- !u!120 &2136241029333556777
 LineRenderer:
   serializedVersion: 2
