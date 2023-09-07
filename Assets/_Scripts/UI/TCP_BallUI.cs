@@ -40,7 +40,15 @@ public class TCP_BallUI : MonoBehaviour
     [SerializeField]
     private UnityEvent exitRoomEventNetwork;
 
-    public static GameState gameState = GameState.None;
+
+    public static GameState gameState
+    {
+        get { return _gameState; }
+    }
+
+
+    private static GameState _gameState = GameState.None;
+
 
     // Start is called before the first frame update
     void Start()
@@ -123,13 +131,13 @@ public class TCP_BallUI : MonoBehaviour
             roomAnimatorUI.Play("InFromLeft");
         }
 
-        gameState = GameState.Room;
+        _gameState = GameState.Room;
         room.text = PlayerPrefs.GetString("room", "4");
     }
 
     public void LastClient()
     {
-        gameState = GameState.Connect;
+        _gameState = GameState.Connect;
         ip.text = PlayerPrefs.GetString("ipClient", FindMyIP.localIP);
         port.text = PlayerPrefs.GetString("portClient", "5000");
         id.text = PlayerPrefs.GetString("idClient", "Guest");
@@ -143,7 +151,7 @@ public class TCP_BallUI : MonoBehaviour
 
     public void LastServer()
     {
-        gameState = GameState.Connect;
+        _gameState = GameState.Connect;
         ip.text = FindMyIP.localIP;
         port.text = PlayerPrefs.GetString("portServer", "5000");
         id.text = PlayerPrefs.GetString("idServer", "Guest");

@@ -8,6 +8,7 @@ public enum TCP_BallHeader
     None = -1,
     SetID = 0,
     Entry = 1,
+    AllPlayerList = 2,
 
 }
 

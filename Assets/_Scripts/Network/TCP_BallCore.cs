@@ -26,22 +26,38 @@ public class TCP_BallCore : MonoBehaviour
     private IEnumerator connecting;
 
 
-    public static TCP_BallCore instance;
-    public static Action<string> messageEvent;
-    public static Action<string> errorEvent;
-    public static NetworkMode networkMode = NetworkMode.None;
+    public static TCP_BallCore instance
+    {
+        get { return _instance; }
+    }
+    public static Action<string> messageEvent
+    {
+        get { return _messageEvent; }
+    }
+    public static Action<string> errorEvent
+    {
+        get { return _errorEvent; }
+    }
+    public static NetworkMode networkMode
+    {
+        get { return _networkMode; }
+    }
 
 
     // Using for start server or client.
     private static TCP_BallServer server;
     private static TCP_BallClient client;
+    private static NetworkMode _networkMode = NetworkMode.None;
+    private static TCP_BallCore _instance;
+    private static Action<string> _messageEvent;
+    private static Action<string> _errorEvent;
 
 
     private void Awake()
     {
         if (instance == null)
         {
-            instance = this;
+            _instance = this;
         }
         else
         {
@@ -53,8 +69,8 @@ public class TCP_BallCore : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        errorEvent = ui.ErrorHandle;
-        messageEvent = ui.Message;
+        _errorEvent = ui.ErrorHandle;
+        _messageEvent = ui.Message;
     }
 
     // Update is called once per frame
@@ -115,9 +131,9 @@ public class TCP_BallCore : MonoBehaviour
 
     public static bool AttemptToConnectServer()
     {
-        if(networkMode != NetworkMode.Server)
+        if(_networkMode != NetworkMode.Server)
         {
-            networkMode = NetworkMode.Client;
+            _networkMode = NetworkMode.Client;
         }
 
         instance.ui.ResetText();
@@ -155,13 +171,13 @@ public class TCP_BallCore : MonoBehaviour
         if (client == null)
         {
             messageEvent.Invoke("Connect failed");
-            if(networkMode == NetworkMode.Server)
+            if(_networkMode == NetworkMode.Server)
             {
                 CloseServer();
             }
             instance.ui.ConnectFail();
         }
-        // Connect success
+        // Connect success, setting id
         else if (TCP_BallClient.ready)
         {
             client.Send(TCP_BallCommand.ClientOnConnect(instance.idInput.text));
@@ -174,15 +190,15 @@ public class TCP_BallCore : MonoBehaviour
 
     public void SetNetworkServer()
     {
-        networkMode = NetworkMode.Server;
+        _networkMode = NetworkMode.Server;
     }
     public void SetNetworkClient()
     {
-        networkMode = NetworkMode.Client;
+        _networkMode = NetworkMode.Client;
     }
     public void NetworkModeReset()
     {
-        networkMode = NetworkMode.None;
+        _networkMode = NetworkMode.None;
     }
 
     public static void CloseServer()

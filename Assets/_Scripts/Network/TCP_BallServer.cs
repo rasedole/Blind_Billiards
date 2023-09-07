@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -70,6 +72,7 @@ public class TCP_BallServer
     public static void CheckID(TCP_BallServerConnectClients client, string idInput)
     {
         string idTemp = idInput;
+        List<CommandData> broadcastDataToNewClient = new List<CommandData>();
         if (roomPlayer.ContainsKey(idTemp))
         {
             // Increase id offset
@@ -80,32 +83,41 @@ public class TCP_BallServer
             }
             idTemp = idTemp + idOffset;
 
-            // Return new id to client
-            Broadcast
-                (
-                    new List<CommandData>
-                    {
-                        new CommandData(0, ((int)TCP_BallHeader.SetID).ToString()),
-                        new CommandData(1, idTemp)
-                    },
-                    new List<TCP_BallServerConnectClients>
-                    {
-                        client
-                    }
-                );
+            // Return new id to client 
+            broadcastDataToNewClient.Add(new CommandData(0, ((int)TCP_BallHeader.SetID).ToString()));
+            broadcastDataToNewClient.Add(new CommandData(1, idTemp));
         }
 
+        // Entry new client to server GameManager
+        TCP_BallCommand.serverEntryNewClientEvent.Invoke(idTemp);
+
         // Broadcast this client entering to all other clients
+        List<CommandData> broadcastDataToOtherClient = new List<CommandData>
+        {
+            // Head
+            new CommandData(0, ((int)TCP_BallHeader.Entry).ToString())
+        };
+        broadcastDataToOtherClient.AddRange(TranslateEntryPlayer(TCP_BallGameManagerGetterAdapter.lastPlayer));
         Broadcast
             (
-                new List<CommandData>
-                {
-                    new CommandData(0, ((int)TCP_BallHeader.Entry).ToString()),
-                    new CommandData(1, idTemp)
-                },
+                broadcastDataToOtherClient,
+                roomPlayer.Values.ToList()
+            );
+
+        // Return all player entrydata to new client
+        broadcastDataToNewClient.Add(new CommandData(0, ((int)TCP_BallHeader.AllPlayerList).ToString()));
+        List<BallEntryPlayerData> entryPlayers = TCP_BallGameManagerGetterAdapter.allEntryPlayers;
+        foreach (BallEntryPlayerData onePlayer in entryPlayers)
+        {
+            broadcastDataToNewClient.AddRange(TranslateEntryPlayer(onePlayer));
+        }
+
+        Broadcast
+            (
+                broadcastDataToNewClient,
                 new List<TCP_BallServerConnectClients>
                 {
-                    client
+                        client
                 }
             );
 
@@ -209,5 +221,20 @@ public class TCP_BallServer
             //clients.Remove(disconnectList[i]);
             disconnectList.RemoveAt(i);
         }
+    }
+
+    private static List<CommandData> TranslateEntryPlayer(BallEntryPlayerData player)
+    {
+        return new List<CommandData>
+        {
+            // ID
+            new CommandData(1, player.id),
+            // Turn order(client index)
+            new CommandData(3, player.index.ToString()),
+            // Color RGB
+            new CommandData(5, player.color.r.ToString()),
+            new CommandData(6, player.color.g.ToString()),
+            new CommandData(7, player.color.b.ToString())
+        };
     }
 }
