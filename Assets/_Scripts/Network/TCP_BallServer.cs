@@ -18,11 +18,34 @@ public class TCP_BallServer
             return instance != null && instance.listener != null;
         }
     }
+    public static int maxPlayerCount
+    {
+        set
+        {
+            if (TCP_BallCore.networkMode != NetworkMode.None)
+            {
+                // Check room max player count decrease
+                if(_maxPlayerCount < value)
+                {
+                    List<string> list = new List<string>();
+                    // List<string> ids = TCP_BallGameManagerGetterAdapter.RoomMaxCountDecrease(int count);
+                    //foreach (string id in ids)
+                    //{
+                    //        roomPlayer[id].client.Close();
+                    //    roomPlayer[id].client = null
+                    //}
+                }
+
+                _maxPlayerCount = value;
+            }
+        }
+    }
 
     private static Dictionary<string, TCP_BallServerConnectClients> roomPlayer;
     private static List<TCP_BallServerConnectClients> pendingClients;
     private static List<string> disconnectList;
     private static TCP_BallServer instance;
+    private static int _maxPlayerCount;
 
     private TcpListener listener;
 
@@ -34,6 +57,7 @@ public class TCP_BallServer
 
         roomPlayer = new Dictionary<string, TCP_BallServerConnectClients>();
         pendingClients = new List<TCP_BallServerConnectClients>();
+        _maxPlayerCount = PlayerPrefs.GetInt("room", 4);
 
         try
         {
@@ -79,6 +103,15 @@ public class TCP_BallServer
             int idOffset = 0;
             while (roomPlayer.ContainsKey(idTemp + idOffset))
             {
+                // Check reconnect
+                if (roomPlayer[idTemp + idOffset] == null)
+                {
+                    idTemp = idTemp + idOffset;
+                    broadcastDataToNewClient.AddRange(GetAllEntryPlayer());
+                    roomPlayer[idTemp] = client;
+                    pendingClients.Remove(client);
+                    return;
+                }
                 idOffset++;
             }
             idTemp = idTemp + idOffset;
@@ -88,15 +121,26 @@ public class TCP_BallServer
             broadcastDataToNewClient.Add(new CommandData(1, idTemp));
         }
 
+        // Check max player count in room
+        if(roomPlayer.Count >= _maxPlayerCount)
+        {
+            Broadcast
+                (
+                    new List<CommandData> { new CommandData(0, ((int)TCP_BallHeader.RoomMaxKick).ToString()) },
+                    new List<TCP_BallServerConnectClients> { client }
+                );
+            return;
+        }
+
         // Entry new client to server GameManager
         TCP_BallCommand.serverEntryNewClientEvent.Invoke(idTemp);
 
         // Broadcast this client entering to all other clients
         List<CommandData> broadcastDataToOtherClient = new List<CommandData>
-        {
-            // Head
-            new CommandData(0, ((int)TCP_BallHeader.Entry).ToString())
-        };
+            {
+                // Head
+                new CommandData(0, ((int)TCP_BallHeader.Entry).ToString())
+            };
         broadcastDataToOtherClient.AddRange(TranslateEntryPlayer(TCP_BallGameManagerGetterAdapter.lastPlayer));
         Broadcast
             (
@@ -105,20 +149,11 @@ public class TCP_BallServer
             );
 
         // Return all player entrydata to new client
-        broadcastDataToNewClient.Add(new CommandData(0, ((int)TCP_BallHeader.AllPlayerList).ToString()));
-        List<BallEntryPlayerData> entryPlayers = TCP_BallGameManagerGetterAdapter.allEntryPlayers;
-        foreach (BallEntryPlayerData onePlayer in entryPlayers)
-        {
-            broadcastDataToNewClient.AddRange(TranslateEntryPlayer(onePlayer));
-        }
-
+        broadcastDataToNewClient.AddRange(GetAllEntryPlayer());
         Broadcast
             (
                 broadcastDataToNewClient,
-                new List<TCP_BallServerConnectClients>
-                {
-                        client
-                }
+                new List<TCP_BallServerConnectClients> { client }
             );
 
         // Entry client to new player
@@ -164,6 +199,7 @@ public class TCP_BallServer
         }
         disconnectList = new List<string>();
 
+        // Receive for entry player client
         foreach (KeyValuePair<string, TCP_BallServerConnectClients> pair in roomPlayer)
         {
             // Check client connected
@@ -221,6 +257,59 @@ public class TCP_BallServer
             //clients.Remove(disconnectList[i]);
             disconnectList.RemoveAt(i);
         }
+
+        // Receive for pending client
+        int pendingClientsIndex = 0;
+        while(pendingClientsIndex < pendingClients.Count)
+        {
+            // Check client connected
+            bool connected;
+            try
+            {
+                if (pendingClients[pendingClientsIndex] != null && pendingClients[pendingClientsIndex].client.Client != null && pendingClients[pendingClientsIndex].client.Client.Connected)
+                {
+                    if (pendingClients[pendingClientsIndex].client.Client.Poll(0, SelectMode.SelectRead))
+                    {
+                        connected = !(pendingClients[pendingClientsIndex].client.Client.Receive(new byte[1], SocketFlags.Peek) == 0);
+                    }
+
+                    connected = true;
+                }
+                else
+                {
+                    connected = false;
+                }
+            }
+            catch
+            {
+                connected = false;
+            }
+
+            // Remember client disconnected 
+            if (!connected)
+            {
+                pendingClients[pendingClientsIndex].client.Close();
+                pendingClients.RemoveAt(pendingClientsIndex);
+                continue;
+            }
+            // Listen client send message
+            else
+            {
+                NetworkStream s = pendingClients[pendingClientsIndex].client.GetStream();
+                if (s.DataAvailable)
+                {
+                    if (pendingClients[pendingClientsIndex].reader == null)
+                    {
+                        pendingClients[pendingClientsIndex].reader = new StreamReader(s, true);
+                    }
+                    string data = pendingClients[pendingClientsIndex].reader.ReadLine();
+                    if (data != null)
+                    {
+                        List<CommandData> commands = TCP_BallCommand.ServerReceiveEvent(data, pendingClients[pendingClientsIndex]);
+                    }
+                }
+            }
+        }
     }
 
     private static List<CommandData> TranslateEntryPlayer(BallEntryPlayerData player)
@@ -236,5 +325,23 @@ public class TCP_BallServer
             new CommandData(6, player.color.g.ToString()),
             new CommandData(7, player.color.b.ToString())
         };
+    }
+
+    private static List<CommandData> GetAllEntryPlayer()
+    {
+        // Return all player entrydata to new client
+        List<CommandData> broadcastDataToNewClient = new List<CommandData>
+        {
+            new CommandData(0, ((int)TCP_BallHeader.AllPlayerList).ToString())
+        };
+        List<BallEntryPlayerData> entryPlayers = TCP_BallGameManagerGetterAdapter.allEntryPlayers;
+        foreach (BallEntryPlayerData onePlayer in entryPlayers)
+        {
+            broadcastDataToNewClient.AddRange(TranslateEntryPlayer(onePlayer));
+        }
+
+        // Set server gamestate
+        broadcastDataToNewClient.Add(new CommandData(3, ((int)TCP_BallUI.gameState).ToString()));
+        return broadcastDataToNewClient;
     }
 }
