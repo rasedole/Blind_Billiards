@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public List<GameObject> gamePlayers;
-    public List<BallEntryPlayerData> entryPlayerDataList;
+    public List<BallEntryPlayerData> entryPlayerDataList = new List<BallEntryPlayerData>();
 
     //속성추가 : 공을 발사한 이후부터 공이 모두 멈추고 턴을 넘겨주는 사이에도 조작할 수 없도록 하기 위해서 bool 변수로 isNobodyMove 선언
     public bool isNobodyMove = true;
@@ -97,20 +97,30 @@ public class GameManager : MonoBehaviour
 
     public void AddPlayerData(string playerID)
     {
-        foreach(var playerData in entryPlayerDataList)
+        if (entryPlayerDataList != null)
         {
-            if (playerData.id == playerID)
-                Debug.Log("이미 존재하는 플레이어를 추가하려고 했습니다.");
-                return;
+            foreach(var playerData in entryPlayerDataList)
+            {
+                if (playerData.id == playerID)
+                    Debug.Log("이미 존재하는 플레이어를 추가하려고 했습니다.");
+                    return;
+            }
         }
-
         BallEntryPlayerData data = new BallEntryPlayerData();
         int randomNum = Random.Range(0, ballColors.Count);
 
         data.color = ballColors[randomNum];
         data.id = playerID;
         data.score = 0;
-        data.index = entryPlayerDataList.Count;
+        if(entryPlayerDataList == null)
+        {
+            data.index = 0;
+        }
+        else
+        {
+
+            data.index = entryPlayerDataList.Count;
+        }
 
         ballColors.Remove(ballColors[randomNum]);
 
