@@ -3014,7 +3014,7 @@ MonoBehaviour:
   clientGetAllPlayerEvent:
     m_PersistentCalls:
       m_Calls: []
-  ui: {fileID: 0}
+  ui: {fileID: 352936290}
 --- !u!1 &358488707
 GameObject:
   m_ObjectHideFlags: 0
