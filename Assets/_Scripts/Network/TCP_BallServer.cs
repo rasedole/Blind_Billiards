@@ -252,11 +252,15 @@ public class TCP_BallServer
 
         for (int i = 0; i < disconnectList.Count - 1; i++)
         {
-            //Broadcast($"{disconnectList[i].id} 연결이 끊어졌습니다", clients);
+            roomPlayer[disconnectList[i]].Disconnect();
+            roomPlayer[disconnectList[i]] = null;
 
-            //clients.Remove(disconnectList[i]);
+            // Check 
+            Broadcast(new List<CommandData>() { new CommandData(2, $"{disconnectList[i]}와의 연결이 끊어졌습니다") }, roomPlayer.Values.ToList());
+
             disconnectList.RemoveAt(i);
         }
+        disconnectList.Clear();
 
         // Receive for pending client
         int pendingClientsIndex = 0;
