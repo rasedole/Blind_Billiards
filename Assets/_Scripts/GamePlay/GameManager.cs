@@ -36,11 +36,6 @@ public class GameManager : MonoBehaviour
 
     public string myID = "Test";
 
-    public GameObject playerListContent;
-    public GameObject playerListPrefab;
-
-    public TMP_Text playerNumberInput;
-
     private void Awake()
     {
         if (Instance == null)
@@ -249,7 +244,10 @@ public class GameManager : MonoBehaviour
     {
         if (TCP_BallCore.networkMode != NetworkMode.Client)
         {
-            //MakeFourTestPlayer();
+            if(TCP_BallCore.networkMode == NetworkMode.None)
+            {
+                MakeFourTestPlayer();
+            }
             gameObjects.SetActive(true);
             TurnManager.Instance.GetListFromGameManager();
             MakeBallByData();
