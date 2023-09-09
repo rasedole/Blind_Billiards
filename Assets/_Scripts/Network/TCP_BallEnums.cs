@@ -11,6 +11,7 @@ public enum TCP_BallHeader
     AllPlayerList = 2,
     RoomMaxKick = 3,
     RoomDisconnect = 4,
+    RoomMaxCountChanged = 5,
 
 }
 
