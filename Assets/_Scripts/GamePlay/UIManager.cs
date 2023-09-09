@@ -30,6 +30,6 @@ public class UIManager : MonoBehaviour
 
     public void UpdateTurn(int turn)
     {
-        currentTurnText.text = "Turn " + turn.ToString();
+        //currentTurnText.text = "Turn " + turn.ToString();
     }
 }

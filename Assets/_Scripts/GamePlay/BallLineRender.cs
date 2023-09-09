@@ -32,21 +32,23 @@ public class BallLineRender : MonoBehaviour
         {
             if (isClicked)
             {
-
-                Vector3 offset = new Vector3(joystick.transform.position.x - joystick.Horizontal, 0, joystick.transform.position.y - joystick.Vertical);
-                lineRay = new Ray(ballPosition, offset.normalized);
-                int _layerMask = 1 << LayerMask.NameToLayer("Wall");
-                if (Physics.Raycast(lineRay, out hitinfo, 10, _layerMask))
+                if (GameManager.Instance.CheckMyBall() || TCP_BallCore.networkMode == NetworkMode.None)
                 {
-                    //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
-                    lineRenderer.SetPosition(0, ballPosition);
-                    lineRenderer.SetPosition(1, ballPosition + offset * hitinfo.distance);
-                }
-                else
-                {
-                    //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
-                    lineRenderer.SetPosition(0, ballPosition);
-                    lineRenderer.SetPosition(1, ballPosition + offset * 2);
+                    Vector3 offset = new Vector3(joystick.transform.position.x - joystick.Horizontal, 0, joystick.transform.position.y - joystick.Vertical);
+                    lineRay = new Ray(ballPosition, offset.normalized);
+                    int _layerMask = 1 << LayerMask.NameToLayer("Wall");
+                    if (Physics.Raycast(lineRay, out hitinfo, 10, _layerMask))
+                    {
+                        //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
+                        lineRenderer.SetPosition(0, ballPosition);
+                        lineRenderer.SetPosition(1, ballPosition + offset * hitinfo.distance);
+                    }
+                    else
+                    {
+                        //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
+                        lineRenderer.SetPosition(0, ballPosition);
+                        lineRenderer.SetPosition(1, ballPosition + offset * 2);
+                    }
                 }
             }
         }

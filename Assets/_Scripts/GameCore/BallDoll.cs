@@ -49,11 +49,14 @@ public class BallDoll : MonoBehaviour
 
         // Set animation
         showMode = _mode;
-        _rigidbody.isKinematic = true;
+        if (TCP_BallCore.networkMode == NetworkMode.Client) 
+        {
+            _rigidbody.isKinematic = true;
+        }
         if (showMode == BallShowMode.MyPlayer)
         {
             ballAnimator.Play("Moving");
-            _rigidbody.isKinematic = false;
+            //_rigidbody.isKinematic = false;
         }
         else if (showMode == BallShowMode.Showcase)
         {

@@ -35,14 +35,17 @@ public class BallHit : MonoBehaviour
     //충돌이 발생할 시 MoveDate구조체를 게임데이터에게 쌓는다.
     private void OnCollisionEnter(Collision collision)
     {
-        if(TCP_BallCore.networkMode != NetworkMode.Client)
+        if (!GameManager.Instance.isNobodyMove)
         {
-            if (!GameManager.Instance.isNobodyMove)
+            if (!GuestReplayer.replaying)
             {
-                if (!GuestReplayer.replaying)
+                if (TCP_BallCore.networkMode == NetworkMode.Server)
                 {
                     GameManager.Instance.ballMoveData.Add(moveData);
 
+                }
+                if(TCP_BallCore.networkMode != NetworkMode.Client)
+                {
                     GetComponent<BallDoll>().CollisionEvent();
                 }
             }

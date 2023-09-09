@@ -39,20 +39,27 @@ public class BallShoot : MonoBehaviour
 
     public void Shoot()
     {
-        if(TCP_BallCore.networkMode != NetworkMode.Client)
+        if (TCP_BallCore.networkMode != NetworkMode.Client)
         {
             if (GameManager.Instance.isNobodyMove)
             {
-                GameManager.Instance.shootTime = Time.time;
-                Debug.Log("Shoot!");
-                TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(direction * power, ForceMode.Impulse);
-                GameManager.Instance.isNobodyMove = false;
-
-                foreach (var balls in GameManager.Instance.gamePlayers)
+                if(GameManager.Instance.CheckMyBall() || TCP_BallCore.networkMode == NetworkMode.None)
                 {
-                    GameManager.Instance.ballMoveData.Add(balls.GetComponent<BallHit>().moveData);
+                    GameManager.Instance.shootTime = Time.time;
+                    Debug.Log("Shoot!");
+                    TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(direction * power, ForceMode.Impulse);
+                    GameManager.Instance.isNobodyMove = false;
+
+                    if (TCP_BallCore.networkMode == NetworkMode.Server)
+                    {
+                        foreach (var balls in GameManager.Instance.gamePlayers)
+                        {
+                            GameManager.Instance.ballMoveData.Add(balls.GetComponent<BallHit>().moveData);
+                        }
+                    }
+                    StartCoroutine(GameManager.Instance.CheckMovement(1));
+
                 }
-                StartCoroutine(GameManager.Instance.CheckMovement(1));
             }
         }
         else
@@ -64,7 +71,7 @@ public class BallShoot : MonoBehaviour
     //¼­¹ö¿ë ½¸
     public void Shoot(Vector3 clientDirection)
     {
-        if(TCP_BallCore.networkMode != NetworkMode.Server)
+        if (TCP_BallCore.networkMode != NetworkMode.Server)
         {
             return;
         }
@@ -80,6 +87,7 @@ public class BallShoot : MonoBehaviour
             {
                 GameManager.Instance.ballMoveData.Add(balls.GetComponent<BallHit>().moveData);
             }
+
             StartCoroutine(GameManager.Instance.CheckMovement(1));
         }
     }

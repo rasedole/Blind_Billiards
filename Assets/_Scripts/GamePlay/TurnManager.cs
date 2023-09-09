@@ -38,6 +38,10 @@ public class TurnManager : MonoBehaviour
     public void EndTurn()
     {
         currentTurn++;
+        if(currentTurn >= GameManager.Instance.gamePlayers.Count)
+        {
+            currentTurn = 0;
+        }
         GameObject.Find("Variable Joystick").GetComponent<BallLineRender>().ResetBallStatus();
         UIManager.Instance.UpdateTurn(currentTurn);
         if(TCP_BallCore.networkMode == NetworkMode.None)
@@ -53,8 +57,18 @@ public class TurnManager : MonoBehaviour
         {
             return null;
         }
+        if(currentTurn >= ballList.Count)
+        {
+            int tempTurn = currentTurn;
+            while(tempTurn >= ballList.Count)
+            {
+                tempTurn -= ballList.Count;
+            }
+            return ballList[tempTurn];
+        }
         return ballList[currentTurn];
     }
+
     public GameObject GetTurnBall(int turn)
     {
         if(ballList == null)
