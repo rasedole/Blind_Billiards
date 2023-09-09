@@ -1134,7 +1134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c59bf4776859af941911cdf6e4523182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  command: {fileID: 11400000, guid: 01718ad3a9ba29545bf5364bc07c84d1, type: 2}
+  command: {fileID: 11400000, guid: dba37d49287c0c14881718d90bd8d5b3, type: 2}
   inputField: {fileID: 467386435}
   text: {fileID: 35847275}
   list: {fileID: 258840575}
@@ -3551,7 +3551,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.5000076, y: -0.5}
+  m_AnchoredPosition: {x: -7.5, y: -0.5}
   m_SizeDelta: {x: -35, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1308922717
@@ -4718,7 +4718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 1641720302}
-  core: {fileID: 11400000, guid: 01718ad3a9ba29545bf5364bc07c84d1, type: 2}
+  core: {fileID: 11400000, guid: dba37d49287c0c14881718d90bd8d5b3, type: 2}
 --- !u!1 &1599373318
 GameObject:
   m_ObjectHideFlags: 0
@@ -4771,7 +4771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cad780afc7f07b49b5b5da6c9bcf837, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  command: {fileID: 11400000, guid: 01718ad3a9ba29545bf5364bc07c84d1, type: 2}
+  command: {fileID: 11400000, guid: dba37d49287c0c14881718d90bd8d5b3, type: 2}
   inputField: {fileID: 440499296}
   text: {fileID: 419477936}
 --- !u!1 &1617825098

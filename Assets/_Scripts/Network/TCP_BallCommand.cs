@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -61,6 +62,8 @@ public class TCP_BallCommand : MonoBehaviour
                 b.command != 7
             )
         {
+            //Debug.Log("13567 > " + id.command + "" + index.command + "" + r.command + "" + g.command + "" + b.command);
+            Debug.Log(CommandCore.Encode(instance.command, new List<CommandData>() { id, index, r, g, b }));
             TCP_BallCore.messageEvent.Invoke("Type error!");
             return false;
         }
@@ -169,16 +172,16 @@ public class TCP_BallCommand : MonoBehaviour
 
                     index++;
                     List<BallEntryPlayerData> allPlayerList = new List<BallEntryPlayerData>();
-                    while 
+                    while
                         (
-                            datas.Count < 6 + index &&
+                            datas.Count >= (6 + index) &&
                             datas[index].command == 1
                         )
                     {
                         // Read one player
                         BallEntryPlayerData onePlayer;
 
-                        if(TryTranslateEntryPlayer
+                        if (TryTranslateEntryPlayer
                             (
                                 datas[index], 
                                 datas[index + 1], 
@@ -200,6 +203,7 @@ public class TCP_BallCommand : MonoBehaviour
                     // Get server gamestate
                     if (datas[index].command != 3)
                     {
+                        Debug.Log(CommandCore.Encode(instance.command, datas) + "");
                         TCP_BallCore.messageEvent.Invoke("Type error!");
                         return null;
                     }
@@ -207,8 +211,10 @@ public class TCP_BallCommand : MonoBehaviour
                     {
                         switch (Enum.Parse<GameState>(datas[index].text))
                         {
+                            case GameState.Connect:
                             case GameState.Room:
                                 instance.ui.GoToRoom();
+
                                 break;
 
                             case GameState.InGame:

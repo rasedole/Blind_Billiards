@@ -66,14 +66,22 @@ public class CommandCore : ScriptableObject
 
         // Sorting command position, also check data starts with commands.
         Dictionary<int, int> commandPos = new Dictionary<int, int>();
+        Dictionary<int, int> sortingDict = new Dictionary<int, int>();
+        List<int> sortingIndexList;
         bool defaultString = true;
         foreach (int cmdIndex in commandPosRaw.Keys)
             foreach (int index in commandPosRaw[cmdIndex])
             {
-                commandPos.Add(index, cmdIndex);
+                sortingDict.Add(index, cmdIndex);
                 if (index == 0)
                     defaultString = false;
             }
+        sortingIndexList = sortingDict.Keys.ToList();
+        sortingIndexList.Sort();
+        foreach(int i in sortingIndexList)
+        {
+            commandPos.Add(i, sortingDict[i]);
+        }
 
         // Slice raw data(string) with command position.
         List<string> slices = new List<string>();
