@@ -22,22 +22,23 @@ public class TCP_BallServer
     {
         set
         {
-            if (TCP_BallCore.networkMode != NetworkMode.None)
+            // Check room max player count decrease
+            List<string> broadCastList = new List<string>();
+            if (_maxPlayerCount < value)
             {
-                // Check room max player count decrease
-                if(_maxPlayerCount < value)
+                List<BallEntryPlayerData> clients = TCP_BallGameManagerGetterAdapter.RoomMaxCountDecrease(value);
+                foreach (BallEntryPlayerData client in clients)
                 {
-                    List<string> list = new List<string>();
-                    // List<string> ids = TCP_BallGameManagerGetterAdapter.RoomMaxCountDecrease(int count);
-                    //foreach (string id in ids)
-                    //{
-                    //        roomPlayer[id].client.Close();
-                    //    roomPlayer[id].client = null
-                    //}
+                    roomPlayer[client.id].client.Close();
+                    roomPlayer[client.id].client = null;
+                    roomPlayer.Remove(client.id);
+                    broadCastList.Add(client.id);
+                    RoomMaxDecreaseKick(roomPlayer[client.id]);
                 }
-
-                _maxPlayerCount = value;
             }
+
+            BroadCastDisconnectAtRoom(broadCastList);
+            _maxPlayerCount = value;
         }
     }
 
@@ -124,11 +125,7 @@ public class TCP_BallServer
         // Check max player count in room
         if(roomPlayer.Count >= _maxPlayerCount)
         {
-            Broadcast
-                (
-                    new List<CommandData> { new CommandData(0, ((int)TCP_BallHeader.RoomMaxKick).ToString()) },
-                    new List<TCP_BallServerConnectClients> { client }
-                );
+            RoomMaxDecreaseKick(client);
             return;
         }
 
@@ -255,10 +252,21 @@ public class TCP_BallServer
             roomPlayer[disconnectList[i]].Disconnect();
             roomPlayer[disconnectList[i]] = null;
 
-            // Check 
-            Broadcast(new List<CommandData>() { new CommandData(2, $"{disconnectList[i]}와의 연결이 끊어졌습니다") }, roomPlayer.Values.ToList());
+            // Check disconnect at room
+            if(TCP_BallUI.gameState != GameState.InGame)
+            {
+                roomPlayer.Remove(disconnectList[i]);
+            }
+        }
 
-            disconnectList.RemoveAt(i);
+        if (TCP_BallUI.gameState == GameState.InGame)
+        {
+            //Broadcast(new List<CommandData>() { new CommandData(2, $"{disconnectList[i]}와의 연결이 끊어졌습니다") }, roomPlayer.Values.ToList());
+        }
+        else if (disconnectList.Count > 0)
+        {
+            // Delete disconnected clients in room to all other players
+            BroadCastDisconnectAtRoom(disconnectList);
         }
         disconnectList.Clear();
 
@@ -348,5 +356,33 @@ public class TCP_BallServer
         // Set server gamestate
         broadcastDataToNewClient.Add(new CommandData(3, ((int)TCP_BallUI.gameState).ToString()));
         return broadcastDataToNewClient;
+    }
+
+    private static void RoomMaxDecreaseKick(TCP_BallServerConnectClients client)
+    {
+        RoomMaxDecreaseKick(new List<TCP_BallServerConnectClients> { client });
+    }
+    private static void RoomMaxDecreaseKick(List<TCP_BallServerConnectClients> clients)
+    {
+        Broadcast
+            (
+                new List<CommandData> { new CommandData(0, ((int)TCP_BallHeader.RoomMaxKick).ToString()) },
+                clients
+            );
+    }
+
+    private static void BroadCastDisconnectAtRoom(List<string> broadCastList)
+    {
+        List<CommandData> disconnectCommand = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.RoomDisconnect).ToString()) };
+        foreach (string id in broadCastList)
+        {
+            disconnectCommand.Add(new CommandData(1, id));
+        }
+
+        Broadcast
+            (
+                disconnectCommand,
+                roomPlayer.Values.ToList()
+            );
     }
 }

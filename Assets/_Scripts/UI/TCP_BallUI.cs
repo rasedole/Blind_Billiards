@@ -109,6 +109,8 @@ public class TCP_BallUI : MonoBehaviour
 
     public void GoToRoom()
     {
+        UI_RoomManager.ResetList();
+
         enterRoomEvent.Invoke();
         room.readOnly = false;
         if (TCP_BallCore.networkMode == NetworkMode.None)
@@ -189,6 +191,17 @@ public class TCP_BallUI : MonoBehaviour
 
     public void SetRoomMaxPlayer(string maxPlayer)
     {
-        TCP_BallServer.maxPlayerCount = int.Parse(maxPlayer);
+        if (TCP_BallCore.networkMode == NetworkMode.Server)
+        {
+            TCP_BallServer.maxPlayerCount = int.Parse(maxPlayer);
+        }
+        else if (TCP_BallCore.networkMode == NetworkMode.Client)
+        {
+
+        }
+        else
+        {
+
+        }
     }
 }

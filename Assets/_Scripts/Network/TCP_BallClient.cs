@@ -147,6 +147,7 @@ public class TCP_BallClient
 
         try
         {
+            Debug.Log("Client Send > " + rawData);
             writer.WriteLine(rawData);
             writer.Flush();
         }

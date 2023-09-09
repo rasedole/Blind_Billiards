@@ -11,6 +11,8 @@ public class TCP_BallCommand : MonoBehaviour
     [SerializeField]
     private CommandCore command;
     [SerializeField]
+    private TCP_BallUI ui;
+    [SerializeField]
     private UnityEvent<string> clientSetSelfIDEvent;
     [SerializeField]
     private UnityEvent<string> _serverEntryNewClientEvent;
@@ -19,7 +21,7 @@ public class TCP_BallCommand : MonoBehaviour
     [SerializeField]
     private UnityEvent<List<BallEntryPlayerData>> clientGetAllPlayerEvent;
     [SerializeField]
-    private TCP_BallUI ui;
+    private UnityEvent<List<string>> removeRoomPlayerEvent;
 
 
     private static TCP_BallCommand instance;
@@ -96,8 +98,7 @@ public class TCP_BallCommand : MonoBehaviour
     /* ========== Client ========== */
     public static List<CommandData> ClientReceiveEvent(string rawData)
     {
-        //ui.GoToRoom();
-        Debug.Log(rawData);
+        Debug.Log("ClientReceiveEvent > " + rawData);
         List<CommandData> datas = CommandCore.Decode(instance.command, rawData);
         int index = 0;
 
@@ -234,9 +235,41 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Room is full
                 case TCP_BallHeader.RoomMaxKick:
-                    TCP_BallCore.messageEvent.Invoke("Room is full!");
+                    if (TCP_BallUI.gameState == GameState.Room)
+                    {
+
+                    }
+                    else if (TCP_BallUI.gameState == GameState.Connect)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Room is full!");
+                    }
                     TCP_BallClient.DisconnectClient();
                     return null;
+
+                // Other player disconnect at room
+                case TCP_BallHeader.RoomDisconnect:
+                    if (datas.Count < 1 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+
+                    // Add all ID
+                    index++;
+                    List<string> idList = new List<string>();
+                    while
+                        (
+                            datas.Count > index &&
+                            datas[index].command == 1
+                        )
+                    {
+                        idList.Add(datas[index].text);
+                        datas.RemoveAt(index);
+                    }
+
+                    instance.removeRoomPlayerEvent.Invoke(idList);
+                    index--;
+                    break;
 
                 default:
                     break;
@@ -265,13 +298,13 @@ public class TCP_BallCommand : MonoBehaviour
     public static string ServerBroadcastEvent(List<CommandData> datas)
     {
         string rawData = CommandCore.Encode(instance.command, datas);
-        Debug.Log(rawData);
+        Debug.Log("ServerBroadcastEvent > " + rawData);
 
         return rawData;
     }
     public static List<CommandData> ServerReceiveEvent(string rawData, TCP_BallServerConnectClients clients)
     {
-        Debug.Log(rawData);
+        Debug.Log("ServerReceiveEvent > " + rawData);
         List<CommandData> datas = CommandCore.Decode(instance.command, rawData);
         int index = 0;
 

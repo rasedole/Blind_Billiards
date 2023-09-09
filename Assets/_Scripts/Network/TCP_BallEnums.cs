@@ -10,6 +10,7 @@ public enum TCP_BallHeader
     Entry = 1,
     AllPlayerList = 2,
     RoomMaxKick = 3,
+    RoomDisconnect = 4,
 
 }
 

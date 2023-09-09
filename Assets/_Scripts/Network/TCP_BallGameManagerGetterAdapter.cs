@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,5 +24,10 @@ public static class TCP_BallGameManagerGetterAdapter
             //PlayerData of All Player in GameManager
             return GameManager.Instance.entryPlayerDataList;
         }
+    }
+
+    public static List<BallEntryPlayerData> RoomMaxCountDecrease(int changedCount)
+    {
+        return null;
     }
 }

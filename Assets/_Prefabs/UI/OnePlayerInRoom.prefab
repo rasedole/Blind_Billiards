@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1778962569584901024}
   - component: {fileID: 6356779575856006059}
+  - component: {fileID: 6686324702790633932}
   m_Layer: 5
   m_Name: OnePlayerInRoom
   m_TagString: Untagged
@@ -52,6 +53,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 1
   m_AspectRatio: 7
+--- !u!114 &6686324702790633932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2417487219434250389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b168c236ed9b43f4cb9d8e4a4bdff353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 0}
+  text: {fileID: 239835379850428158}
 --- !u!1 &4723180302248822166
 GameObject:
   m_ObjectHideFlags: 0
