@@ -18,13 +18,17 @@ public class TCP_BallUI : MonoBehaviour
     [SerializeField]
     private TMP_InputField id;
     [SerializeField]
-    private TMP_InputField room;
+    private TMP_InputField roomMaxCount;
     [SerializeField]
     private Animator connectAnimatorUI;
     [SerializeField]
     private Animator mainAnimatorUI;
     [SerializeField]
     private Animator roomAnimatorUI;
+    [SerializeField]
+    private TextMeshProUGUI roomInfo;
+    [SerializeField]
+    private GameObject kickedRoomUI;
 
     // Events
     [SerializeField]
@@ -112,7 +116,10 @@ public class TCP_BallUI : MonoBehaviour
         UI_RoomManager.ResetList();
 
         enterRoomEvent.Invoke();
-        room.readOnly = false;
+        roomMaxCount.readOnly = false;
+        roomInfo.text = ip.text + " / " + port.text;
+        roomInfo.gameObject.SetActive(false);
+
         if (TCP_BallCore.networkMode == NetworkMode.None)
         {
             mainAnimatorUI.Play("Out");
@@ -126,17 +133,18 @@ public class TCP_BallUI : MonoBehaviour
         else if (TCP_BallCore.networkMode == NetworkMode.Client)
         {
             SubmitClient();
-            room.readOnly = true;
+            roomMaxCount.readOnly = true;
         }
 
         if (TCP_BallCore.networkMode != NetworkMode.None)
         {
+            roomInfo.gameObject.SetActive(true);
             connectAnimatorUI.Play("Out");
             roomAnimatorUI.Play("InFromLeft");
         }
 
         _gameState = GameState.Room;
-        room.text = PlayerPrefs.GetInt("room", 4).ToString();
+        roomMaxCount.text = PlayerPrefs.GetInt("room", 4).ToString();
     }
 
     public void LastClient()
@@ -168,7 +176,7 @@ public class TCP_BallUI : MonoBehaviour
 
     public void SubmitRoom()
     {
-        PlayerPrefs.SetInt("room", int.Parse(room.text));
+        PlayerPrefs.SetInt("room", int.Parse(roomMaxCount.text));
     }
 
     public void ConnectFail()
@@ -178,7 +186,7 @@ public class TCP_BallUI : MonoBehaviour
 
     public void ExitRoom()
     {
-        room.readOnly = false;
+        roomMaxCount.readOnly = false;
         if (TCP_BallCore.networkMode == NetworkMode.None)
         {
             exitRoomEventSolo.Invoke();
@@ -197,11 +205,16 @@ public class TCP_BallUI : MonoBehaviour
         }
         else if (TCP_BallCore.networkMode == NetworkMode.Client)
         {
-
+            roomMaxCount.SetTextWithoutNotify(maxPlayer);
         }
         else
         {
 
         }
+    }
+
+    public void KickedInRoom()
+    {
+        kickedRoomUI.SetActive(true);
     }
 }

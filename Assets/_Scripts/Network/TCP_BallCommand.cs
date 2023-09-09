@@ -233,11 +233,11 @@ public class TCP_BallCommand : MonoBehaviour
                     instance.clientGetAllPlayerEvent.Invoke(allPlayerList);
                     break;
 
-                // Room is full
+                // Kicked at room
                 case TCP_BallHeader.RoomMaxKick:
                     if (TCP_BallUI.gameState == GameState.Room)
                     {
-
+                        instance.ui.KickedInRoom();
                     }
                     else if (TCP_BallUI.gameState == GameState.Connect)
                     {
@@ -269,6 +269,27 @@ public class TCP_BallCommand : MonoBehaviour
 
                     instance.removeRoomPlayerEvent.Invoke(idList);
                     index--;
+                    datas.RemoveAt(index);
+                    break;
+
+                case TCP_BallHeader.RoomMaxCountChanged:
+                    int value = 0;
+                    if (datas.Count < 1 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+                    else if (datas[index + 1].command != 3 || int.TryParse(datas[index + 1].text, out value))
+                    {
+                        instance.ui.SetRoomMaxPlayer(datas[index + 1].text);
+                    }
+                    else
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        return null;
+                    }
+
+                    datas.RemoveRange(index, 2);
                     break;
 
                 default:

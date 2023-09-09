@@ -37,6 +37,15 @@ public class TCP_BallServer
                 }
             }
 
+            Broadcast
+                (
+                    new List<CommandData>() 
+                    { 
+                        new CommandData(0, ((int)TCP_BallHeader.RoomMaxCountChanged).ToString()) ,
+                        new CommandData(3, value.ToString())
+                    },
+                    roomPlayer.Values.ToList()
+                );
             BroadCastDisconnectAtRoom(broadCastList);
             _maxPlayerCount = value;
         }
