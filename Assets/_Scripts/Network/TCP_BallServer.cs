@@ -29,16 +29,12 @@ public class TCP_BallServer
                 List<BallEntryPlayerData> clients = TCP_BallGameManagerGetterAdapter.RoomMaxCountDecrease(value);
                 if(clients != null && clients.Count > 0)
                 {
-                    Debug.LogWarning("1");
                     foreach (BallEntryPlayerData client in clients)
                     {
-                        Debug.LogWarning("2");
                         roomPlayer[client.id].client.Close();
                         roomPlayer[client.id].client = null;
-                        Debug.LogWarning("3");
                         roomPlayer.Remove(client.id);
                         broadCastList.Add(client.id);
-                        Debug.LogWarning("4");
                         RoomMaxDecreaseKick(roomPlayer[client.id]);
                     }
                 }
@@ -94,6 +90,8 @@ public class TCP_BallServer
         catch (Exception e)
         {
             TCP_BallCore.errorEvent.Invoke(e.Message);
+            server.CloseServer();
+            return null;
         }
 
         instance = server;
@@ -179,14 +177,17 @@ public class TCP_BallServer
         string rawData = TCP_BallCommand.ServerBroadcastEvent(datas);
         try
         {
-            foreach (TCP_BallServerConnectClients client in clients)
+            for(int i = 0; i < clients.Count; i++)
             {
-                if (client.writer == null)
+                if (clients[i] != null && clients[i].client.Connected)
                 {
-                    client.writer = new StreamWriter(client.client.GetStream());
+                    if (clients[i].writer == null) 
+                    {
+                        clients[i].writer = new StreamWriter(clients[i].client.GetStream());
+                    }
+                    clients[i].writer.WriteLine(rawData);
+                    clients[i].writer.Flush();
                 }
-                client.writer.WriteLine(rawData);
-                client.writer.Flush();
             }
         }
         catch (Exception e)
@@ -258,6 +259,24 @@ public class TCP_BallServer
                     if (data != null)
                     {
                         List<CommandData> commands = TCP_BallCommand.ServerReceiveEvent(data, pair.Value);
+                        if(commands != null && commands.Count > 0)
+                        {
+                            int index = 0;
+
+                            while (index < commands.Count)
+                            {
+                                switch (Enum.Parse<TCP_BallHeader>(commands[0].text))
+                                {
+                                    case TCP_BallHeader.RoomDisconnect:
+                                        disconnectList.Add(pair.Key);
+                                        commands.RemoveAt(index);
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
                     }
                 }
             }

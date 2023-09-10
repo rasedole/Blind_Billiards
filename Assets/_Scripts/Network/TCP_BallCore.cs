@@ -121,12 +121,8 @@ public class TCP_BallCore : MonoBehaviour
             instance.ui.ConnectFail();
             return false;
         }
-        else
-        {
-            AttemptToConnectServer();
-        }
 
-        return true;
+        return AttemptToConnectServer();
     }
 
     public static bool AttemptToConnectServer()
@@ -144,6 +140,10 @@ public class TCP_BallCore : MonoBehaviour
         }
         if(!int.TryParse(instance.portInput.text, out port))
         {
+            if (networkMode == NetworkMode.Server)
+            {
+                CloseServer();
+            }
             messageEvent.Invoke("Port error!");
             instance.ui.ConnectFail();
             return false;
@@ -152,6 +152,10 @@ public class TCP_BallCore : MonoBehaviour
         client = TCP_BallClient.ConnectToServer(instance.ipInput.text, port, instance.idInput.text);
         if (client == null)
         {
+            if(networkMode == NetworkMode.Server)
+            {
+                CloseServer();
+            }
             instance.ui.ConnectFail();
             return false;
         }

@@ -66,6 +66,17 @@ public class TCP_BallClient
 
     public static void DisconnectClient(TCP_BallClient client = null)
     {
+        // Check disconnect manualy
+        if (ready)
+        {
+            instance.Send(new List<CommandData>() 
+            {
+                new CommandData(0, ((int)TCP_BallHeader.RoomDisconnect).ToString())
+            });
+        }
+
+
+        // Abort
         if(client != null)
         {
             client.OnDisconnect();
@@ -138,6 +149,10 @@ public class TCP_BallClient
 
 
     // Send message to server
+    public void Send(List<CommandData> commands)
+    {
+        Send(TCP_BallCommand.ClientSendEvent(commands));
+    }
     public void Send(string rawData)
     {
         if (!ready)
