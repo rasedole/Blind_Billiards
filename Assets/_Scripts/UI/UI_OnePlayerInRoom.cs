@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class UI_OnePlayerInRoom : MonoBehaviour
 {
+    public string score
+    {
+        get { return score; }
+        set { text.text = value; }
+    }
+
     [SerializeField]
     private Image image;
     [SerializeField]

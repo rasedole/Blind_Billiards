@@ -44,6 +44,8 @@ public class JoystickHandler : MonoBehaviour
         handle.anchorMax = new Vector2(0.5f, 0.5f);
         handle.offsetMin = Vector2.zero;
         handle.offsetMax = new Vector2(wrapper.rect.width / 2, wrapper.rect.height / 2);
+
+        handle.anchoredPosition = Vector2.zero;
     }
 
     private void SizeResetByAnchor(RectTransform rect)

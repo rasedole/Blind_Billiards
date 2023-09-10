@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3735395875953664141}
   - component: {fileID: 766864922043516148}
+  - component: {fileID: 1221701071285333856}
   m_Layer: 0
   m_Name: OneScoreInGame
   m_TagString: Untagged
@@ -52,6 +53,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 1
   m_AspectRatio: 4
+--- !u!114 &1221701071285333856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5454664838833817698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b168c236ed9b43f4cb9d8e4a4bdff353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 697040365875840966}
+  text: {fileID: 4821873940935129491}
 --- !u!1 &7694953479025374104
 GameObject:
   m_ObjectHideFlags: 0
