@@ -321,6 +321,14 @@ public class TCP_BallCommand : MonoBehaviour
             );
     }
 
+    public static string ClientSendEvent(List<CommandData> datas)
+    {
+        string rawData = CommandCore.Encode(instance.command, datas);
+        Debug.Log("ClientSendEvent > " + rawData);
+
+        return rawData;
+    }
+
 
 
     /* ========== Server ========== */
@@ -367,6 +375,11 @@ public class TCP_BallCommand : MonoBehaviour
                     }
                     datas.RemoveRange(0, 2);
                     break;
+
+                case TCP_BallHeader.RoomDisconnect:
+                    index++;
+                    break;
+
                 default:
                     break;
             }

@@ -259,6 +259,24 @@ public class TCP_BallServer
                     if (data != null)
                     {
                         List<CommandData> commands = TCP_BallCommand.ServerReceiveEvent(data, pair.Value);
+                        if(commands != null && commands.Count > 0)
+                        {
+                            int index = 0;
+
+                            while (index < commands.Count)
+                            {
+                                switch (Enum.Parse<TCP_BallHeader>(commands[0].text))
+                                {
+                                    case TCP_BallHeader.RoomDisconnect:
+                                        disconnectList.Add(pair.Key);
+                                        commands.RemoveAt(index);
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -393,7 +411,6 @@ public class TCP_BallServer
         List<CommandData> disconnectCommand = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.RoomDisconnect).ToString()) };
         foreach (string id in broadCastList)
         {
-            Debug.LogWarning(id);
             disconnectCommand.Add(new CommandData(1, id));
         }
 
