@@ -23,9 +23,12 @@ public class UI_OnePlayerInRoom : MonoBehaviour
         
     }
 
-    public void Set(Color color, string _text)
+    public void Set(Color color, string _text, Transform pareant)
     {
+        color.a = 1;
         image.color = color;
         text.text = _text;
+        transform.SetParent(pareant);
+        transform.localScale = Vector3.one;
     }
 }

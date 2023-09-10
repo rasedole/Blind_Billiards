@@ -51,8 +51,7 @@ public class UI_RoomManager : MonoBehaviour
                 id,
                 ObjectPoolingManager.Pooling(instance.playerPrefab).GetComponent<UI_OnePlayerInRoom>()
             );
-        roomPool[id].Set(color, id);
-        roomPool[id].transform.SetParent(instance.playersPos);
+        roomPool[id].Set(color, id, instance.playersPos);
     }
 
     public static void ResetList()

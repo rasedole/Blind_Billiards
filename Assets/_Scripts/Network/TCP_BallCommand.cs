@@ -279,9 +279,16 @@ public class TCP_BallCommand : MonoBehaviour
                         TCP_BallCore.messageEvent.Invoke("No input value!");
                         return null;
                     }
-                    else if (datas[index + 1].command != 3 || int.TryParse(datas[index + 1].text, out value))
+                    else if
+                        (
+                            datas[index + 1].command != 3 ||
+                            int.TryParse(datas[index + 1].text, out value)
+                        )
                     {
-                        instance.ui.SetRoomMaxPlayer(datas[index + 1].text);
+                        if(TCP_BallCore.networkMode != NetworkMode.Server)
+                        {
+                            instance.ui.SetRoomMaxPlayer(datas[index + 1].text);
+                        }
                     }
                     else
                     {

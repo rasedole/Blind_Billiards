@@ -199,6 +199,13 @@ public class TCP_BallUI : MonoBehaviour
 
     public void SetRoomMaxPlayer(string maxPlayer)
     {
+        // Check min value
+        if(int.Parse(maxPlayer) < 2)
+        {
+            roomMaxCount.SetTextWithoutNotify(2.ToString());
+        }
+
+        // Check game mode
         if (TCP_BallCore.networkMode == NetworkMode.Server)
         {
             TCP_BallServer.maxPlayerCount = int.Parse(maxPlayer);

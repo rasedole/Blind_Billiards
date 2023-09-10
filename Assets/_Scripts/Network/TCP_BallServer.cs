@@ -27,13 +27,20 @@ public class TCP_BallServer
             if (_maxPlayerCount < value)
             {
                 List<BallEntryPlayerData> clients = TCP_BallGameManagerGetterAdapter.RoomMaxCountDecrease(value);
-                foreach (BallEntryPlayerData client in clients)
+                if(clients != null && clients.Count > 0)
                 {
-                    roomPlayer[client.id].client.Close();
-                    roomPlayer[client.id].client = null;
-                    roomPlayer.Remove(client.id);
-                    broadCastList.Add(client.id);
-                    RoomMaxDecreaseKick(roomPlayer[client.id]);
+                    Debug.LogWarning("1");
+                    foreach (BallEntryPlayerData client in clients)
+                    {
+                        Debug.LogWarning("2");
+                        roomPlayer[client.id].client.Close();
+                        roomPlayer[client.id].client = null;
+                        Debug.LogWarning("3");
+                        roomPlayer.Remove(client.id);
+                        broadCastList.Add(client.id);
+                        Debug.LogWarning("4");
+                        RoomMaxDecreaseKick(roomPlayer[client.id]);
+                    }
                 }
             }
 

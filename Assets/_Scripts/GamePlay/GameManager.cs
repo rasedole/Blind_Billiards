@@ -292,13 +292,19 @@ public class GameManager : MonoBehaviour
 
     public void GetAllPlayerFromServer(List<BallEntryPlayerData> datas)
     {
-
         entryPlayerDataList = datas;
-        
+        if(TCP_BallUI.gameState == GameState.Room)
+        {
+            UI_RoomManager.MakeNew(datas);
+        }
     }
 
     public void GetLastPlayerFromServer(BallEntryPlayerData data)
     {
         entryPlayerDataList.Add(data);
+        if (TCP_BallUI.gameState == GameState.Room)
+        {
+            UI_RoomManager.MakeNew(new List<BallEntryPlayerData>() { data });
+        }
     }
 }
