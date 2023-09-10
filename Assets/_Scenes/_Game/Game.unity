@@ -2749,6 +2749,7 @@ MonoBehaviour:
   roomAnimatorUI: {fileID: 102265965}
   roomInfo: {fileID: 476410278}
   kickedRoomUI: {fileID: 1323689950}
+  roomGameStartButton: {fileID: 1622624262}
   connectFaildEvent:
     m_PersistentCalls:
       m_Calls:

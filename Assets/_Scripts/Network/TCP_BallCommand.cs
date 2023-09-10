@@ -242,6 +242,7 @@ public class TCP_BallCommand : MonoBehaviour
                     else if (TCP_BallUI.gameState == GameState.Connect)
                     {
                         TCP_BallCore.messageEvent.Invoke("Room is full!");
+                        instance.ui.ConnectFail();
                     }
                     TCP_BallClient.DisconnectClient();
                     return null;

@@ -29,6 +29,8 @@ public class TCP_BallUI : MonoBehaviour
     private TextMeshProUGUI roomInfo;
     [SerializeField]
     private GameObject kickedRoomUI;
+    [SerializeField]
+    private GameObject roomGameStartButton;
 
     // Events
     [SerializeField]
@@ -119,6 +121,7 @@ public class TCP_BallUI : MonoBehaviour
         roomMaxCount.readOnly = false;
         roomInfo.text = ip.text + " / " + port.text;
         roomInfo.gameObject.SetActive(false);
+        roomGameStartButton.SetActive(true);
 
         if (TCP_BallCore.networkMode == NetworkMode.None)
         {
@@ -133,6 +136,7 @@ public class TCP_BallUI : MonoBehaviour
         else if (TCP_BallCore.networkMode == NetworkMode.Client)
         {
             SubmitClient();
+            roomGameStartButton.SetActive(false);
             roomMaxCount.readOnly = true;
         }
 
@@ -192,8 +196,12 @@ public class TCP_BallUI : MonoBehaviour
             exitRoomEventSolo.Invoke();
             return;
         }
+        else if (TCP_BallCore.networkMode == NetworkMode.Server)
+        {
+            TCP_BallCore.CloseServer();
+        }
 
-        TCP_BallCore.CloseServer();
+        TCP_BallClient.DisconnectClient();
         exitRoomEventNetwork.Invoke();
     }
 
