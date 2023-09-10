@@ -47,6 +47,14 @@ public class BallHit : MonoBehaviour
                 if(TCP_BallCore.networkMode != NetworkMode.Client)
                 {
                     GetComponent<BallDoll>().CollisionEvent();
+
+                    if(collision.gameObject.tag == "Player")
+                    {
+                        if(TurnManager.Instance.GetTurnBall() == this.gameObject)
+                        {
+                            ScoreManager.Instance.PlusScore(this.gameObject);
+                        }
+                    }
                 }
             }
         }

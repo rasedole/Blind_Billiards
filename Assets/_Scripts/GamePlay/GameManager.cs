@@ -31,10 +31,14 @@ public class GameManager : MonoBehaviour
 
     public GameObject gameObjects;
 
+    public TMP_InputField maxPlayer;
+
     //###새로만든 UI에 있는 조이스틱으로 변경필요 코드
     public VariableJoystick joystick;
 
     public string myID = "Test";
+
+    public GameObject gameUI;
 
     private void Awake()
     {
@@ -246,11 +250,13 @@ public class GameManager : MonoBehaviour
         {
             if(TCP_BallCore.networkMode == NetworkMode.None)
             {
-                MakeFourTestPlayer();
+                MakeLocalPlayer();
             }
             gameObjects.SetActive(true);
             TurnManager.Instance.GetListFromGameManager();
             MakeBallByData();
+            gameUI.SetActive(true);
+            ScoreManager.Instance.UpdateScore();
         }
     }
 
@@ -262,13 +268,13 @@ public class GameManager : MonoBehaviour
         MakeBallByData();
     }
 
-    public void MakeFourTestPlayer()
+    public void MakeLocalPlayer()
     {
-        RemovePlayerData("Default");
-        AddPlayerData("TestServerPlayer");
-        AddPlayerData("TestClientPlayer1");
-        AddPlayerData("TestClientPlayer2");
-        AddPlayerData("TestClientPlayer3");
+        for(int i = 0; i < int.Parse(maxPlayer.text); i++)
+        {
+            int randomID = Random.Range(0, 10000);
+            AddPlayerData("LocalPlayer"+randomID);
+        }
     }
 
     public bool CheckMyBall()

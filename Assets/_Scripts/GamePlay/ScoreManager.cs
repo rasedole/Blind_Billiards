@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
@@ -9,19 +10,49 @@ using UnityEngine.PlayerLoop;
 
 public class ScoreManager : MonoBehaviour
 {
-    public Dictionary<string,int> ScoreList 
+    public static ScoreManager Instance;
+
+    public TMP_Text scoreTextUI;
+
+    private void Awake()
     {
-        get
+        if (Instance == null)
         {
-            return _scoreList;
+            Instance = this;
         }
-        private set
+        else
         {
-            _scoreList = value;
+            Destroy(this);
         }
     }
-    //플레이어 이름과 점수를 가지고 있는 Dict
-    Dictionary<string, int> _scoreList = new();
-    
-    
+
+    public void PlusScore(GameObject ball)
+    {
+        foreach(var data in GameManager.Instance.entryPlayerDataList)
+        {
+            if(data.id == ball.name)
+            {
+                data.score++;
+            }
+        }
+
+        UpdateScore();
+    }
+
+    public void UpdateScore()
+    {
+        string tmpText = "Rank 1st\n";
+        string tmpID = "------";
+        int tmpScore = 0;
+        foreach(var data in GameManager.Instance.entryPlayerDataList)
+        {
+            if(data.score > tmpScore)
+            {
+                tmpID = data.id;
+                tmpScore = data.score;
+            }
+        }
+        tmpText += tmpID + " " + tmpScore;
+        scoreTextUI.text = tmpText;
+    }
 }
