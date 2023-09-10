@@ -12,7 +12,7 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
 
-    public TMP_Text scoreTextUI;
+    //public TMP_Text scoreTextUI;
 
     private void Awake()
     {
@@ -53,6 +53,6 @@ public class ScoreManager : MonoBehaviour
             }
         }
         tmpText += tmpID + " " + tmpScore;
-        scoreTextUI.text = tmpText;
+        //scoreTextUI.text = tmpText;
     }
 }

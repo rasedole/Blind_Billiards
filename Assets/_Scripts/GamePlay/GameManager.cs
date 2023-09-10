@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
 
     public string myID = "Test";
 
-    public GameObject gameUI;
+    //public GameObject gameUI;
 
     private void Awake()
     {
@@ -197,6 +197,7 @@ public class GameManager : MonoBehaviour
                 if (playerData.id == playerID[i])
                 {
                     entryPlayerDataList.Remove(playerData);
+                    break;
                 }
             }
         }
@@ -204,6 +205,8 @@ public class GameManager : MonoBehaviour
 
     public void MakeBallByData()
     {
+        RemoveSameID();
+
         //셔플
         for (int i = 0; i < entryPlayerDataList.Count; i++)
         {
@@ -255,8 +258,8 @@ public class GameManager : MonoBehaviour
             gameObjects.SetActive(true);
             TurnManager.Instance.GetListFromGameManager();
             MakeBallByData();
-            gameUI.SetActive(true);
-            ScoreManager.Instance.UpdateScore();
+            //gameUI.SetActive(true);
+            //ScoreManager.Instance.UpdateScore();
         }
     }
 
@@ -289,11 +292,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EntryToRoom()
+    public void RemoveSameID()
     {
-        //MakeFourTestPlayer();
-        //MakeRoomList();
-        //playerNumberInput.text = entryPlayerDataList.Count.ToString();
+        for(int i = 0; i < entryPlayerDataList.Count-1; i++)
+        {
+            for(int j = i+1; j < entryPlayerDataList.Count; j++)
+            {
+                if (entryPlayerDataList[i].id == entryPlayerDataList[j].id)
+                {
+                    RemovePlayerData(entryPlayerDataList[i].id);
+                }
+            }
+        }
     }
 
     public void GetAllPlayerFromServer(List<BallEntryPlayerData> datas)
