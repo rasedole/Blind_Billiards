@@ -80,7 +80,7 @@ public class TCP_BallUI : MonoBehaviour
         }
         if(gameState == GameState.InGame)
         {
-            chattingMessage.text += text;
+            chattingMessage.text += "[System] : " + text + "\n";
         }
     }
 

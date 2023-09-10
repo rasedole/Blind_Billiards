@@ -6,26 +6,43 @@ using UnityEngine.UI;
 
 public class ScoreToggleHandler : MonoBehaviour
 {
-    Toggle chatToggle;
-    [SerializeField] GameObject scoreWrapper;
-    [SerializeField] Sprite rigthArrow;
-    [SerializeField] Sprite leftArrow;
+    private bool chatToggle;
+
+
+    [SerializeField] 
+    private GameObject scoreWrapper;
+    [SerializeField] 
+    private Sprite spriteWhenClose;
+    [SerializeField] 
+    private Sprite spriteWhenOpen;
+
+    private void Awake()
+    {
+        chatToggle = true;
+    }
 
     private void Start()
     {
-        chatToggle = gameObject.GetComponent<Toggle>();
+
     }
 
     private void Update()
     {
-        if (chatToggle.isOn)
+
+    }
+
+    public void Toggle()
+    {
+        chatToggle = !chatToggle;
+
+        if (chatToggle)
         {
-            gameObject.GetComponent<Image>().sprite = leftArrow;
+            gameObject.GetComponent<Image>().sprite = spriteWhenOpen;
             scoreWrapper.SetActive(true);
         }
         else
         {
-            gameObject.GetComponent<Image>().sprite = rigthArrow;
+            gameObject.GetComponent<Image>().sprite = spriteWhenClose;
             scoreWrapper.SetActive(false);
         }
     }
