@@ -66,8 +66,6 @@ public class UI_RoomManager : MonoBehaviour
 
     public static void Remove(List<string> ids)
     {
-        Debug.Log("!");
-
         foreach (string id in ids)
         {
             roomPool[id].gameObject.SetActive(false);

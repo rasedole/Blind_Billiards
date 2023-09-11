@@ -29,11 +29,8 @@ public class TCP_BallServer
                 List<BallEntryPlayerData> clients = TCP_BallGameManagerGetterAdapter.RoomMaxCountDecrease(value);
                 if(clients != null && clients.Count > 0)
                 {
-                    Debug.LogWarning(clients.Count);
                     foreach (BallEntryPlayerData client in clients)
                     {
-                        Debug.LogWarning(client.id);
-
                         // Kick overflow
                         RoomMaxDecreaseKick(roomPlayer[client.id]);
                         roomPlayer[client.id].client.Close();
@@ -41,6 +38,7 @@ public class TCP_BallServer
                         roomPlayer.Remove(client.id);
                         broadCastList.Add(client.id);
                     }
+                    BroadCastDisconnectAtRoom(broadCastList);
                 }
             }
 
@@ -54,7 +52,6 @@ public class TCP_BallServer
                     },
                     roomPlayer.Values.ToList()
                 );
-            BroadCastDisconnectAtRoom(broadCastList);
             _maxPlayerCount = value;
         }
     }
