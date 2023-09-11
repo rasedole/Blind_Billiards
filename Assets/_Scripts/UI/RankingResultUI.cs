@@ -31,6 +31,7 @@ public class RankingResultUI : MonoBehaviour
     void Start()
     {
         savedRankDatas = new List<RankData>();
+        maxRankingRow = rankObj.Length;
     }
 
     public void RankShow(List<RankData> rankDatas)
@@ -52,6 +53,9 @@ public class RankingResultUI : MonoBehaviour
         {
             savedRankDatas.RemoveRange(maxRankingRow, savedRankDatas.Count-maxRankingRow);
         }
+
+        if (savedRankDatas.Count < maxRankingRow)
+            maxRankingRow = savedRankDatas.Count;
 
         // 화면에 보여주기.
         ShowRankData();
