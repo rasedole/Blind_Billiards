@@ -30,16 +30,16 @@ public class RankingResultUI : MonoBehaviour
 
     void Start()
     {
-        maxRankingRow = rankObj.Length;
         savedRankDatas = new List<RankData>();
     }
 
     public void RankShow(List<RankData> rankDatas)
     {
         LoadRankData(rankDatas.Count);
+        maxRankingRow = rankDatas.Count;
 
         // 새 점수 추가
-        foreach(RankData rankData in rankDatas)
+        foreach (RankData rankData in rankDatas)
         {
             savedRankDatas.Add(rankData);
         }
