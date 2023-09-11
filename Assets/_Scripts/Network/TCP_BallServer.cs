@@ -24,26 +24,28 @@ public class TCP_BallServer
         {
             // Check room max player count decrease
             List<string> broadCastList = new List<string>();
-            if (_maxPlayerCount < value)
+            if (_maxPlayerCount > value)
             {
                 List<BallEntryPlayerData> clients = TCP_BallGameManagerGetterAdapter.RoomMaxCountDecrease(value);
                 if(clients != null && clients.Count > 0)
                 {
+                    Debug.LogWarning(clients.Count);
                     foreach (BallEntryPlayerData client in clients)
                     {
+                        Debug.LogWarning(client.id);
+                        RoomMaxDecreaseKick(roomPlayer[client.id]);
                         roomPlayer[client.id].client.Close();
                         roomPlayer[client.id].client = null;
                         roomPlayer.Remove(client.id);
                         broadCastList.Add(client.id);
-                        RoomMaxDecreaseKick(roomPlayer[client.id]);
                     }
                 }
             }
 
             Broadcast
                 (
-                    new List<CommandData>() 
-                    { 
+                    new List<CommandData>()
+                    {
                         new CommandData(0, ((int)TCP_BallHeader.RoomMaxCountChanged).ToString()) ,
                         new CommandData(3, value.ToString())
                     },
@@ -282,7 +284,9 @@ public class TCP_BallServer
             }
         }
 
-        for (int i = 0; i < disconnectList.Count - 1; i++)
+        if(disconnectList.Count > 1)
+
+        for (int i = 0; i < disconnectList.Count; i++)
         {
             roomPlayer[disconnectList[i]].Disconnect();
             roomPlayer[disconnectList[i]] = null;
@@ -302,8 +306,8 @@ public class TCP_BallServer
         {
             // Delete disconnected clients in room to all other players
             BroadCastDisconnectAtRoom(disconnectList);
+            disconnectList.Clear();
         }
-        disconnectList.Clear();
 
         // Receive for pending client
         int pendingClientsIndex = 0;
