@@ -52,11 +52,11 @@ public static class TCP_BallGameManagerGetterAdapter
             {
                 foreach (var ball in outlist)
                 {
-                    Debug.Log(ball.id + "++++");
+                    //Debug.Log(ball.id + "++++");
                     removelist.Remove(ball);
                 }
                 foreach (var tmp in removelist)
-                    Debug.Log(tmp.id + "!@!@");
+                    //Debug.Log(tmp.id + "!@!@");
                 return removelist;
             }
             outlist.Add(data);
