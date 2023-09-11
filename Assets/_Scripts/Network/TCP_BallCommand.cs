@@ -268,9 +268,10 @@ public class TCP_BallCommand : MonoBehaviour
                         datas.RemoveAt(index);
                     }
 
-                    instance.removeRoomPlayerEvent.Invoke(idList);
+                    // Remove room player
                     index--;
                     datas.RemoveAt(index);
+                    instance.removeRoomPlayerEvent.Invoke(idList);
                     break;
 
                 case TCP_BallHeader.RoomMaxCountChanged:

@@ -60,12 +60,19 @@ public class UI_RoomManager : MonoBehaviour
         {
             List<string> ids = roomPool.Keys.ToList();
 
-            foreach (string id in ids)
-            {
-                roomPool[id].gameObject.SetActive(false);
-                roomPool[id].transform.SetParent(instance.transform);
-                roomPool.Remove(id);
-            }
+            Remove(ids);
+        }
+    }
+
+    public static void Remove(List<string> ids)
+    {
+        Debug.Log("!");
+
+        foreach (string id in ids)
+        {
+            roomPool[id].gameObject.SetActive(false);
+            roomPool[id].transform.SetParent(instance.transform);
+            roomPool.Remove(id);
         }
     }
 }
