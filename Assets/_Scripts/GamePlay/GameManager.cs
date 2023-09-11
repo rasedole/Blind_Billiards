@@ -324,7 +324,10 @@ public class GameManager : MonoBehaviour
 
     public void GetLastPlayerFromServer(BallEntryPlayerData data)
     {
-        entryPlayerDataList.Add(data);
+        if(TCP_BallCore.networkMode != NetworkMode.Server)
+        {
+            entryPlayerDataList.Add(data);
+        }
         if (TCP_BallUI.gameState == GameState.Room)
         {
             UI_RoomManager.MakeNew(new List<BallEntryPlayerData>() { data });

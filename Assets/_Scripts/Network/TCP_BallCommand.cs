@@ -125,6 +125,7 @@ public class TCP_BallCommand : MonoBehaviour
                     {
                         // Client GameManager Function
                         instance.clientSetSelfIDEvent.Invoke(datas[1 + index].text);
+                        TCP_BallClient.Flush();
                     }
                     else
                     {
