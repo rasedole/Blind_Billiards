@@ -33,6 +33,8 @@ public class TCP_BallServer
                     foreach (BallEntryPlayerData client in clients)
                     {
                         Debug.LogWarning(client.id);
+
+                        // Kick overflow
                         RoomMaxDecreaseKick(roomPlayer[client.id]);
                         roomPlayer[client.id].client.Close();
                         roomPlayer[client.id].client = null;
@@ -42,6 +44,7 @@ public class TCP_BallServer
                 }
             }
 
+            // Notify to other player
             Broadcast
                 (
                     new List<CommandData>()
