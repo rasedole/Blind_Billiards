@@ -147,6 +147,20 @@ public class TCP_BallClient
         }
     }
 
+    public static void Flush()
+    {
+        try
+        {
+            while (instance.reader.ReadLine() != "")
+            {
+
+            }
+        }
+        catch(Exception e)
+        {
+            Debug.LogError(e);
+        }
+    }
 
     // Send message to server
     public void Send(List<CommandData> commands)

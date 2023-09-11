@@ -284,8 +284,6 @@ public class TCP_BallServer
             }
         }
 
-        if(disconnectList.Count > 1)
-
         for (int i = 0; i < disconnectList.Count; i++)
         {
             roomPlayer[disconnectList[i]].Disconnect();
