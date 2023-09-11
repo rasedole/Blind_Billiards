@@ -151,10 +151,6 @@ public class TCP_BallClient
     {
         try
         {
-            while (instance.reader.ReadLine() != "")
-            {
-
-            }
         }
         catch(Exception e)
         {
