@@ -30,8 +30,8 @@ public class RankingResultUI : MonoBehaviour
 
     void Start()
     {
-        maxRankingRow = rankObj.Length;
         savedRankDatas = new List<RankData>();
+        maxRankingRow = rankObj.Length;
     }
 
     public void RankShow(List<RankData> rankDatas)
@@ -39,7 +39,7 @@ public class RankingResultUI : MonoBehaviour
         LoadRankData(rankDatas.Count);
 
         // 새 점수 추가
-        foreach(RankData rankData in rankDatas)
+        foreach (RankData rankData in rankDatas)
         {
             savedRankDatas.Add(rankData);
         }
@@ -52,6 +52,9 @@ public class RankingResultUI : MonoBehaviour
         {
             savedRankDatas.RemoveRange(maxRankingRow, savedRankDatas.Count-maxRankingRow);
         }
+
+        if (savedRankDatas.Count < maxRankingRow)
+            maxRankingRow = savedRankDatas.Count;
 
         // 화면에 보여주기.
         ShowRankData();
