@@ -29,46 +29,58 @@ public static class TCP_BallGameManagerGetterAdapter
 
     public static List<BallEntryPlayerData> RoomMaxCountDecrease(int changedCount)
     {
-        List<BallEntryPlayerData> removelist = GameManager.Instance.entryPlayerDataList;
+        if (GameManager.Instance.entryPlayerDataList.Count > changedCount)
+        {
+            List<BallEntryPlayerData> removelist = GameManager.Instance.entryPlayerDataList;
+            for (int i = 0; i < changedCount; i++)
+            {
+                removelist.RemoveAt(0);
+            }
+
+            return removelist;
+        }
+        return null;
+
+
+        //지워질 목록
+
+        //남아있을 목록
         List<BallEntryPlayerData> outlist = new List<BallEntryPlayerData>();
+
+
         int typecount = 0;
         bool isexist = false;
-        foreach (var data in GameManager.Instance.entryPlayerDataList)
-        {
-            isexist = false;
-            foreach (var outdata in outlist)
-            {
-                if (data.id == outdata.id)
-                {
-                    isexist = true;
-                    break;
-                }
-            }
-            if (!isexist)
-            {
-                typecount++;
-            }
-            if (typecount > changedCount)
-            {
-                foreach (var ball in outlist)
-                {
-                    //Debug.Log(ball.id + "++++");
-                    removelist.Remove(ball);
-                }
-                foreach (var tmp in removelist)
-                    //Debug.Log(tmp.id + "!@!@");
-                return removelist;
-            }
-            outlist.Add(data);
-        }
+        //foreach (var data in GameManager.Instance.entryPlayerDataList)
+        //{
+        //    isexist = false;
+        //    //foreach (var outdata in outlist)
+        //    //{
+        //    //    if (data.id == outdata.id)
+        //    //    {
+        //    //        isexist = true;
+        //    //        break;
+        //    //    }
+        //    //}
+        //    if (!isexist)
+        //    {
+        //        typecount++;
+        //    }
+        //    if (typecount > changedCount)
+        //    {
+        //        foreach (var ball in outlist)
+        //        {
+        //            //removelist.Remove(ball);
+        //        }
+        //        return removelist;
+        //    }
+        //    outlist.Add(data);
+        //}
 
-        foreach (var ball in outlist)
-        {
-            Debug.Log(ball.id + "++++");
-            removelist.Remove(ball);
-        }
-        foreach (var tmp in removelist)
-            Debug.Log(tmp.id + "!@!@");
-        return removelist;
+        //foreach (var ball in outlist)
+        //{
+        //    //Debug.Log(ball.id + "++++");
+        //    removelist.Remove(ball);
+        //}
+        //return removelist;
     }
 }
