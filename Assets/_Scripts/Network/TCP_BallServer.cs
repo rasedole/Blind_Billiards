@@ -163,6 +163,12 @@ public class TCP_BallServer
 
         // Return all player entrydata to new client
         broadcastDataToNewClient.AddRange(GetAllEntryPlayer());
+
+        // Add room max count to new client
+        broadcastDataToNewClient.Add(new CommandData(0, ((int)TCP_BallHeader.RoomMaxCountChanged).ToString()));
+        broadcastDataToNewClient.Add(new CommandData(3, _maxPlayerCount.ToString()));
+
+        // Broadcast to new client
         Broadcast
             (
                 broadcastDataToNewClient,
@@ -200,8 +206,23 @@ public class TCP_BallServer
 
     public void CloseServer()
     {
-        if (listener != null)
+
+        if (started)
         {
+            // Disconnect all clients
+            Broadcast
+                (
+                    new List<CommandData> { new CommandData(0, ((int)TCP_BallHeader.ServerDisconnect).ToString()) },
+                    roomPlayer.Values.ToList()
+                );
+
+            foreach (TCP_BallServerConnectClients client in roomPlayer.Values)
+            {
+                client.Disconnect();
+            }
+            roomPlayer.Clear();
+
+            // Stop server listener
             listener.Stop();
         }
         listener = null;
@@ -294,13 +315,14 @@ public class TCP_BallServer
             {
                 roomPlayer.Remove(disconnectList[i]);
             }
+
+            if (TCP_BallUI.gameState == GameState.InGame)
+            {
+                //Broadcast(new List<CommandData>() { new CommandData(2, $"{disconnectList[i]}와의 연결이 끊어졌습니다") }, roomPlayer.Values.ToList());
+            }
         }
 
-        if (TCP_BallUI.gameState == GameState.InGame)
-        {
-            //Broadcast(new List<CommandData>() { new CommandData(2, $"{disconnectList[i]}와의 연결이 끊어졌습니다") }, roomPlayer.Values.ToList());
-        }
-        else if (disconnectList.Count > 0)
+        if (TCP_BallUI.gameState != GameState.InGame && disconnectList.Count > 0)
         {
             // Delete disconnected clients in room to all other players
             BroadCastDisconnectAtRoom(disconnectList);

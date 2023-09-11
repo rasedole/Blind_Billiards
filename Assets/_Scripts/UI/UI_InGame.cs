@@ -17,6 +17,8 @@ public class UI_InGame : MonoBehaviour
     private TextMeshProUGUI headerText;
     [SerializeField]
     private TMP_InputField chatting;
+    [SerializeField]
+    private Animator inGameWrapper;
 
     private static Dictionary<string, UI_OnePlayerInRoom> roomPool = new Dictionary<string, UI_OnePlayerInRoom>();
     private static Dictionary<string, int> scoreList = new Dictionary<string, int>();
@@ -26,7 +28,6 @@ public class UI_InGame : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        gameObject.SetActive(false);
     }
 
     // Start is called before the first frame update
@@ -43,7 +44,6 @@ public class UI_InGame : MonoBehaviour
 
     public static void MakeNew(List<BallEntryPlayerData> allPlayerList, string _myID)
     {
-        instance.gameObject.SetActive(true);
         myID = _myID;
 
         foreach (BallEntryPlayerData player in allPlayerList)

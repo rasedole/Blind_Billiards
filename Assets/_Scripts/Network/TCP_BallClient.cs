@@ -69,12 +69,11 @@ public class TCP_BallClient
         // Check disconnect manualy
         if (ready)
         {
-            instance.Send(new List<CommandData>() 
+            if(TCP_BallCore.networkMode == NetworkMode.Client)
             {
-                new CommandData(0, ((int)TCP_BallHeader.RoomDisconnect).ToString())
-            });
+                instance.Send(new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.RoomDisconnect).ToString()) });
+            }
         }
-
 
         // Abort
         if(client != null)
@@ -144,17 +143,6 @@ public class TCP_BallClient
             {
                 List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
             }
-        }
-    }
-
-    public static void Flush()
-    {
-        try
-        {
-        }
-        catch(Exception e)
-        {
-            Debug.LogError(e);
         }
     }
 

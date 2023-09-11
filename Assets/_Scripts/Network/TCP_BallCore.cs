@@ -212,4 +212,10 @@ public class TCP_BallCore : MonoBehaviour
             server.CloseServer();
         }
     }
+
+    // For button
+    public static void EndGame()
+    {
+        instance.ui.GameEnd();
+    }
 }

@@ -22,6 +22,18 @@ public class TCP_BallCommand : MonoBehaviour
     private UnityEvent<List<BallEntryPlayerData>> clientGetAllPlayerEvent;
     [SerializeField]
     private UnityEvent<List<string>> removeRoomPlayerEvent;
+    [SerializeField]
+    private UnityEvent _endGameServer;
+    [SerializeField]
+    private UnityEvent _endGameClient;
+    [SerializeField]
+    private UnityEvent _endGameSolo;
+    [SerializeField]
+    private UnityEvent _startGameServer;
+    [SerializeField]
+    private UnityEvent _startGameClient;
+    [SerializeField]
+    private UnityEvent<int> _startGameSolo;
 
 
     private static TCP_BallCommand instance;
@@ -30,6 +42,30 @@ public class TCP_BallCommand : MonoBehaviour
     public static UnityEvent<string> serverEntryNewClientEvent
     {
         get { return instance._serverEntryNewClientEvent; }
+    }
+    public static UnityEvent endGameServer
+    {
+        get { return instance._endGameServer; }
+    }
+    public static UnityEvent endGameClient
+    {
+        get { return instance._endGameClient; }
+    }
+    public static UnityEvent endGameSolo
+    {
+        get { return instance._endGameSolo; }
+    }
+    public static UnityEvent startGameServer
+    {
+        get { return instance._startGameServer; }
+    }
+    public static UnityEvent startGameClient
+    {
+        get { return instance._startGameClient; }
+    }
+    public static UnityEvent<int> startGameSolo
+    {
+        get { return instance._startGameSolo; }
     }
 
 
@@ -64,7 +100,6 @@ public class TCP_BallCommand : MonoBehaviour
                 b.command != 7
             )
         {
-            //Debug.Log("13567 > " + id.command + "" + index.command + "" + r.command + "" + g.command + "" + b.command);
             Debug.Log(CommandCore.Encode(instance.command, new List<CommandData>() { id, index, r, g, b }));
             TCP_BallCore.messageEvent.Invoke("Type error!");
             return false;
@@ -128,7 +163,6 @@ public class TCP_BallCommand : MonoBehaviour
                     {
                         // Client GameManager Function
                         instance.clientSetSelfIDEvent.Invoke(datas[1 + index].text);
-                        TCP_BallClient.Flush();
                     }
                     else
                     {
@@ -281,6 +315,7 @@ public class TCP_BallCommand : MonoBehaviour
                     instance.removeRoomPlayerEvent.Invoke(idList);
                     break;
 
+                // Server changed room max count
                 case TCP_BallHeader.RoomMaxCountChanged:
                     int value = 0;
                     if (datas.Count < 1 + index)
@@ -306,6 +341,11 @@ public class TCP_BallCommand : MonoBehaviour
                     }
 
                     datas.RemoveRange(index, 2);
+                    break;
+
+                // Server closed
+                case TCP_BallHeader.ServerDisconnect:
+                    instance.ui.GameEnd();
                     break;
 
                 default:

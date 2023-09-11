@@ -12,6 +12,7 @@ public enum TCP_BallHeader
     RoomMaxKick = 3,
     RoomDisconnect = 4,
     RoomMaxCountChanged = 5,
+    ServerDisconnect = 6,
 
 }
 

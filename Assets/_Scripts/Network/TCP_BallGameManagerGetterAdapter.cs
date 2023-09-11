@@ -45,11 +45,11 @@ public static class TCP_BallGameManagerGetterAdapter
         //지워질 목록
 
         //남아있을 목록
-        List<BallEntryPlayerData> outlist = new List<BallEntryPlayerData>();
+        //List<BallEntryPlayerData> outlist = new List<BallEntryPlayerData>();
 
 
-        int typecount = 0;
-        bool isexist = false;
+        //int typecount = 0;
+        //bool isexist = false;
         //foreach (var data in GameManager.Instance.entryPlayerDataList)
         //{
         //    isexist = false;

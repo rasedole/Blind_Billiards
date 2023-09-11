@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     public TMP_InputField maxPlayer;
 
     //###새로만든 UI에 있는 조이스틱으로 변경필요 코드
-    public VariableJoystick joystick;
+    public FixedJoystick joystick;
 
     public string myID = "Test";
 
