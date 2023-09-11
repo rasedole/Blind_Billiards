@@ -20,8 +20,7 @@ public class GuestReplayer : MonoBehaviour
 
     private static GuestReplayer instance;
 
-    [SerializeField]
-    private List<BallDoll> balls;
+    public List<BallDoll> balls;
 
     private List<MoveData> moveDatas;
     private bool _replaying;

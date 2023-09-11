@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
 
     public string myID = "Test";
 
+    public GuestReplayer guestReplayer;
+
     //public GameObject gameUI;
 
     private void Awake()
@@ -230,6 +232,11 @@ public class GameManager : MonoBehaviour
             ballGO.GetComponent<BallDoll>().showcaseColor = playerData.color;
             gamePlayers.Add(ballGO);
             ballGO.name = playerData.id;
+        }
+
+        foreach(var ball in gamePlayers)
+        {
+            guestReplayer.balls.Add(ball.GetComponent<BallDoll>());
         }
 
         if (TCP_BallCore.networkMode == NetworkMode.None)
