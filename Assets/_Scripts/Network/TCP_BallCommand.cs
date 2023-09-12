@@ -139,7 +139,6 @@ public class TCP_BallCommand : MonoBehaviour
 
         while (index < datas.Count)
         {
-            Debug.LogWarning("while");
             // Check error
             if (datas[0].command != 0)
             {
@@ -147,12 +146,10 @@ public class TCP_BallCommand : MonoBehaviour
                 return null;
             }
 
-            Debug.LogWarning("switch");
             switch (Enum.Parse<TCP_BallHeader>(datas[index].text))
             {
                 // Check id
                 case TCP_BallHeader.SetID:
-                    Debug.LogWarning("SetID");
                     if (datas.Count < 2 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
@@ -174,7 +171,6 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Server has new player entry
                 case TCP_BallHeader.Entry:
-                    Debug.LogWarning("Entry");
                     if (datas.Count < 6 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
@@ -204,7 +200,6 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Get all player list
                 case TCP_BallHeader.AllPlayerList:
-                    Debug.LogWarning("AllPlayerList");
                     if (datas.Count < 6 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
@@ -219,7 +214,6 @@ public class TCP_BallCommand : MonoBehaviour
                             datas[index].command == 1
                         )
                     {
-                        Debug.LogWarning("TCP_BallHeader.AllPlayerList");
                         // Read one player
                         BallEntryPlayerData onePlayer;
 
@@ -352,7 +346,6 @@ public class TCP_BallCommand : MonoBehaviour
                     break;
             }
         }
-        Debug.LogWarning("return");
         return datas;
     }
 

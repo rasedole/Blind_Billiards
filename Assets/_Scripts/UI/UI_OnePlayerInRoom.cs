@@ -36,5 +36,9 @@ public class UI_OnePlayerInRoom : MonoBehaviour
         text.text = _text;
         transform.SetParent(pareant);
         transform.localScale = Vector3.one;
+        Vector3 localPos = transform.localPosition;
+        localPos.z = 0;
+        transform.localPosition = localPos;
+        transform.localRotation = Quaternion.identity;  
     }
 }

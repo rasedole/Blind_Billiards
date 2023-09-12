@@ -271,6 +271,7 @@ public class TCP_BallUI : MonoBehaviour
         chatWrapper.SetActive(TCP_BallCore.networkMode != NetworkMode.None);
         chatToggle.SetActive(TCP_BallCore.networkMode != NetworkMode.None);
         chatInput.SetActive(TCP_BallCore.networkMode != NetworkMode.None);
+        _gameState = GameState.InGame;
 
         if (TCP_BallCore.networkMode == NetworkMode.Server)
         {
