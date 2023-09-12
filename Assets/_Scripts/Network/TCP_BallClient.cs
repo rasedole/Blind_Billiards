@@ -78,7 +78,7 @@ public class TCP_BallClient
         // Abort
         if(client != null)
         {
-            client.OnDisconnect();
+            //client.OnDisconnect();
             if (client.writer != null)
             {
                 client.writer.Close();
@@ -103,7 +103,7 @@ public class TCP_BallClient
 
         if(instance != null)
         {
-            instance.OnDisconnect();
+            //instance.OnDisconnect();
             if (instance.writer != null)
             {
                 instance.writer.Close();
@@ -127,11 +127,6 @@ public class TCP_BallClient
 
             instance = null;
         }
-    }
-
-    private void OnDisconnect()
-    {
-        
     }
 
     public void Update()

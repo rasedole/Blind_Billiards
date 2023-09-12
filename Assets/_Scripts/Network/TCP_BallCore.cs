@@ -218,4 +218,35 @@ public class TCP_BallCore : MonoBehaviour
     {
         instance.ui.GameEnd();
     }
+
+    public static void StartGame()
+    {
+        TCP_BallServer.StartGame();
+    }
+
+    public static void ShootTheBall(Vector3 shootValue)
+    {
+        if (TCP_BallGameManagerGetterAdapter.myID != TCP_BallGameManagerGetterAdapter.nowTurnID)
+        {
+            Debug.LogError("Order Error");
+        }
+
+        if (networkMode == NetworkMode.Server)
+        {
+            TCP_BallCommand.shootBall.Invoke(shootValue);
+        }
+        else if (networkMode == NetworkMode.Client)
+        {
+            client.Send(TCP_BallCommand.ClientSendEvent
+                (
+                    new List<CommandData>()
+                    {
+                        new CommandData(0, ((int)TCP_BallHeader.Shoot).ToString()),
+                        new CommandData(5, shootValue.x.ToString()),
+                        new CommandData(6, shootValue.y.ToString()),
+                        new CommandData(7, shootValue.z.ToString())
+                    }
+                ));
+        }
+    }
 }
