@@ -388,11 +388,11 @@ public class TCP_BallCommand : MonoBehaviour
                         MoveData moveData = new MoveData();
                         moveData.index = int.Parse(datas[index + 1].text);
                         moveData.ballIndex = int.Parse(datas[index + 2].text);
-                        moveData.startTime = float.Parse(datas[index + 8].text);
+                        moveData.startTime = float.Parse(datas[index + 6].text);
                         Vector3 vector = new Vector3();
-                        vector.x = float.Parse(datas[index + 5].text);
-                        vector.y = float.Parse(datas[index + 6].text);
-                        vector.z = float.Parse(datas[index + 7].text);
+                        vector.x = float.Parse(datas[index + 3].text);
+                        vector.y = float.Parse(datas[index + 4].text);
+                        vector.z = float.Parse(datas[index + 5].text);
                         moveData.startPos = vector;
                         instance.ballMove.Invoke(moveData);
                     }
