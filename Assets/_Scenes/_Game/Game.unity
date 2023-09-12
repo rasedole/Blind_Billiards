@@ -3621,6 +3621,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _shootBall:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &352936292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12197,9 +12200,9 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 352936290}
-          m_TargetAssemblyTypeName: TCP_BallUI, Assembly-CSharp
-          m_MethodName: GameStart
+        - m_Target: {fileID: 352936289}
+          m_TargetAssemblyTypeName: TCP_BallCore, Assembly-CSharp
+          m_MethodName: StartGame
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

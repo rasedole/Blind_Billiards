@@ -34,6 +34,12 @@ public class TCP_BallCommand : MonoBehaviour
     private UnityEvent _startGameClient;
     [SerializeField]
     private UnityEvent<int> _startGameSolo;
+    [SerializeField]
+    private UnityEvent<Vector3> _shootBall;
+    [SerializeField]
+    private UnityEvent<MoveData> ballMove;
+    [SerializeField]
+    private UnityEvent<int, int> turnEnd;
 
 
     private static TCP_BallCommand instance;
@@ -66,6 +72,10 @@ public class TCP_BallCommand : MonoBehaviour
     public static UnityEvent<int> startGameSolo
     {
         get { return instance._startGameSolo; }
+    }
+    public static UnityEvent<Vector3> shootBall
+    {
+        get { return instance._shootBall; }
     }
 
 
@@ -340,6 +350,70 @@ public class TCP_BallCommand : MonoBehaviour
                 // Server closed
                 case TCP_BallHeader.ServerDisconnect:
                     instance.ui.GameEnd();
+                    datas.RemoveAt(index);
+                    break;
+
+                // Game start
+                case TCP_BallHeader.GameStart:
+                    instance.ui.GameStart();
+                    datas.RemoveAt(index);
+                    break;
+
+                // Get ball move data
+                case TCP_BallHeader.BallMove:
+                    if (datas.Count < 7 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+                    if
+                    (
+                        datas[index + 1].command != 3 ||
+                        datas[index + 2].command != 4 ||
+                        datas[index + 3].command != 5 ||
+                        datas[index + 4].command != 6 ||
+                        datas[index + 5].command != 7 ||
+                        datas[index + 6].command != 8
+                    )
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        return null;
+                    }
+
+                    if(TCP_BallCore.networkMode == NetworkMode.Client)
+                    {
+                        MoveData moveData = new MoveData();
+                        moveData.index = int.Parse(datas[index + 1].text);
+                        moveData.ballIndex = int.Parse(datas[index + 2].text);
+                        moveData.startTime = float.Parse(datas[index + 8].text);
+                        Vector3 vector = new Vector3();
+                        vector.x = float.Parse(datas[index + 5].text);
+                        vector.y = float.Parse(datas[index + 6].text);
+                        vector.z = float.Parse(datas[index + 7].text);
+                        moveData.startPos = vector;
+                        instance.ballMove.Invoke(moveData);
+                    }
+                    datas.RemoveRange(index, 7);
+                    break;
+
+                // Server's ball stopped moving
+                case TCP_BallHeader.TurnEnd:
+                    if (datas.Count < 2 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+                    if (datas[index + 1].command != 3 || datas[index + 2].command != 4)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        return null;
+                    }
+                    if(TCP_BallCore.networkMode == NetworkMode.Client)
+                    {
+                        instance.turnEnd.Invoke(int.Parse(datas[index + 1].text), int.Parse(datas[index + 2].text));
+                    }
+
+                    datas.RemoveRange(index, 3);
                     break;
 
                 default:
@@ -420,6 +494,24 @@ public class TCP_BallCommand : MonoBehaviour
 
                 case TCP_BallHeader.RoomDisconnect:
                     index++;
+                    break;
+
+                case TCP_BallHeader.Shoot:
+                    if (datas.Count < 4 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+                    if
+                    (
+                        datas[index + 1].command != 5 ||
+                        datas[index + 2].command != 6 ||
+                        datas[index + 3].command != 7
+                    )
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        return null;
+                    }
                     break;
 
                 default:

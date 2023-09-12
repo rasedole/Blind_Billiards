@@ -83,4 +83,20 @@ public static class TCP_BallGameManagerGetterAdapter
         //}
         //return removelist;
     }
+
+    public static string myID
+    {
+        get
+        {
+            return "";
+        }
+    }
+
+    public static string nowTurnID
+    {
+        get
+        {
+            return "";
+        }
+    }
 }

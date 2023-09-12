@@ -13,6 +13,10 @@ public enum TCP_BallHeader
     RoomDisconnect = 4,
     RoomMaxCountChanged = 5,
     ServerDisconnect = 6,
+    GameStart = 7,
+    Shoot = 8,
+    BallMove = 9,
+    TurnEnd = 10,
 
 }
 

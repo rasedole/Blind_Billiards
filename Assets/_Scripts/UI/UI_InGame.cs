@@ -23,7 +23,6 @@ public class UI_InGame : MonoBehaviour
     private static Dictionary<string, UI_OnePlayerInRoom> roomPool = new Dictionary<string, UI_OnePlayerInRoom>();
     private static Dictionary<string, int> scoreList = new Dictionary<string, int>();
     private static UI_InGame instance;
-    private static string myID;
 
     private void Awake()
     {
@@ -42,10 +41,8 @@ public class UI_InGame : MonoBehaviour
         
     }
 
-    public static void MakeNew(List<BallEntryPlayerData> allPlayerList, string _myID)
+    public static void MakeNew(List<BallEntryPlayerData> allPlayerList)
     {
-        myID = _myID;
-
         foreach (BallEntryPlayerData player in allPlayerList)
         {
             if (roomPool.ContainsKey(player.id))
@@ -113,7 +110,7 @@ public class UI_InGame : MonoBehaviour
                     ids.Add(idNow);
 
                     // Check mine
-                    if (idNow == myID)
+                    if (idNow == TCP_BallGameManagerGetterAdapter.myID)
                     {
                         instance.headerText.text = "Rank " + rankNow + "\nScore " + score;
                     }

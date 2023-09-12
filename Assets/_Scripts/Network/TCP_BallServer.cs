@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -61,6 +62,7 @@ public class TCP_BallServer
     private static List<string> disconnectList;
     private static TCP_BallServer instance;
     private static int _maxPlayerCount;
+    private static int moveDataIndex = 0;
 
     private TcpListener listener;
 
@@ -295,6 +297,22 @@ public class TCP_BallServer
                                         commands.RemoveAt(index);
                                         break;
 
+                                    case TCP_BallHeader.Shoot:
+                                        if(pair.Key == TCP_BallGameManagerGetterAdapter.nowTurnID)
+                                        {
+                                            Vector3 vector = new Vector3();
+                                            vector.x = float.Parse(commands[index + 1].text);
+                                            vector.y = float.Parse(commands[index + 2].text);
+                                            vector.z = float.Parse(commands[index + 3].text);
+                                            TCP_BallCommand.shootBall.Invoke(vector);
+                                        }
+                                        else
+                                        {
+                                            Debug.LogError("Order Error");
+                                        }
+                                        commands.RemoveRange(index, 4);
+                                        break;
+
                                     default:
                                         break;
                                 }
@@ -443,5 +461,60 @@ public class TCP_BallServer
                 disconnectCommand,
                 roomPlayer.Values.ToList()
             );
+    }
+
+    public static void StartGame()
+    {
+        List<CommandData> commandList = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.GameStart).ToString()) };
+        Broadcast
+            (
+                commandList,
+                roomPlayer.Values.ToList()
+            );
+    }
+
+    public static void Moved(MoveData moveData)
+    {
+        if(TCP_BallCore.networkMode != NetworkMode.Server)
+        {
+            Debug.LogError("You are not server!");
+        }
+
+        Broadcast
+        (
+            new List<CommandData>()
+            {
+                new CommandData(0, ((int)TCP_BallHeader.BallMove).ToString()),
+                new CommandData(3, moveData.index.ToString()),
+                new CommandData(4, moveData.ballIndex.ToString()),
+                new CommandData(5, moveData.startPos.x.ToString()),
+                new CommandData(6, moveData.startPos.y.ToString()),
+                new CommandData(7, moveData.startPos.z.ToString()),
+                new CommandData(8, moveData.startTime.ToString())
+            },
+            roomPlayer.Values.ToList()
+        );
+        moveDataIndex++;
+    }
+
+    public static void TurnEnd(int score)
+    {
+        if (TCP_BallCore.networkMode != NetworkMode.Server)
+        {
+            Debug.LogError("You are not server!");
+        }
+
+        Broadcast
+        (
+            new List<CommandData>()
+            {
+                new CommandData(0, ((int)TCP_BallHeader.TurnEnd).ToString()),
+                new CommandData(3, moveDataIndex.ToString()),
+                new CommandData(4, score.ToString())
+            },
+            roomPlayer.Values.ToList()
+        );
+
+        moveDataIndex = 0;
     }
 }
