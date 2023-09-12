@@ -209,22 +209,22 @@ public class GameManager : MonoBehaviour
 
     public void MakeBallByData()
     {
-        RemoveSameID();
+        //RemoveSameID();
 
         //셔플
-        for (int i = 0; i < entryPlayerDataList.Count; i++)
-        {
-            int randomNum = Random.Range(0, entryPlayerDataList.Count);
-            BallEntryPlayerData tempData = entryPlayerDataList[i];
-            entryPlayerDataList[i] = entryPlayerDataList[randomNum];
-            entryPlayerDataList[randomNum] = tempData;
-        }
+        //for (int i = 0; i < entryPlayerDataList.Count; i++)
+        //{
+        //    int randomNum = Random.Range(0, entryPlayerDataList.Count);
+        //    BallEntryPlayerData tempData = entryPlayerDataList[i];
+        //    entryPlayerDataList[i] = entryPlayerDataList[randomNum];
+        //    entryPlayerDataList[randomNum] = tempData;
+        //}
 
         //셔플한 순서 index에 입력
-        for (int i = 0; i < entryPlayerDataList.Count; i++)
-        {
-            entryPlayerDataList[i].index = i;
-        }
+        //for (int i = 0; i < entryPlayerDataList.Count; i++)
+        //{
+        //    entryPlayerDataList[i].index = i;
+        //}
 
         foreach (var playerData in entryPlayerDataList)
         {
@@ -268,8 +268,9 @@ public class GameManager : MonoBehaviour
 
     public void StartGameFromRoom()
     {
-            TurnManager.Instance.GetListFromGameManager();
-            MakeBallByData();
+        Debug.Log(Time.time + " aaaa");
+        TurnManager.Instance.GetListFromGameManager();
+        MakeBallByData();
     }
 
     public void StartGameFromRoomClient()
