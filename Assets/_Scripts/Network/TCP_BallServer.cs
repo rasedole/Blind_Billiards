@@ -517,4 +517,16 @@ public class TCP_BallServer
 
         moveDataIndex = 0;
     }
+
+    public static bool CheckPlayerConnect(string id)
+    {
+        if(roomPlayer.ContainsKey(id) && roomPlayer[id] != null)
+        {
+            return true;
+        }
+        else 
+        { 
+            return false; 
+        }
+    }
 }
