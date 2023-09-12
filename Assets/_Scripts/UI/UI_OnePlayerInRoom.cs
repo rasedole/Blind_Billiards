@@ -8,7 +8,7 @@ public class UI_OnePlayerInRoom : MonoBehaviour
 {
     public string score
     {
-        get { return score; }
+        get { return text.text; }
         set { text.text = value; }
     }
 

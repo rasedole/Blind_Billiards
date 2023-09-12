@@ -220,7 +220,10 @@ public class TCP_BallServer
 
             foreach (TCP_BallServerConnectClients client in roomPlayer.Values)
             {
-                client.Disconnect();
+                if(client.client != null)
+                {
+                    client.Disconnect();
+                }
             }
             roomPlayer.Clear();
 
@@ -267,7 +270,10 @@ public class TCP_BallServer
             // Remember client disconnected 
             if (!connected)
             {
-                pair.Value.client.Close();
+                if(pair.Value != null && pair.Value.client != null)
+                {
+                    pair.Value.client.Close();
+                }
                 disconnectList.Add(pair.Key);
             }
             // Listen client send message
