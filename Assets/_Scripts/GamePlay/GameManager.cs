@@ -255,34 +255,28 @@ public class GameManager : MonoBehaviour
         joystick.GetComponent<BallLineRender>().ResetBallStatus();
     }
 
-
-    public void StartGameFromRoom()
+    public void StartGameSolo(System.Int32 playerNumber)
     {
-        if (TCP_BallCore.networkMode != NetworkMode.Client)
-        {
-            if(TCP_BallCore.networkMode == NetworkMode.None)
-            {
-                MakeLocalPlayer();
-            }
-            //gameObjects.SetActive(true);
-            TurnManager.Instance.GetListFromGameManager();
-            MakeBallByData();
-            //gameUI.SetActive(true);
-            //ScoreManager.Instance.UpdateScore();
-        }
-    }
-
-    public void StartGameFromRoomClient()
-    {
-        //MakeFourTestPlayer();
-        gameObjects.SetActive(true);
+        MakeLocalPlayer(playerNumber);
         TurnManager.Instance.GetListFromGameManager();
         MakeBallByData();
     }
 
-    public void MakeLocalPlayer()
+    public void StartGameFromRoom()
     {
-        for(int i = 0; i < int.Parse(maxPlayer.text); i++)
+            TurnManager.Instance.GetListFromGameManager();
+            MakeBallByData();
+    }
+
+    public void StartGameFromRoomClient()
+    {
+        TurnManager.Instance.GetListFromGameManager();
+        MakeBallByData();
+    }
+
+    public void MakeLocalPlayer(System.Int32 _playerNumber)
+    {
+        for(int i = 0; i < _playerNumber; i++)
         {
             int randomID = Random.Range(0, 10000);
             AddPlayerData("LocalPlayer"+randomID);
@@ -339,5 +333,10 @@ public class GameManager : MonoBehaviour
     public void SetID()
     {
         myID = inputID.text;
+    }
+
+    public void SetID(string _id)
+    {
+        myID = _id;
     }
 }
