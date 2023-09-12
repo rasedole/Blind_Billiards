@@ -221,7 +221,10 @@ public class TCP_BallCore : MonoBehaviour
 
     public static void StartGame()
     {
-        TCP_BallServer.StartGame();
+        if(networkMode == NetworkMode.Server)
+        {
+            TCP_BallServer.StartGame();
+        }
     }
 
     public static void ShootTheBall(Vector3 shootValue)
