@@ -355,7 +355,6 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Game start
                 case TCP_BallHeader.GameStart:
-                    instance.ui.GameStart();
                     datas.RemoveAt(index);
                     break;
 
