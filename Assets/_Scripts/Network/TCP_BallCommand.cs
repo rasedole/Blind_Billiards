@@ -356,6 +356,10 @@ public class TCP_BallCommand : MonoBehaviour
                 // Game start
                 case TCP_BallHeader.GameStart:
                     datas.RemoveAt(index);
+                    if(TCP_BallCore.networkMode == NetworkMode.Client)
+                    {
+                        instance.ui.GameStart();
+                    }
                     break;
 
                 // Get ball move data
