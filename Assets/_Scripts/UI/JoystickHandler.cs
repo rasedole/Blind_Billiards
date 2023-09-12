@@ -24,7 +24,7 @@ public class JoystickHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (lastScreenSize.x != Screen.width && lastScreenSize.y != Screen.height)
+        if (lastScreenSize.x != Screen.width || lastScreenSize.y != Screen.height)
         {
             lastScreenSize = new Vector2(Screen.width, Screen.height);
             Init();
@@ -54,5 +54,10 @@ public class JoystickHandler : MonoBehaviour
         rect.anchorMax = new Vector2(1, 1);
         rect.offsetMin = Vector2.zero;
         rect.offsetMax = Vector2.zero;
+    }
+
+    private void OnEnable()
+    {
+        Init();
     }
 }

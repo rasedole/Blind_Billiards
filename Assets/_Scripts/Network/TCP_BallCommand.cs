@@ -411,10 +411,7 @@ public class TCP_BallCommand : MonoBehaviour
                         TCP_BallCore.messageEvent.Invoke("Type error!");
                         return null;
                     }
-                    if(TCP_BallCore.networkMode == NetworkMode.Client)
-                    {
-                        instance.turnEnd.Invoke(int.Parse(datas[index + 1].text), int.Parse(datas[index + 2].text));
-                    }
+                    instance.turnEnd.Invoke(int.Parse(datas[index + 1].text), int.Parse(datas[index + 2].text));
 
                     datas.RemoveRange(index, 3);
                     break;
@@ -515,6 +512,8 @@ public class TCP_BallCommand : MonoBehaviour
                         TCP_BallCore.messageEvent.Invoke("Type error!");
                         return null;
                     }
+
+                    index += 4;
                     break;
 
                 default:
