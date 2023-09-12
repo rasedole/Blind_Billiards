@@ -13,14 +13,14 @@ public class BallShoot : MonoBehaviour
     //加己1 : 炼捞胶平, h, v, tempV, tempH, Power, 规氢
     [SerializeField] float power = 50;
 
-    VariableJoystick joystick;
+    FixedJoystick joystick;
     float tempV = 0;
     float tempH = 0;
     Vector3 direction;
 
     private void Start()
     {
-        joystick = GetComponent<VariableJoystick>();
+        joystick = GetComponent<FixedJoystick>();
     }
 
     private void Update()

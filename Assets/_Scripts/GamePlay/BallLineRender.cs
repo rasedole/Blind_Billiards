@@ -13,7 +13,7 @@ public class BallLineRender : MonoBehaviour
     //속성1 : 입력값을 받아올 JoyStick, 선을 그릴 LineRenderer, 벽을 찾을 Ray와 RayCastHit, 조이스틱이 눌러졌는지 확인할 isClicked, 공의 위치
     public bool isClicked = false;
 
-    VariableJoystick joystick;
+    FixedJoystick joystick;
     LineRenderer lineRenderer;
     Ray lineRay;
     RaycastHit hitinfo = new();
@@ -22,7 +22,7 @@ public class BallLineRender : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        joystick = GetComponent<VariableJoystick>();
+        joystick = GetComponent<FixedJoystick>();
     }
 
     // Update is called once per frame
@@ -34,7 +34,7 @@ public class BallLineRender : MonoBehaviour
             {
                 if (GameManager.Instance.CheckMyBall() || TCP_BallCore.networkMode == NetworkMode.None)
                 {
-                    Vector3 offset = new Vector3(joystick.transform.position.x - joystick.Horizontal, 0, joystick.transform.position.y - joystick.Vertical);
+                    Vector3 offset = new Vector3(- joystick.Horizontal, 0, - joystick.Vertical);
                     lineRay = new Ray(ballPosition, offset.normalized);
                     int _layerMask = 1 << LayerMask.NameToLayer("Wall");
                     if (Physics.Raycast(lineRay, out hitinfo, 10, _layerMask))

@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviour
 
     public GuestReplayer guestReplayer;
 
+    public TMP_InputField inputID;
+
     //public GameObject gameUI;
 
     private void Awake()
@@ -250,7 +252,7 @@ public class GameManager : MonoBehaviour
 
         TurnManager.Instance.GetListFromGameManager();
 
-        GameObject.Find("Variable Joystick").GetComponent<BallLineRender>().ResetBallStatus();
+        joystick.GetComponent<BallLineRender>().ResetBallStatus();
     }
 
 
@@ -262,7 +264,7 @@ public class GameManager : MonoBehaviour
             {
                 MakeLocalPlayer();
             }
-            gameObjects.SetActive(true);
+            //gameObjects.SetActive(true);
             TurnManager.Instance.GetListFromGameManager();
             MakeBallByData();
             //gameUI.SetActive(true);
@@ -332,5 +334,10 @@ public class GameManager : MonoBehaviour
         {
             UI_RoomManager.MakeNew(new List<BallEntryPlayerData>() { data });
         }
+    }
+
+    public void SetID()
+    {
+        myID = inputID.text;
     }
 }
