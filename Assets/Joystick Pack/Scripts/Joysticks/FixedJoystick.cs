@@ -55,6 +55,10 @@ public class FixedJoystick : Joystick
         {
             GetComponent<BallShoot>().Shoot();
         }
+        else
+        {
+            TCP_BallCore.ShootTheBall(GetComponent<BallShoot>().direction);
+        }
         GetComponent<BallLineRender>().isClicked = false;
     }
 

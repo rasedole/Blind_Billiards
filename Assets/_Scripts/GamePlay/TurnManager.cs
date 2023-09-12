@@ -48,6 +48,15 @@ public class TurnManager : MonoBehaviour
         {
             GameManager.Instance.SoloPlaySet(currentTurn);
         }
+
+        if(GetTurnBall().name != GameManager.Instance.myID)
+        {
+            GameManager.Instance.joystick.gameObject.SetActive(false);
+        }
+        else
+        {
+            GameManager.Instance.joystick.gameObject.SetActive(true);
+        }
     }
 
     public void EndTurn(int _countOfMoveData, int _differenceOfScore)
@@ -76,6 +85,8 @@ public class TurnManager : MonoBehaviour
         {
             GameManager.Instance.SoloPlaySet(currentTurn);
         }
+
+        //TCP_BallServer.TurnEnd();
     }
 
     //순서2 : 턴에 해당하는 공을 반환한다.
@@ -121,5 +132,14 @@ public class TurnManager : MonoBehaviour
     public void GetListFromGameManager()
     {
         ballList = GameManager.Instance.gamePlayers;
+
+        if (GetTurnBall().name != GameManager.Instance.myID)
+        {
+            GameManager.Instance.joystick.gameObject.SetActive(false);
+        }
+        else
+        {
+            GameManager.Instance.joystick.gameObject.SetActive(true);
+        }
     }
 }

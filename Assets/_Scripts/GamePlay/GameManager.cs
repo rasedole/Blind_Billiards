@@ -351,7 +351,7 @@ public class GameManager : MonoBehaviour
 
     public void SetSpawnPointAndStartOrder()
     {
-        
+        ShuffleSpawnPoint();
     }
 
     public void ShuffleSpawnPoint()
@@ -365,24 +365,36 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ShootBallInNetwork(Vector3 _shootDirection)
+    //public void ShootBallInNetwork(Vector3 _shootDirection)
+    //{
+    //    Debug.Log("Test Ball Shoot");
+
+    //    if (GameManager.Instance.isNobodyMove)
+    //    {
+    //        GameManager.Instance.shootTime = Time.time;
+    //        Debug.Log(TurnManager.Instance.GetTurnBall().name);
+    //        TCP_BallCore.ShootTheBall(_shootDirection * 50);
+    //        //TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
+    //        GameManager.Instance.isNobodyMove = false;
+
+    //        foreach (var balls in GameManager.Instance.gamePlayers)
+    //        {
+    //            GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
+    //        }
+
+    //        StartCoroutine(GameManager.Instance.CheckMovement(1));
+    //    }
+    //}
+
+    public int GetIndexOfBall(string id)
     {
-        Debug.Log("Test Ball Shoot");
-
-        if (GameManager.Instance.isNobodyMove)
+        foreach(var ball in entryPlayerDataList)
         {
-            GameManager.Instance.shootTime = Time.time;
-            Debug.Log(TurnManager.Instance.GetTurnBall().name);
-            TCP_BallCore.ShootTheBall(_shootDirection * 50);
-            //TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
-            GameManager.Instance.isNobodyMove = false;
-
-            foreach (var balls in GameManager.Instance.gamePlayers)
+            if(ball.id == id)
             {
-                GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
+                return ball.index;
             }
-
-            StartCoroutine(GameManager.Instance.CheckMovement(1));
         }
+        return -1;
     }
 }

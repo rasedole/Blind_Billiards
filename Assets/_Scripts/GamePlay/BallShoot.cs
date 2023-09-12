@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -100,28 +101,35 @@ public class BallShoot : MonoBehaviour
     //    }
     //}
 
-    //public void ShootBall(Vector3 clientDirection)
-    //{
-    //    Debug.Log("Test Ball Shoot");
-    //    //if (TCP_BallCore.networkMode != NetworkMode.Server)
-    //    //{
-    //    //    return;
-    //    //}
+    public void ShootBall(Vector3 clientDirection)
+    {
+        Debug.Log("Test Ball Shoot");
+        //if (TCP_BallCore.networkMode != NetworkMode.Server)
+        //{
+        //    return;
+        //}
 
-    //    if (GameManager.Instance.isNobodyMove)
-    //    {
-    //        GameManager.Instance.shootTime = Time.time;
-    //        Debug.Log(TurnManager.Instance.GetTurnBall().name);
-    //        TCP_BallCore.ShootTheBall(clientDirection * power);
-    //        //TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
-    //        GameManager.Instance.isNobodyMove = false;
+        if (GameManager.Instance.isNobodyMove)
+        {
+            GameManager.Instance.shootTime = Time.time;
+            //Debug.Log(TurnManager.Instance.GetTurnBall().name);
+            TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
+            //TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
+            GameManager.Instance.isNobodyMove = false;
 
-    //        foreach (var balls in GameManager.Instance.gamePlayers)
-    //        {
-    //            GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
-    //        }
 
-    //        StartCoroutine(GameManager.Instance.CheckMovement(1));
-    //    }
-    //}
+            //for(int i = 0; i < GameManager.Instance.gamePlayers.Count; i++)
+            //{
+            //    //Debug.LogWarning(i);
+            //    GameManager.Instance.AddMoveData(GetComponent<BallHit>().moveData);
+            //}
+            foreach (var balls in GameManager.Instance.gamePlayers)
+            {
+
+                GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
+            }
+
+            StartCoroutine(GameManager.Instance.CheckMovement(1));
+        }
+    }
 }
