@@ -3660,9 +3660,9 @@ MonoBehaviour:
   _shootBall:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1633067452}
-        m_TargetAssemblyTypeName: BallShoot, Assembly-CSharp
-        m_MethodName: ShootBall
+      - m_Target: {fileID: 352936292}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ShootBallInNetwork
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

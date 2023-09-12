@@ -268,7 +268,6 @@ public class GameManager : MonoBehaviour
 
     public void StartGameFromRoom()
     {
-        Debug.Log(Time.time + " aaaa");
         TurnManager.Instance.GetListFromGameManager();
         MakeBallByData();
     }
@@ -363,6 +362,27 @@ public class GameManager : MonoBehaviour
             Transform tmp = spawnPoints[randomNum];
             spawnPoints[randomNum] = spawnPoints[i];
             spawnPoints[i] = tmp;
+        }
+    }
+
+    public void ShootBallInNetwork(Vector3 _shootDirection)
+    {
+        Debug.Log("Test Ball Shoot");
+
+        if (GameManager.Instance.isNobodyMove)
+        {
+            GameManager.Instance.shootTime = Time.time;
+            Debug.Log(TurnManager.Instance.GetTurnBall().name);
+            TCP_BallCore.ShootTheBall(_shootDirection * 50);
+            //TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
+            GameManager.Instance.isNobodyMove = false;
+
+            foreach (var balls in GameManager.Instance.gamePlayers)
+            {
+                GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
+            }
+
+            StartCoroutine(GameManager.Instance.CheckMovement(1));
         }
     }
 }
