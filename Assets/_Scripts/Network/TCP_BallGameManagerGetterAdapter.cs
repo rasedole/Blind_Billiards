@@ -10,9 +10,6 @@ public static class TCP_BallGameManagerGetterAdapter
     {
         get
         {
-            //GameManager.Instance.AddPlayerData("1");
-            //BallEntryPlayerData temp = GameManager.Instance.entryPlayerDataList[GameManager.Instance.entryPlayerDataList.Count - 1];
-            //Debug.Log("ID: " + temp.id + "\n" + "index: " + temp.index + "\n" + "COlor: " + temp.color + "\n" + "Score: " + temp.score + "\n");
             return GameManager.Instance.entryPlayerDataList[GameManager.Instance.entryPlayerDataList.Count-1];
         }
     }
@@ -40,55 +37,13 @@ public static class TCP_BallGameManagerGetterAdapter
             return removelist;
         }
         return null;
-
-
-        //지워질 목록
-
-        //남아있을 목록
-        //List<BallEntryPlayerData> outlist = new List<BallEntryPlayerData>();
-
-
-        //int typecount = 0;
-        //bool isexist = false;
-        //foreach (var data in GameManager.Instance.entryPlayerDataList)
-        //{
-        //    isexist = false;
-        //    //foreach (var outdata in outlist)
-        //    //{
-        //    //    if (data.id == outdata.id)
-        //    //    {
-        //    //        isexist = true;
-        //    //        break;
-        //    //    }
-        //    //}
-        //    if (!isexist)
-        //    {
-        //        typecount++;
-        //    }
-        //    if (typecount > changedCount)
-        //    {
-        //        foreach (var ball in outlist)
-        //        {
-        //            //removelist.Remove(ball);
-        //        }
-        //        return removelist;
-        //    }
-        //    outlist.Add(data);
-        //}
-
-        //foreach (var ball in outlist)
-        //{
-        //    //Debug.Log(ball.id + "++++");
-        //    removelist.Remove(ball);
-        //}
-        //return removelist;
     }
 
     public static string myID
     {
         get
         {
-            return "";
+            return GameManager.Instance.myID;
         }
     }
 
@@ -96,7 +51,7 @@ public static class TCP_BallGameManagerGetterAdapter
     {
         get
         {
-            return "";
+            return TurnManager.Instance.GetTurnBall().name;
         }
     }
 }

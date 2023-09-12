@@ -45,7 +45,7 @@ public class BallMove : MonoBehaviour
                 {
                     if (!GuestReplayer.replaying)
                     {
-                        GameManager.Instance.ballMoveData.Add(GetComponent<BallHit>().moveData);
+                        GameManager.Instance.AddMoveData(GetComponent<BallHit>().moveData);
                     }
                 }
                 isMove = false;

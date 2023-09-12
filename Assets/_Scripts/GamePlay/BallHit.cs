@@ -41,7 +41,7 @@ public class BallHit : MonoBehaviour
             {
                 if (TCP_BallCore.networkMode == NetworkMode.Server)
                 {
-                    GameManager.Instance.ballMoveData.Add(moveData);
+                    GameManager.Instance.AddMoveData(moveData);
 
                 }
                 if(TCP_BallCore.networkMode != NetworkMode.Client)

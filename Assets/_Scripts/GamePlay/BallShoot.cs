@@ -54,7 +54,7 @@ public class BallShoot : MonoBehaviour
                     {
                         foreach (var balls in GameManager.Instance.gamePlayers)
                         {
-                            GameManager.Instance.ballMoveData.Add(balls.GetComponent<BallHit>().moveData);
+                            GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
                         }
                     }
                     StartCoroutine(GameManager.Instance.CheckMovement(1));
@@ -69,23 +69,46 @@ public class BallShoot : MonoBehaviour
     }
 
     //¼­¹ö¿ë ½¸
-    public void Shoot(Vector3 clientDirection)
+    //public void Shoot(Vector3 clientDirection)
+    //{
+    //    if (TCP_BallCore.networkMode != NetworkMode.Server)
+    //    {
+    //        return;
+    //    }
+
+    //    if (GameManager.Instance.isNobodyMove)
+    //    {
+    //        GameManager.Instance.shootTime = Time.time;
+    //        Debug.Log("Shoot!");
+    //        TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
+    //        GameManager.Instance.isNobodyMove = false;
+
+    //        foreach (var balls in GameManager.Instance.gamePlayers)
+    //        {
+    //            GameManager.Instance.ballMoveData.Add(balls.GetComponent<BallHit>().moveData);
+    //        }
+
+    //        StartCoroutine(GameManager.Instance.CheckMovement(1));
+    //    }
+    //}
+
+    public void ShootBall(Vector3 clientDirection)
     {
-        if (TCP_BallCore.networkMode != NetworkMode.Server)
-        {
-            return;
-        }
+        //if (TCP_BallCore.networkMode != NetworkMode.Server)
+        //{
+        //    return;
+        //}
 
         if (GameManager.Instance.isNobodyMove)
         {
             GameManager.Instance.shootTime = Time.time;
-            Debug.Log("Shoot!");
+            Debug.Log(TurnManager.Instance.GetTurnBall().name);
             TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
             GameManager.Instance.isNobodyMove = false;
 
             foreach (var balls in GameManager.Instance.gamePlayers)
             {
-                GameManager.Instance.ballMoveData.Add(balls.GetComponent<BallHit>().moveData);
+                GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
             }
 
             StartCoroutine(GameManager.Instance.CheckMovement(1));

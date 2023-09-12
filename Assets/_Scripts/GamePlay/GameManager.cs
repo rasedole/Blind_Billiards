@@ -255,11 +255,15 @@ public class GameManager : MonoBehaviour
         joystick.GetComponent<BallLineRender>().ResetBallStatus();
     }
 
-    public void StartGameSolo(System.Int32 playerNumber)
+    public void StartGameSolo(int playerNumber)
     {
+        Debug.Log("StartGameSolo 시작");
         MakeLocalPlayer(playerNumber);
+        Debug.Log("MakeLocalPlayer 완료");
         TurnManager.Instance.GetListFromGameManager();
+        Debug.Log("TurnManager에게 플레이어 목록 전송 완료");
         MakeBallByData();
+        Debug.Log("공 생성 완료");
     }
 
     public void StartGameFromRoom()
@@ -274,7 +278,7 @@ public class GameManager : MonoBehaviour
         MakeBallByData();
     }
 
-    public void MakeLocalPlayer(System.Int32 _playerNumber)
+    public void MakeLocalPlayer(int _playerNumber)
     {
         for(int i = 0; i < _playerNumber; i++)
         {
@@ -338,5 +342,26 @@ public class GameManager : MonoBehaviour
     public void SetID(string _id)
     {
         myID = _id;
+    }
+
+    public void AddMoveData(MoveData _moveData)
+    {
+        ballMoveData.Add(_moveData);
+    }
+
+    public void SetSpawnPointAndStartOrder()
+    {
+        
+    }
+
+    public void ShuffleSpawnPoint()
+    {
+        for(int i = 0; i < spawnPoints.Length; i++)
+        {
+            int randomNum = Random.Range(0, spawnPoints.Length);
+            Transform tmp = spawnPoints[randomNum];
+            spawnPoints[randomNum] = spawnPoints[i];
+            spawnPoints[i] = tmp;
+        }
     }
 }

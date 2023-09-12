@@ -51,7 +51,7 @@ public class VariableJoystick : Joystick
         base.OnPointerUp(eventData);
 
         //조이스틱의 버튼을 떼는 순간 BallShoot을 실행
-        GetComponent<BallShoot>().Shoot();
+        //GetComponent<BallShoot>().Shoot();
         GetComponent<BallLineRender>().isClicked = false;
     }
 

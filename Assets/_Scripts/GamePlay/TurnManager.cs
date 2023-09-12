@@ -42,9 +42,37 @@ public class TurnManager : MonoBehaviour
         {
             currentTurn = 0;
         }
-        GameObject.Find("Variable Joystick").GetComponent<BallLineRender>().ResetBallStatus();
+        GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
         UIManager.Instance.UpdateTurn(currentTurn);
         if(TCP_BallCore.networkMode == NetworkMode.None)
+        {
+            GameManager.Instance.SoloPlaySet(currentTurn);
+        }
+    }
+
+    public void EndTurn(int _countOfMoveData, int _differenceOfScore)
+    {
+
+        if(_countOfMoveData != GameManager.Instance.ballMoveData.Count)
+        {
+            Debug.LogError("공 데이터에 오류가 발생했습니다.");
+            return;
+        }
+
+        for (int i = 0; i < _differenceOfScore; i++)
+        {
+            ScoreManager.Instance.PlusScore(GetTurnBall());
+        }
+
+        currentTurn++;
+        if(currentTurn >= GameManager.Instance.gamePlayers.Count)
+        {
+            currentTurn = 0;
+        }
+
+        GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
+        UIManager.Instance.UpdateTurn(currentTurn);
+        if (TCP_BallCore.networkMode == NetworkMode.None)
         {
             GameManager.Instance.SoloPlaySet(currentTurn);
         }
