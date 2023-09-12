@@ -270,12 +270,14 @@ public class GameManager : MonoBehaviour
     {
         TurnManager.Instance.GetListFromGameManager();
         MakeBallByData();
+        UI_InGame.MakeNew(entryPlayerDataList);
     }
 
     public void StartGameFromRoomClient()
     {
         TurnManager.Instance.GetListFromGameManager();
         MakeBallByData();
+        UI_InGame.MakeNew(entryPlayerDataList);
     }
 
     public void MakeLocalPlayer(int _playerNumber)
@@ -346,6 +348,14 @@ public class GameManager : MonoBehaviour
 
     public void AddMoveData(MoveData _moveData)
     {
+        if(ballMoveData == null)
+        {
+            _moveData.index = 0;
+        }
+        else
+        {
+            _moveData.index = ballMoveData.Count;
+        }
         ballMoveData.Add(_moveData);
     }
 

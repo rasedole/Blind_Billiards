@@ -103,30 +103,18 @@ public class BallShoot : MonoBehaviour
 
     public void ShootBall(Vector3 clientDirection)
     {
-        Debug.Log("Test Ball Shoot");
-        //if (TCP_BallCore.networkMode != NetworkMode.Server)
-        //{
-        //    return;
-        //}
+        GameManager.Instance.ballMoveData.Clear();
 
         if (GameManager.Instance.isNobodyMove)
         {
             GameManager.Instance.shootTime = Time.time;
-            //Debug.Log(TurnManager.Instance.GetTurnBall().name);
             TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
-            //TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
             GameManager.Instance.isNobodyMove = false;
 
-
-            //for(int i = 0; i < GameManager.Instance.gamePlayers.Count; i++)
-            //{
-            //    //Debug.LogWarning(i);
-            //    GameManager.Instance.AddMoveData(GetComponent<BallHit>().moveData);
-            //}
             foreach (var balls in GameManager.Instance.gamePlayers)
             {
-
                 GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
+                TCP_BallServer.Moved(balls.GetComponent<BallHit>().moveData);
             }
 
             StartCoroutine(GameManager.Instance.CheckMovement(1));

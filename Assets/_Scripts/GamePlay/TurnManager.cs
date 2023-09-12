@@ -37,6 +37,15 @@ public class TurnManager : MonoBehaviour
     //순서1 : 턴을 다음 턴으로 넘긴다.
     public void EndTurn()
     {
+        foreach(var data in GameManager.Instance.entryPlayerDataList)
+        {
+            if(data.id == GetTurnBall().name)
+            {
+                TCP_BallServer.TurnEnd(data.score);
+                break;
+            }
+        }
+
         currentTurn++;
         if(currentTurn >= GameManager.Instance.gamePlayers.Count)
         {
@@ -49,14 +58,16 @@ public class TurnManager : MonoBehaviour
             GameManager.Instance.SoloPlaySet(currentTurn);
         }
 
-        if(GetTurnBall().name != GameManager.Instance.myID)
-        {
-            GameManager.Instance.joystick.gameObject.SetActive(false);
-        }
-        else
-        {
-            GameManager.Instance.joystick.gameObject.SetActive(true);
-        }
+        //GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
+
+        //if(GetTurnBall().name != GameManager.Instance.myID)
+        //{
+        //    GameManager.Instance.joystick.gameObject.SetActive(false);
+        //}
+        //else
+        //{
+        //    GameManager.Instance.joystick.gameObject.SetActive(true);
+        //}
     }
 
     public void EndTurn(int _countOfMoveData, int _differenceOfScore)
@@ -86,7 +97,7 @@ public class TurnManager : MonoBehaviour
             GameManager.Instance.SoloPlaySet(currentTurn);
         }
 
-        //TCP_BallServer.TurnEnd();
+        GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
     }
 
     //순서2 : 턴에 해당하는 공을 반환한다.
@@ -133,13 +144,13 @@ public class TurnManager : MonoBehaviour
     {
         ballList = GameManager.Instance.gamePlayers;
 
-        if (GetTurnBall().name != GameManager.Instance.myID)
-        {
-            GameManager.Instance.joystick.gameObject.SetActive(false);
-        }
-        else
-        {
-            GameManager.Instance.joystick.gameObject.SetActive(true);
-        }
+        //if (GetTurnBall().name != GameManager.Instance.myID)
+        //{
+        //    GameManager.Instance.joystick.gameObject.SetActive(false);
+        //}
+        //else
+        //{
+        //    GameManager.Instance.joystick.gameObject.SetActive(true);
+        //}
     }
 }
