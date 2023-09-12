@@ -45,6 +45,7 @@ public class BallMove : MonoBehaviour
                 {
                     if (!GuestReplayer.replaying)
                     {
+                        TCP_BallServer.Moved(GetComponent<BallHit>().moveData);
                         GameManager.Instance.AddMoveData(GetComponent<BallHit>().moveData);
                     }
                 }

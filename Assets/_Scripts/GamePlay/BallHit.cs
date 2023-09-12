@@ -17,19 +17,26 @@ public class BallHit : MonoBehaviour
             {
                 _moveData.startPos = transform.position;
             }
-            _moveData.ballIndex = ballID;
+            _moveData.ballIndex = GameManager.Instance.GetIndexOfBall(name);
             _moveData.startTime = Time.time - GameManager.Instance.shootTime;
 
             return _moveData;
         }
     }
-    private MoveData _moveData = new();
 
-    public int ballID;
+    private MoveData _moveData;
 
     void Start()
     {
+        _moveData = new MoveData();
         _moveData.startPos = gameObject.transform.position;
+
+        if (GetComponent<BallMove>().isMove)
+        {
+            _moveData.startPos = transform.position;
+        }
+        _moveData.ballIndex = GameManager.Instance.GetIndexOfBall(name);
+        _moveData.startTime = Time.time - GameManager.Instance.shootTime;
     }
 
     //충돌이 발생할 시 MoveDate구조체를 게임데이터에게 쌓는다.
@@ -41,6 +48,7 @@ public class BallHit : MonoBehaviour
             {
                 if (TCP_BallCore.networkMode == NetworkMode.Server)
                 {
+                    TCP_BallServer.Moved(moveData);
                     GameManager.Instance.AddMoveData(moveData);
 
                 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,10 +14,18 @@ public class BallShoot : MonoBehaviour
     //加己1 : 炼捞胶平, h, v, tempV, tempH, Power, 规氢
     [SerializeField] float power = 50;
 
+    public Vector3 direction
+    {
+        get
+        {
+            return _direction;
+        }
+    }
+
     FixedJoystick joystick;
     float tempV = 0;
     float tempH = 0;
-    Vector3 direction;
+    Vector3 _direction;
 
     private void Start()
     {
@@ -34,7 +43,7 @@ public class BallShoot : MonoBehaviour
             tempV = v;
         }
 
-        direction = Vector3.left * tempH + Vector3.back * tempV;
+        _direction = Vector3.left * tempH + Vector3.back * tempV;
     }
 
     public void Shoot()
@@ -47,7 +56,7 @@ public class BallShoot : MonoBehaviour
                 {
                     GameManager.Instance.shootTime = Time.time;
                     Debug.Log("Shoot!");
-                    TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(direction * power, ForceMode.Impulse);
+                    TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(_direction * power, ForceMode.Impulse);
                     GameManager.Instance.isNobodyMove = false;
 
                     if (TCP_BallCore.networkMode == NetworkMode.Server)
@@ -94,21 +103,18 @@ public class BallShoot : MonoBehaviour
 
     public void ShootBall(Vector3 clientDirection)
     {
-        //if (TCP_BallCore.networkMode != NetworkMode.Server)
-        //{
-        //    return;
-        //}
+        GameManager.Instance.ballMoveData.Clear();
 
         if (GameManager.Instance.isNobodyMove)
         {
             GameManager.Instance.shootTime = Time.time;
-            Debug.Log(TurnManager.Instance.GetTurnBall().name);
             TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
             GameManager.Instance.isNobodyMove = false;
 
             foreach (var balls in GameManager.Instance.gamePlayers)
             {
                 GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
+                TCP_BallServer.Moved(balls.GetComponent<BallHit>().moveData);
             }
 
             StartCoroutine(GameManager.Instance.CheckMovement(1));

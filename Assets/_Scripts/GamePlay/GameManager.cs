@@ -209,22 +209,22 @@ public class GameManager : MonoBehaviour
 
     public void MakeBallByData()
     {
-        RemoveSameID();
+        //RemoveSameID();
 
         //셔플
-        for (int i = 0; i < entryPlayerDataList.Count; i++)
-        {
-            int randomNum = Random.Range(0, entryPlayerDataList.Count);
-            BallEntryPlayerData tempData = entryPlayerDataList[i];
-            entryPlayerDataList[i] = entryPlayerDataList[randomNum];
-            entryPlayerDataList[randomNum] = tempData;
-        }
+        //for (int i = 0; i < entryPlayerDataList.Count; i++)
+        //{
+        //    int randomNum = Random.Range(0, entryPlayerDataList.Count);
+        //    BallEntryPlayerData tempData = entryPlayerDataList[i];
+        //    entryPlayerDataList[i] = entryPlayerDataList[randomNum];
+        //    entryPlayerDataList[randomNum] = tempData;
+        //}
 
         //셔플한 순서 index에 입력
-        for (int i = 0; i < entryPlayerDataList.Count; i++)
-        {
-            entryPlayerDataList[i].index = i;
-        }
+        //for (int i = 0; i < entryPlayerDataList.Count; i++)
+        //{
+        //    entryPlayerDataList[i].index = i;
+        //}
 
         foreach (var playerData in entryPlayerDataList)
         {
@@ -268,14 +268,16 @@ public class GameManager : MonoBehaviour
 
     public void StartGameFromRoom()
     {
-            TurnManager.Instance.GetListFromGameManager();
-            MakeBallByData();
+        TurnManager.Instance.GetListFromGameManager();
+        MakeBallByData();
+        UI_InGame.MakeNew(entryPlayerDataList);
     }
 
     public void StartGameFromRoomClient()
     {
         TurnManager.Instance.GetListFromGameManager();
         MakeBallByData();
+        UI_InGame.MakeNew(entryPlayerDataList);
     }
 
     public void MakeLocalPlayer(int _playerNumber)
@@ -346,12 +348,20 @@ public class GameManager : MonoBehaviour
 
     public void AddMoveData(MoveData _moveData)
     {
+        if(ballMoveData == null)
+        {
+            _moveData.index = 0;
+        }
+        else
+        {
+            _moveData.index = ballMoveData.Count;
+        }
         ballMoveData.Add(_moveData);
     }
 
     public void SetSpawnPointAndStartOrder()
     {
-        
+        ShuffleSpawnPoint();
     }
 
     public void ShuffleSpawnPoint()
@@ -363,5 +373,38 @@ public class GameManager : MonoBehaviour
             spawnPoints[randomNum] = spawnPoints[i];
             spawnPoints[i] = tmp;
         }
+    }
+
+    //public void ShootBallInNetwork(Vector3 _shootDirection)
+    //{
+    //    Debug.Log("Test Ball Shoot");
+
+    //    if (GameManager.Instance.isNobodyMove)
+    //    {
+    //        GameManager.Instance.shootTime = Time.time;
+    //        Debug.Log(TurnManager.Instance.GetTurnBall().name);
+    //        TCP_BallCore.ShootTheBall(_shootDirection * 50);
+    //        //TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
+    //        GameManager.Instance.isNobodyMove = false;
+
+    //        foreach (var balls in GameManager.Instance.gamePlayers)
+    //        {
+    //            GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
+    //        }
+
+    //        StartCoroutine(GameManager.Instance.CheckMovement(1));
+    //    }
+    //}
+
+    public int GetIndexOfBall(string id)
+    {
+        foreach(var ball in entryPlayerDataList)
+        {
+            if(ball.id == id)
+            {
+                return ball.index;
+            }
+        }
+        return -1;
     }
 }

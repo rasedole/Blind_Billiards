@@ -55,6 +55,16 @@ public class FixedJoystick : Joystick
         {
             GetComponent<BallShoot>().Shoot();
         }
+        else
+        {
+            if(GameManager.Instance.myID == TurnManager.Instance.GetTurnBall().name)
+            {
+                if(!GuestReplayer.replaying)
+                {
+                    TCP_BallCore.ShootTheBall(GetComponent<BallShoot>().direction);
+                }
+            }
+        }
         GetComponent<BallLineRender>().isClicked = false;
     }
 

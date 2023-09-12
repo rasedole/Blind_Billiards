@@ -33,8 +33,11 @@ public class ScoreManager : MonoBehaviour
             if(data.id == ball.name)
             {
                 data.score++;
+                //UI_InGame.ScoreChange(data.id, data.score);
             }
         }
+
+
 
         UpdateScore();
     }
