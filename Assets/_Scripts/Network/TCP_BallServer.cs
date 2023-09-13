@@ -331,8 +331,11 @@ public class TCP_BallServer
 
         for (int i = 0; i < disconnectList.Count; i++)
         {
-            roomPlayer[disconnectList[i]].Disconnect();
-            roomPlayer[disconnectList[i]] = null;
+            if (roomPlayer.ContainsKey(disconnectList[i]) && roomPlayer[disconnectList[i]].client != null)
+            {
+                roomPlayer[disconnectList[i]].Disconnect();
+                roomPlayer[disconnectList[i]] = null;
+            }
 
             // Check disconnect at room
             if(TCP_BallUI.gameState != GameState.InGame)
