@@ -71,7 +71,7 @@ public class TCP_BallClient
         {
             if(TCP_BallCore.networkMode == NetworkMode.Client)
             {
-                instance.Send(new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.RoomDisconnect).ToString()) });
+                Send(new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.RoomDisconnect).ToString()) });
             }
         }
 
@@ -139,7 +139,7 @@ public class TCP_BallClient
                 data += reader.ReadLine();
                 if (data != null)
                 {
-                    List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
+                    List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data, this);
                 }
             }
             reader.DiscardBufferedData();
@@ -147,9 +147,9 @@ public class TCP_BallClient
     }
 
     // Send message to server
-    public void Send(List<CommandData> commands)
+    public static void Send(List<CommandData> commands)
     {
-        Send(TCP_BallCommand.ClientSendEvent(commands));
+        instance.Send(TCP_BallCommand.ClientSendEvent(commands));
     }
     public void Send(string rawData)
     {
@@ -168,5 +168,14 @@ public class TCP_BallClient
         {
             TCP_BallCore.errorEvent.Invoke(e.Message);
         }
+    }
+
+    public static void TurnEndChecking()
+    {
+        Send(new List<CommandData>()
+        {
+            new CommandData(0, ((int)TCP_BallHeader.TurnCheckedPing).ToString()) ,
+            new CommandData(1, instance.id)
+        });
     }
 }

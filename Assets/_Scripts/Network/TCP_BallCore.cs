@@ -261,6 +261,11 @@ public class TCP_BallCore : MonoBehaviour
     }
     public static void TurnCheckClear()
     {
+        if(turnChecker == null)
+        {
+            return;
+        }
+
         foreach(IEnumerator enumerator in turnChecker.Values)
         {
             instance.StopCoroutine(enumerator);

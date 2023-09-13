@@ -281,11 +281,13 @@ public class TCP_BallServer
                             {
                                 switch (Enum.Parse<TCP_BallHeader>(commands[0].text))
                                 {
+                                    // When client disconnect in room
                                     case TCP_BallHeader.RoomDisconnect:
                                         disconnectList.Add(pair.Key);
                                         commands.RemoveAt(index);
                                         break;
 
+                                    // Other client shoot ball
                                     case TCP_BallHeader.Shoot:
                                         if(pair.Key == TCP_BallGameManagerGetterAdapter.nowTurnID)
                                         {
@@ -300,6 +302,12 @@ public class TCP_BallServer
                                             Debug.LogError("Order Error");
                                         }
                                         commands.RemoveRange(index, 4);
+                                        break;
+
+                                    // Other client replay MoveData and go to next turn
+                                    case TCP_BallHeader.TurnCheckedPing:
+
+                                        roomPlayer[commands[index + 1].text].turnCheck = true;
                                         break;
 
                                     default:
@@ -479,9 +487,10 @@ public class TCP_BallServer
             Debug.LogError("You are not server!");
         }
 
-        TCP_BallCore.TurnCheck(turn, TurnEndChecking(score, turn, 0.3f));
+        TCP_BallCore.TurnCheck(turn, TurnEndChecking(score, turn, 0.3f, moveDataIndex));
+        moveDataIndex = 0;
     }
-    private static IEnumerator TurnEndChecking(int score, int turn, float pingTime)
+    private static IEnumerator TurnEndChecking(int score, int turn, float pingTime, int moveDataCount)
     {
         WaitForSeconds wait = new WaitForSeconds(pingTime);
         List<string> keys = roomPlayer.Keys.ToList();
@@ -513,7 +522,7 @@ public class TCP_BallServer
                 {
                 new CommandData(0, ((int)TCP_BallHeader.TurnEnd).ToString()),
                 new CommandData(3, turn.ToString()),
-                new CommandData(3, moveDataIndex.ToString()),
+                new CommandData(3, moveDataCount.ToString()),
                 new CommandData(4, score.ToString())
                 },
                 values
@@ -522,7 +531,8 @@ public class TCP_BallServer
             yield return wait;
         }
 
-        moveDataIndex = 0;
+        TCP_BallCore.TurnCheckClear();
+        yield return null;
     }
 
     public static bool CheckPlayerConnect(string id)

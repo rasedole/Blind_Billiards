@@ -17,6 +17,8 @@ public enum TCP_BallHeader
     Shoot = 8,
     BallMove = 9,
     TurnEnd = 10,
+    TurnCheckedPing = 11,
+    CheckMoveData = 12,
 
 }
 

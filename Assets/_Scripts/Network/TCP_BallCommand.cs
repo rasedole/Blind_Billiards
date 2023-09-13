@@ -142,7 +142,7 @@ public class TCP_BallCommand : MonoBehaviour
     }
 
     /* ========== Client ========== */
-    public static List<CommandData> ClientReceiveEvent(string rawData)
+    public static List<CommandData> ClientReceiveEvent(string rawData, TCP_BallClient tcp_BallClient)
     {
         Debug.Log("ClientReceiveEvent > " + rawData);
         List<CommandData> datas = CommandCore.Decode(instance.command, rawData);
@@ -402,7 +402,6 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Server's ball stopped moving
                 case TCP_BallHeader.TurnEnd:
-                    Debug.LogWarning("TurnEnd");
                     if (datas.Count < 4 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
@@ -421,10 +420,21 @@ public class TCP_BallCommand : MonoBehaviour
                     // Check movedata is complete
                     if (int.Parse(datas[index + 2].text) == TCP_BallGameManagerGetterAdapter.MoveDataListCount)
                     {
-                        //instance.turnEnd.Invoke(int.Parse(datas[index + 1].text), int.Parse(datas[index + 3].text));
+                        instance.turnEnd.Invoke(int.Parse(datas[index + 1].text), int.Parse(datas[index + 3].text));
+                    }
+                    else
+                    {
+                        // Get MoveData
+                        List<CommandData> command = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()) };
+
+                        foreach(int i in TCP_BallGameManagerGetterAdapter.MoveDataIndexList)
+                        {
+                            command.Add(new CommandData(3, datas[index + 2].text));
+                            command.Add(new CommandData(3, i.ToString()));
+                        }
                     }
 
-                    datas.RemoveRange(index, 3);
+                    datas.RemoveRange(index, 4);
                     break;
 
                 default:
@@ -503,10 +513,12 @@ public class TCP_BallCommand : MonoBehaviour
                     datas.RemoveRange(0, 2);
                     break;
 
+                // Handle in server
                 case TCP_BallHeader.RoomDisconnect:
                     index++;
                     break;
 
+                // Handle in server
                 case TCP_BallHeader.Shoot:
                     if (datas.Count < 4 + index)
                     {
@@ -525,6 +537,17 @@ public class TCP_BallCommand : MonoBehaviour
                     }
 
                     index += 4;
+                    break;
+
+                // Handle in server
+                case TCP_BallHeader.TurnCheckedPing:
+                    if (datas.Count < 2 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+
+                    index += 2;
                     break;
 
                 default:

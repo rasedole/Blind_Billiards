@@ -62,4 +62,12 @@ public static class TCP_BallGameManagerGetterAdapter
             return 0;
         }
     }
+
+    public static List<int> MoveDataIndexList
+    {
+        get
+        {
+            return null;
+        }
+    }
 }
