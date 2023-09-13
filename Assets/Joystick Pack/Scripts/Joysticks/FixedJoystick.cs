@@ -65,6 +65,7 @@ public class FixedJoystick : Joystick
                 }
             }
         }
+        GetComponent<BallLineRender>().ResetLineRender();
         GetComponent<BallLineRender>().isClicked = false;
     }
 

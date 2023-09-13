@@ -97,6 +97,8 @@ public class GuestReplayer : MonoBehaviour
             _replaying = false;
 
             GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
+
+            GameManager.Instance.ClearMoveData();
         }
     }
 
@@ -111,6 +113,7 @@ public class GuestReplayer : MonoBehaviour
         instance.moveDatas = _moveDatas;
         instance.StartReplay();
     }
+
     private void StartReplay()
     {
         for(int i = 0; i < moveDatas.Count; i++)
