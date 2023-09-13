@@ -245,6 +245,14 @@ public class TCP_BallUI : MonoBehaviour
 
     public void GameEnd()
     {
+        exitGame.Invoke();
+        if (TCP_BallCore.networkMode == NetworkMode.None)
+        {
+            TCP_BallCommand.endGameSolo.Invoke();
+            return;
+        }
+
+        serverClosed.SetActive(TCP_BallCore.networkMode != NetworkMode.None);
         if (TCP_BallCore.networkMode == NetworkMode.Server)
         {
             TCP_BallCore.CloseServer();
@@ -256,13 +264,7 @@ public class TCP_BallUI : MonoBehaviour
             TCP_BallClient.DisconnectClient();
             TCP_BallCommand.endGameClient.Invoke();
         }
-        else
-        {
-            TCP_BallCommand.endGameSolo.Invoke();
-        }
 
-        serverClosed.SetActive(TCP_BallCore.networkMode != NetworkMode.None);
-        exitGame.Invoke();
         exitRoomEventNetwork.Invoke();
     }
 
