@@ -143,7 +143,7 @@ public class TCP_BallCommand : MonoBehaviour
     /* ========== Client ========== */
     public static List<CommandData> ClientReceiveEvent(string rawData)
     {
-        Debug.Log("ClientReceiveEvent > " + rawData);
+        Debug.LogError("ClientReceiveEvent > " + rawData);
         List<CommandData> datas = CommandCore.Decode(instance.command, rawData);
         int index = 0;
 
@@ -457,7 +457,7 @@ public class TCP_BallCommand : MonoBehaviour
     }
     public static List<CommandData> ServerReceiveEvent(string rawData, TCP_BallServerConnectClients clients)
     {
-        Debug.Log("ServerReceiveEvent > " + rawData);
+        Debug.LogError("ServerReceiveEvent > " + rawData);
         List<CommandData> datas = CommandCore.Decode(instance.command, rawData);
         int index = 0;
 
