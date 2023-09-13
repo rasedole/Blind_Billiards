@@ -407,4 +407,22 @@ public class GameManager : MonoBehaviour
         }
         return -1;
     }
+
+    public void ClearPlayerData()
+    {
+        entryPlayerDataList.Clear();
+        if(entryPlayerDataList != null)
+        {
+            Debug.LogError("플레이어 데이터 초기화에 실패했습니다.");
+        }
+    }
+
+    public void ClearMoveData()
+    {
+        ballMoveData.Clear();
+        if(ballMoveData != null)
+        {
+            Debug.LogError("BallMove 데이터 초기화에 실패했습니다.");
+        }
+    }
 }
