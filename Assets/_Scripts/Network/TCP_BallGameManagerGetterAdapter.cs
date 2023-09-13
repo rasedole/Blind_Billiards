@@ -54,4 +54,12 @@ public static class TCP_BallGameManagerGetterAdapter
             return TurnManager.Instance.GetTurnBall().name;
         }
     }
+
+    public static int MoveDataListCount
+    {
+        get
+        {
+            return 0;
+        }
+    }
 }

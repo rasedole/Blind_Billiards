@@ -403,17 +403,26 @@ public class TCP_BallCommand : MonoBehaviour
                 // Server's ball stopped moving
                 case TCP_BallHeader.TurnEnd:
                     Debug.LogWarning("TurnEnd");
-                    if (datas.Count < 2 + index)
+                    if (datas.Count < 4 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
                         return null;
                     }
-                    if (datas[index + 1].command != 3 || datas[index + 2].command != 4)
+                    if (
+                        datas[index + 1].command != 3 ||
+                        datas[index + 2].command != 3 ||
+                        datas[index + 3].command != 4
+                        )
                     {
                         TCP_BallCore.messageEvent.Invoke("Type error!");
                         return null;
                     }
-                    instance.turnEnd.Invoke(int.Parse(datas[index + 1].text), int.Parse(datas[index + 2].text));
+
+                    // Check movedata is complete
+                    if (int.Parse(datas[index + 2].text) == TCP_BallGameManagerGetterAdapter.MoveDataListCount)
+                    {
+                        //instance.turnEnd.Invoke(int.Parse(datas[index + 1].text), int.Parse(datas[index + 3].text));
+                    }
 
                     datas.RemoveRange(index, 3);
                     break;

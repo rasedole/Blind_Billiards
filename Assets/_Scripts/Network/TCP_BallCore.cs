@@ -24,7 +24,6 @@ public class TCP_BallCore : MonoBehaviour
     private TCP_BallCommand eventHandle;
 
     private IEnumerator connecting;
-    private IEnumerator _turnEndChecker;
 
 
     public static TCP_BallCore instance
@@ -43,19 +42,7 @@ public class TCP_BallCore : MonoBehaviour
     {
         get { return _networkMode; }
     }
-    public static IEnumerator turnEndChecker
-    {
-        set
-        {
-            if(_instance._turnEndChecker != null)
-            {
-                _instance.StopCoroutine(_instance._turnEndChecker);
-                _instance._turnEndChecker = null;
-            }
-            _instance._turnEndChecker = value;
-            _instance.StartCoroutine(_instance._turnEndChecker);
-        }
-    }
+    public static Dictionary<int, IEnumerator> turnChecker = new Dictionary<int, IEnumerator>();
 
 
     // Using for start server or client.
@@ -265,5 +252,19 @@ public class TCP_BallCore : MonoBehaviour
                     }
                 ));
         }
+    }
+
+    public static void TurnCheck(int turn, IEnumerator enumerator)
+    {
+        turnChecker.Add(turn, enumerator);
+        instance.StartCoroutine(turnChecker[turn]);
+    }
+    public static void TurnCheckClear()
+    {
+        foreach(IEnumerator enumerator in turnChecker.Values)
+        {
+            instance.StopCoroutine(enumerator);
+        }
+        turnChecker.Clear();
     }
 }

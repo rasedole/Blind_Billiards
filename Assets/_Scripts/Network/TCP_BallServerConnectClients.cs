@@ -10,6 +10,7 @@ public class TCP_BallServerConnectClients
     public StreamWriter writer;
     public StreamReader reader;
     public NetworkStream stream;
+    public bool turnCheck;
 
     public TCP_BallServerConnectClients(TcpClient _client)
     {

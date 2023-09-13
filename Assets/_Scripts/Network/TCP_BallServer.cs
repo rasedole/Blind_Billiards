@@ -210,7 +210,6 @@ public class TCP_BallServer
 
     public void CloseServer()
     {
-
         if (started)
         {
             // Disconnect all clients
@@ -233,6 +232,7 @@ public class TCP_BallServer
             listener.Stop();
         }
         listener = null;
+        TCP_BallCore.TurnCheckClear();
     }
 
     public void Update()
@@ -314,7 +314,7 @@ public class TCP_BallServer
 
         for (int i = 0; i < disconnectList.Count; i++)
         {
-            if (roomPlayer.ContainsKey(disconnectList[i]) && roomPlayer[disconnectList[i]].client != null)
+            if (roomPlayer.ContainsKey(disconnectList[i]) && roomPlayer[disconnectList[i]] != null)
             {
                 roomPlayer[disconnectList[i]].Disconnect();
                 roomPlayer[disconnectList[i]] = null;
@@ -460,7 +460,7 @@ public class TCP_BallServer
             new List<CommandData>()
             {
                 new CommandData(0, ((int)TCP_BallHeader.BallMove).ToString()),
-                new CommandData(3, moveData.index.ToString()),
+                new CommandData(3, moveDataIndex.ToString()),
                 new CommandData(4, moveData.ballIndex.ToString()),
                 new CommandData(5, moveData.startPos.x.ToString()),
                 new CommandData(6, moveData.startPos.y.ToString()),
@@ -472,14 +472,57 @@ public class TCP_BallServer
         moveDataIndex++;
     }
 
-    public static void TurnEnd(int score)
+    public static void TurnEnd(int score, int turn = 0)
     {
         if (TCP_BallCore.networkMode != NetworkMode.Server)
         {
             Debug.LogError("You are not server!");
         }
 
-        TCP_BallCore.turnEndChecker = CheckTurnEnd(score);
+        TCP_BallCore.TurnCheck(turn, TurnEndChecking(score, turn, 0.3f));
+    }
+    private static IEnumerator TurnEndChecking(int score, int turn, float pingTime)
+    {
+        WaitForSeconds wait = new WaitForSeconds(pingTime);
+        List<string> keys = roomPlayer.Keys.ToList();
+        List<TCP_BallServerConnectClients> values = new List<TCP_BallServerConnectClients>();
+        foreach (string key in keys)
+        {
+            if (roomPlayer[key] != null)
+            {
+                roomPlayer[key].turnCheck = false;
+                values.Add(roomPlayer[key]);
+            }
+        }
+        while (values.Count > 0)
+        {
+            int index = 0;
+            while (index < values.Count)
+            {
+                if (values[index].turnCheck)
+                {
+                    values.RemoveAt(index);
+                    continue;
+                }
+                index++;
+            }
+
+            Broadcast
+            (
+                new List<CommandData>()
+                {
+                new CommandData(0, ((int)TCP_BallHeader.TurnEnd).ToString()),
+                new CommandData(3, turn.ToString()),
+                new CommandData(3, moveDataIndex.ToString()),
+                new CommandData(4, score.ToString())
+                },
+                values
+            );
+
+            yield return wait;
+        }
+
+        moveDataIndex = 0;
     }
 
     public static bool CheckPlayerConnect(string id)
@@ -518,22 +561,4 @@ public class TCP_BallServer
         }
     }
 
-    private static IEnumerator CheckTurnEnd(int score)
-    {
-        yield return null;
-
-        Broadcast
-        (
-            new List<CommandData>()
-            {
-                new CommandData(0, ((int)TCP_BallHeader.TurnEnd).ToString()),
-                new CommandData(3, moveDataIndex.ToString()),
-                new CommandData(4, score.ToString())
-            },
-            roomPlayer.Values.ToList()
-        );
-
-        moveDataIndex = 0;
-        yield return null;
-    }
 }

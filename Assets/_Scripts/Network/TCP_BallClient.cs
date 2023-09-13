@@ -142,6 +142,7 @@ public class TCP_BallClient
                     List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
                 }
             }
+            reader.DiscardBufferedData();
         }
     }
 
