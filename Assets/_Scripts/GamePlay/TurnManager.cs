@@ -75,6 +75,7 @@ public class TurnManager : MonoBehaviour
 
         if(_countOfMoveData != GameManager.Instance.ballMoveData.Count)
         {
+            Debug.LogWarning(_countOfMoveData + ", " + GameManager.Instance.ballMoveData.Count);
             Debug.LogError("공 데이터에 오류가 발생했습니다.");
             return;
         }

@@ -9,12 +9,14 @@ public class TCP_BallServerConnectClients
     public TcpClient client;
     public StreamWriter writer;
     public StreamReader reader;
+    public NetworkStream stream;
 
     public TCP_BallServerConnectClients(TcpClient _client)
     {
         client = _client;
-        writer = null;
-        reader = null;
+        stream = client.GetStream();
+        writer = new StreamWriter(stream);
+        reader = new StreamReader(stream, true);
     }
 
     public void Disconnect()

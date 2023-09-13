@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.Windows;
 
 public class TCP_BallServer
@@ -189,11 +190,12 @@ public class TCP_BallServer
         {
             for(int i = 0; i < clients.Count; i++)
             {
-                if (clients[i] != null && clients[i].client.Connected)
+                if (clients[i] != null && clients[i].client != null && clients[i].client.Connected)
                 {
                     if (clients[i].writer == null) 
                     {
-                        clients[i].writer = new StreamWriter(clients[i].client.GetStream());
+                        TCP_BallCore.messageEvent.Invoke("Server can't find writer!");
+                        continue;
                     }
                     clients[i].writer.WriteLine(rawData);
                     clients[i].writer.Flush();
@@ -245,27 +247,7 @@ public class TCP_BallServer
         foreach (KeyValuePair<string, TCP_BallServerConnectClients> pair in roomPlayer)
         {
             // Check client connected
-            bool connected;
-            try
-            {
-                if (pair.Value.client != null && pair.Value.client.Client != null && pair.Value.client.Client.Connected)
-                {
-                    if (pair.Value.client.Client.Poll(0, SelectMode.SelectRead))
-                    {
-                        connected = !(pair.Value.client.Client.Receive(new byte[1], SocketFlags.Peek) == 0);
-                    }
-
-                    connected = true;
-                }
-                else
-                {
-                    connected = false;
-                }
-            }
-            catch
-            {
-                connected = false;
-            }
+            bool connected = CheckConnect(pair.Value);
 
             // Remember client disconnected 
             if (!connected)
@@ -279,18 +261,19 @@ public class TCP_BallServer
             // Listen client send message
             else
             {
-                NetworkStream s = pair.Value.client.GetStream();
-                if (s.DataAvailable)
+                while (pair.Value.stream.DataAvailable)
                 {
                     if(pair.Value.reader == null)
                     {
-                        pair.Value.reader = new StreamReader(s, true);
+                        TCP_BallCore.messageEvent.Invoke("Server can't find reader!");
+                        return;
                     }
                     string data = pair.Value.reader.ReadLine();
+
                     if (data != null)
                     {
                         List<CommandData> commands = TCP_BallCommand.ServerReceiveEvent(data, pair.Value);
-                        if(commands != null && commands.Count > 0)
+                        if (commands != null && commands.Count > 0)
                         {
                             int index = 0;
 
@@ -361,27 +344,7 @@ public class TCP_BallServer
         while(pendingClientsIndex < pendingClients.Count)
         {
             // Check client connected
-            bool connected;
-            try
-            {
-                if (pendingClients[pendingClientsIndex] != null && pendingClients[pendingClientsIndex].client.Client != null && pendingClients[pendingClientsIndex].client.Client.Connected)
-                {
-                    if (pendingClients[pendingClientsIndex].client.Client.Poll(0, SelectMode.SelectRead))
-                    {
-                        connected = !(pendingClients[pendingClientsIndex].client.Client.Receive(new byte[1], SocketFlags.Peek) == 0);
-                    }
-
-                    connected = true;
-                }
-                else
-                {
-                    connected = false;
-                }
-            }
-            catch
-            {
-                connected = false;
-            }
+            bool connected = CheckConnect(pendingClients[pendingClientsIndex]);
 
             // Remember client disconnected 
             if (!connected)
@@ -390,24 +353,27 @@ public class TCP_BallServer
                 pendingClients.RemoveAt(pendingClientsIndex);
                 continue;
             }
-            // Listen client send message
-            else
+            pendingClientsIndex++;
+        }
+
+        // Listen client send message
+        pendingClientsIndex = 0;
+        while (pendingClientsIndex < pendingClients.Count)
+        {
+            if (pendingClients[pendingClientsIndex].stream != null && pendingClients[pendingClientsIndex].stream.DataAvailable)
             {
-                NetworkStream s = pendingClients[pendingClientsIndex].client.GetStream();
-                if (s.DataAvailable)
+                if (pendingClients[pendingClientsIndex].reader == null)
                 {
-                    if (pendingClients[pendingClientsIndex].reader == null)
-                    {
-                        pendingClients[pendingClientsIndex].reader = new StreamReader(s, true);
-                    }
-                    string data = pendingClients[pendingClientsIndex].reader.ReadLine();
-                    if (data != null)
-                    {
-                        List<CommandData> commands = TCP_BallCommand.ServerReceiveEvent(data, pendingClients[pendingClientsIndex]);
-                    }
+                    TCP_BallCore.messageEvent.Invoke("Server can't find reader!");
+                    return;
                 }
-                pendingClientsIndex++;
+                string data = pendingClients[pendingClientsIndex].reader.ReadLine();
+                if (data != null)
+                {
+                    List<CommandData> commands = TCP_BallCommand.ServerReceiveEvent(data, pendingClients[pendingClientsIndex]);
+                }
             }
+            pendingClientsIndex++;
         }
     }
 
@@ -513,18 +479,7 @@ public class TCP_BallServer
             Debug.LogError("You are not server!");
         }
 
-        Broadcast
-        (
-            new List<CommandData>()
-            {
-                new CommandData(0, ((int)TCP_BallHeader.TurnEnd).ToString()),
-                new CommandData(3, moveDataIndex.ToString()),
-                new CommandData(4, score.ToString())
-            },
-            roomPlayer.Values.ToList()
-        );
-
-        moveDataIndex = 0;
+        TCP_BallCore.turnEndChecker = CheckTurnEnd(score);
     }
 
     public static bool CheckPlayerConnect(string id)
@@ -537,5 +492,48 @@ public class TCP_BallServer
         { 
             return false; 
         }
+    }
+
+    private bool CheckConnect(TCP_BallServerConnectClients client)
+    {
+        try
+        {
+            if (client != null && client.client.Client != null && client.client.Client.Connected)
+            {
+                if (client.client.Client.Poll(0, SelectMode.SelectRead))
+                {
+                    return !(client.client.Client.Receive(new byte[1], SocketFlags.Peek) == 0);
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static IEnumerator CheckTurnEnd(int score)
+    {
+        yield return null;
+
+        Broadcast
+        (
+            new List<CommandData>()
+            {
+                new CommandData(0, ((int)TCP_BallHeader.TurnEnd).ToString()),
+                new CommandData(3, moveDataIndex.ToString()),
+                new CommandData(4, score.ToString())
+            },
+            roomPlayer.Values.ToList()
+        );
+
+        moveDataIndex = 0;
+        yield return null;
     }
 }

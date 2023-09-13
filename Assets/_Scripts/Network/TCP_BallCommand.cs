@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.Rendering.VolumeComponent;
 
 public class TCP_BallCommand : MonoBehaviour
 {
@@ -143,7 +144,7 @@ public class TCP_BallCommand : MonoBehaviour
     /* ========== Client ========== */
     public static List<CommandData> ClientReceiveEvent(string rawData)
     {
-        Debug.LogError("ClientReceiveEvent > " + rawData);
+        Debug.Log("ClientReceiveEvent > " + rawData);
         List<CommandData> datas = CommandCore.Decode(instance.command, rawData);
         int index = 0;
 
@@ -401,6 +402,7 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Server's ball stopped moving
                 case TCP_BallHeader.TurnEnd:
+                    Debug.LogWarning("TurnEnd");
                     if (datas.Count < 2 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
@@ -457,7 +459,7 @@ public class TCP_BallCommand : MonoBehaviour
     }
     public static List<CommandData> ServerReceiveEvent(string rawData, TCP_BallServerConnectClients clients)
     {
-        Debug.LogError("ServerReceiveEvent > " + rawData);
+        Debug.Log("ServerReceiveEvent > " + rawData);
         List<CommandData> datas = CommandCore.Decode(instance.command, rawData);
         int index = 0;
 
@@ -470,7 +472,7 @@ public class TCP_BallCommand : MonoBehaviour
                 return null;
             }
 
-            switch (Enum.Parse<TCP_BallHeader>(datas[0].text))
+            switch (Enum.Parse<TCP_BallHeader>(datas[index].text))
             {
                 // Check id
                 case TCP_BallHeader.SetID:
@@ -482,7 +484,7 @@ public class TCP_BallCommand : MonoBehaviour
 
                     if (datas[1].command == 1)
                     {
-                        TCP_BallServer.CheckID(clients, datas[1].text);
+                        TCP_BallServer.CheckID(clients, datas[index + 1].text);
                     }
                     else
                     {

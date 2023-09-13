@@ -131,12 +131,16 @@ public class TCP_BallClient
 
     public void Update()
     {
-        if (ready && stream.DataAvailable)
+        if (ready)
         {
-            string data = reader.ReadLine();
-            if (data != null)
+            string data = "";
+            while (stream.DataAvailable)
             {
-                List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
+                data += reader.ReadLine();
+                if (data != null)
+                {
+                    List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
+                }
             }
         }
     }
