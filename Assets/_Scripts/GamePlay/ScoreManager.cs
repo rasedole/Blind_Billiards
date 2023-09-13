@@ -37,25 +37,28 @@ public class ScoreManager : MonoBehaviour
             }
         }
 
-
-
         UpdateScore();
     }
 
     public void UpdateScore()
     {
-        string tmpText = "Rank 1st\n";
-        string tmpID = "------";
-        int tmpScore = 0;
-        foreach(var data in GameManager.Instance.entryPlayerDataList)
-        {
-            if(data.score > tmpScore)
-            {
-                tmpID = data.id;
-                tmpScore = data.score;
-            }
-        }
-        tmpText += tmpID + " " + tmpScore;
+        //string tmpText = "Rank 1st\n";
+        //string tmpID = "------";
+        //int tmpScore = 0;
+        //foreach(var data in GameManager.Instance.entryPlayerDataList)
+        //{
+        //    if(data.score > tmpScore)
+        //    {
+        //        tmpID = data.id;
+        //        tmpScore = data.score;
+        //    }
+        //}
+        //tmpText += tmpID + " " + tmpScore;
         //scoreTextUI.text = tmpText;
+
+        foreach(var data in GameManager.Instance.entryPlayerDataList) 
+        {
+            UI_InGame.ScoreChange(data.id, data.score);
+        }
     }
 }

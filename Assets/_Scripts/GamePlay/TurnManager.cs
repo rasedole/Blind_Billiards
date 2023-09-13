@@ -41,6 +41,7 @@ public class TurnManager : MonoBehaviour
         {
             if(data.id == GetTurnBall().name)
             {
+                Debug.LogError("Call Server TurnEnd");
                 TCP_BallServer.TurnEnd(data.score);
                 break;
             }
@@ -51,12 +52,16 @@ public class TurnManager : MonoBehaviour
         {
             currentTurn = 0;
         }
+
+        Debug.LogError("CurrentTurn: " + currentTurn);
         GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
         UIManager.Instance.UpdateTurn(currentTurn);
         if(TCP_BallCore.networkMode == NetworkMode.None)
         {
             GameManager.Instance.SoloPlaySet(currentTurn);
         }
+
+        GameManager.Instance.ClearMoveData();
 
         //GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
 
@@ -72,32 +77,43 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn(int _countOfMoveData, int _differenceOfScore)
     {
+        Debug.LogError("Call Client TurnEnd");
 
-        if(_countOfMoveData != GameManager.Instance.ballMoveData.Count)
+        if(TCP_BallCore.networkMode != NetworkMode.Server)
         {
-            Debug.LogError("공 데이터에 오류가 발생했습니다.");
-            return;
+            //GameManager.Instance.ClearMoveData();
+
+            Debug.LogError(_countOfMoveData);
+            Debug.LogError(GameManager.Instance.ballMoveData.Count);
+
+
+            if (_countOfMoveData != GameManager.Instance.ballMoveData.Count)
+            {
+                Debug.LogError("공 데이터에 오류가 발생했습니다.");
+                return;
+            }
+
+            for (int i = 0; i < _differenceOfScore; i++)
+            {
+                ScoreManager.Instance.PlusScore(GetTurnBall());
+            }
+
+            currentTurn++;
+            if(currentTurn >= GameManager.Instance.gamePlayers.Count)
+            {
+                currentTurn = 0;
+            }
+            Debug.LogError("Current Turn : "+currentTurn);
+            GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
+            UIManager.Instance.UpdateTurn(currentTurn);
+            if (TCP_BallCore.networkMode == NetworkMode.None)
+            {
+                GameManager.Instance.SoloPlaySet(currentTurn);
+            }
+
+            GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
         }
 
-        for (int i = 0; i < _differenceOfScore; i++)
-        {
-            ScoreManager.Instance.PlusScore(GetTurnBall());
-        }
-
-        currentTurn++;
-        if(currentTurn >= GameManager.Instance.gamePlayers.Count)
-        {
-            currentTurn = 0;
-        }
-
-        GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
-        UIManager.Instance.UpdateTurn(currentTurn);
-        if (TCP_BallCore.networkMode == NetworkMode.None)
-        {
-            GameManager.Instance.SoloPlaySet(currentTurn);
-        }
-
-        GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
     }
 
     //순서2 : 턴에 해당하는 공을 반환한다.

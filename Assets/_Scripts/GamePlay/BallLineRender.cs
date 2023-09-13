@@ -75,6 +75,12 @@ public class BallLineRender : MonoBehaviour
         }
     }
 
+    public void ResetLineRender()
+    {
+        lineRenderer.SetPosition(0, ballPosition);
+        lineRenderer.SetPosition(1, ballPosition);
+    }
+
     public void ResetBallStatus()
     {
         lineRenderer = TurnManager.Instance.GetTurnBall().GetComponent<LineRenderer>();

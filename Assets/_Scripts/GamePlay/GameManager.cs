@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
 
     public TMP_InputField inputID;
 
+    public TMP_InputField chatInput;
     //public GameObject gameUI;
 
     private void Awake()
@@ -77,6 +78,18 @@ public class GameManager : MonoBehaviour
         //}
 
         myID += Random.Range(0.0f, 1.0f);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            if(chatInput.text != null)
+            {
+                UI_InGame.Chatting(myID, chatInput.text);
+            }
+            chatInput.text = null;
+        }
     }
 
     public IEnumerator CheckMovement(float time = 0)
@@ -413,7 +426,7 @@ public class GameManager : MonoBehaviour
         entryPlayerDataList.Clear();
         if(entryPlayerDataList != null)
         {
-            Debug.LogError("플레이어 데이터 초기화에 실패했습니다.");
+            //Debug.LogError("플레이어 데이터 초기화에 실패했습니다.");
         }
     }
 
@@ -422,7 +435,7 @@ public class GameManager : MonoBehaviour
         ballMoveData.Clear();
         if(ballMoveData != null)
         {
-            Debug.LogError("BallMove 데이터 초기화에 실패했습니다.");
+            //Debug.LogError("BallMove 데이터 초기화에 실패했습니다.");
         }
     }
 }

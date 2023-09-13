@@ -103,7 +103,9 @@ public class BallShoot : MonoBehaviour
 
     public void ShootBall(Vector3 clientDirection)
     {
-        GameManager.Instance.ballMoveData.Clear();
+        //GameManager.Instance.ballMoveData.Clear();
+
+        GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetLineRender();
 
         if (GameManager.Instance.isNobodyMove)
         {

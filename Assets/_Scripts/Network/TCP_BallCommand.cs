@@ -401,6 +401,7 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Server's ball stopped moving
                 case TCP_BallHeader.TurnEnd:
+                    Debug.LogError("!!client TurnEnd!!");
                     if (datas.Count < 2 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
@@ -440,7 +441,7 @@ public class TCP_BallCommand : MonoBehaviour
     public static string ClientSendEvent(List<CommandData> datas)
     {
         string rawData = CommandCore.Encode(instance.command, datas);
-        Debug.Log("ClientSendEvent > " + rawData);
+        Debug.LogError("ClientSendEvent > " + rawData);
 
         return rawData;
     }
@@ -451,7 +452,7 @@ public class TCP_BallCommand : MonoBehaviour
     public static string ServerBroadcastEvent(List<CommandData> datas)
     {
         string rawData = CommandCore.Encode(instance.command, datas);
-        Debug.Log("ServerBroadcastEvent > " + rawData);
+        Debug.LogError("ServerBroadcastEvent > " + rawData);
 
         return rawData;
     }
