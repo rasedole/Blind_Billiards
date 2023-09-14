@@ -57,16 +57,26 @@ public static class TCP_BallGameManagerGetterAdapter
 
     public static int MoveDataListCount()
     {
-        return 0;
+        return GameManager.Instance.ballMoveData.Count;
     }
 
     public static List<int> MoveDataNullList(int maxCount)
     {
-        return null;
+        List<int> indexList = new();
+        for(int i = maxCount; i < GameManager.Instance.ballMoveData.Count; i++)
+        {
+            indexList.Add(i);
+        }
+        return indexList;
     }
 
     public static List<MoveData> MoveDataListCallback(List<int> lndexList)
     {
-        return null;
+        List<MoveData> moveList = new();
+        for(int i = 0; i < lndexList.Count; i++)
+        {
+            moveList.Add(GameManager.Instance.ballMoveData[lndexList[i]]);
+        }
+        return moveList;
     }
 }
