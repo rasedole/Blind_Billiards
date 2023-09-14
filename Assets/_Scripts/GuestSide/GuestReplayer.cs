@@ -95,10 +95,7 @@ public class GuestReplayer : MonoBehaviour
         {
             // Replay ends
             _replaying = false;
-
-            GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
-
-            GameManager.Instance.ClearMoveData();
+            GameManager.Instance.isAlreadyShoot = false;
         }
     }
 

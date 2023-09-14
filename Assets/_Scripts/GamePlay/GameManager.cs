@@ -356,4 +356,21 @@ public class GameManager : MonoBehaviour
             Destroy(ball);
         }
     }
+
+    public void EndGameSolo()
+    {
+        List<RankingResultUI.RankData> rankDatas = new();
+        RankingResultUI.RankData rankData = new();
+        //RankingResultUI.RankShow(rankDatas);
+    }
+
+    public void EndGameServer()
+    {
+        RankingResultUI.RankData rankData = new();
+    }
+
+    public void EndGameClient()
+    {
+        RankingResultUI.RankData rankData = new();
+    }
 }
