@@ -421,6 +421,7 @@ public class TCP_BallCommand : MonoBehaviour
                     {
                         // Check movedata is complete
                         int moveDataMaxCount = int.Parse(datas[index + 1].text);
+                        Debug.LogWarning(moveDataMaxCount + ", " + TCP_BallGameManagerGetterAdapter.MoveDataListCount());
                         if (moveDataMaxCount == TCP_BallGameManagerGetterAdapter.MoveDataListCount())
                         {
                             instance.turnEnd.Invoke(moveDataMaxCount, /*score*/int.Parse(datas[index + 2].text));
@@ -431,7 +432,9 @@ public class TCP_BallCommand : MonoBehaviour
                             // Get MoveData
                             List<CommandData> command = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()) };
 
-                            foreach (int i in TCP_BallGameManagerGetterAdapter.MoveDataNullList(moveDataMaxCount))
+                            List<int> list = TCP_BallGameManagerGetterAdapter.MoveDataNullList(moveDataMaxCount);
+                            Debug.LogWarning(list.Count + "");
+                            foreach (int i in list)
                             {
                                 command.Add(new CommandData(3, i.ToString()));
                             }
@@ -578,8 +581,8 @@ public class TCP_BallCommand : MonoBehaviour
                     index++;
                     while
                         (
-                            datas.Count >= (1 + index) &&
-                            datas[index + 1].command == 3
+                            datas.Count > index &&
+                            datas[index].command == 3
                         )
                     {
                         index++;

@@ -18,7 +18,6 @@ public static class TCP_BallGameManagerGetterAdapter
     {
         get
         {
-
             //PlayerData of All Player in GameManager
             return GameManager.Instance.entryPlayerDataList;
         }
