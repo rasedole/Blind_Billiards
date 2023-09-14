@@ -55,19 +55,18 @@ public static class TCP_BallGameManagerGetterAdapter
         }
     }
 
-    public static int MoveDataListCount
+    public static int MoveDataListCount()
     {
-        get
-        {
-            return 0;
-        }
+        return 0;
     }
 
-    public static List<int> MoveDataIndexList
+    public static List<int> MoveDataNullList(int maxCount)
     {
-        get
-        {
-            return null;
-        }
+        return null;
+    }
+
+    public static List<MoveData> MoveDataListCallback(List<int> lndexList)
+    {
+        return null;
     }
 }

@@ -42,7 +42,11 @@ public class TCP_BallCore : MonoBehaviour
     {
         get { return _networkMode; }
     }
-    public static Dictionary<int, IEnumerator> turnChecker = new Dictionary<int, IEnumerator>();
+    public static bool allClientTurnChecked
+    {
+        get { return turnChecker == null; }
+    }
+    public static IEnumerator turnChecker;
 
 
     // Using for start server or client.
@@ -254,10 +258,10 @@ public class TCP_BallCore : MonoBehaviour
         }
     }
 
-    public static void TurnCheck(int turn, IEnumerator enumerator)
+    public static void TurnCheck(IEnumerator enumerator)
     {
-        turnChecker.Add(turn, enumerator);
-        instance.StartCoroutine(turnChecker[turn]);
+        turnChecker = enumerator;
+        instance.StartCoroutine(turnChecker);
     }
     public static void TurnCheckClear()
     {
@@ -266,10 +270,7 @@ public class TCP_BallCore : MonoBehaviour
             return;
         }
 
-        foreach(IEnumerator enumerator in turnChecker.Values)
-        {
-            instance.StopCoroutine(enumerator);
-        }
-        turnChecker.Clear();
+        instance.StopCoroutine(turnChecker);
+        turnChecker = null;
     }
 }

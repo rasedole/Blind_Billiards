@@ -142,7 +142,7 @@ public class TCP_BallCommand : MonoBehaviour
     }
 
     /* ========== Client ========== */
-    public static List<CommandData> ClientReceiveEvent(string rawData, TCP_BallClient tcp_BallClient)
+    public static List<CommandData> ClientReceiveEvent(string rawData)
     {
         Debug.Log("ClientReceiveEvent > " + rawData);
         List<CommandData> datas = CommandCore.Decode(instance.command, rawData);
@@ -384,7 +384,8 @@ public class TCP_BallCommand : MonoBehaviour
                         return null;
                     }
 
-                    if(TCP_BallCore.networkMode == NetworkMode.Client)
+                    TCP_BallClient.turnEnded = false;
+                    if (TCP_BallCore.networkMode == NetworkMode.Client)
                     {
                         MoveData moveData = new MoveData();
                         moveData.index = int.Parse(datas[index + 1].text);
@@ -402,39 +403,48 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Server's ball stopped moving
                 case TCP_BallHeader.TurnEnd:
-                    if (datas.Count < 4 + index)
+                    if (datas.Count < 3 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
                         return null;
                     }
                     if (
                         datas[index + 1].command != 3 ||
-                        datas[index + 2].command != 3 ||
-                        datas[index + 3].command != 4
+                        datas[index + 2].command != 4
                         )
                     {
                         TCP_BallCore.messageEvent.Invoke("Type error!");
                         return null;
                     }
 
-                    // Check movedata is complete
-                    if (int.Parse(datas[index + 2].text) == TCP_BallGameManagerGetterAdapter.MoveDataListCount)
+                    if (!TCP_BallClient.turnEnded)
                     {
-                        instance.turnEnd.Invoke(int.Parse(datas[index + 1].text), int.Parse(datas[index + 3].text));
+                        // Check movedata is complete
+                        int moveDataMaxCount = int.Parse(datas[index + 1].text);
+                        if (moveDataMaxCount == TCP_BallGameManagerGetterAdapter.MoveDataListCount())
+                        {
+                            instance.turnEnd.Invoke(moveDataMaxCount, /*score*/int.Parse(datas[index + 2].text));
+                            TCP_BallClient.TurnEndChecking();
+                        }
+                        else
+                        {
+                            // Get MoveData
+                            List<CommandData> command = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()) };
+
+                            foreach (int i in TCP_BallGameManagerGetterAdapter.MoveDataNullList(moveDataMaxCount))
+                            {
+                                command.Add(new CommandData(3, i.ToString()));
+                            }
+
+                            TCP_BallClient.Send(command);
+                        }
                     }
                     else
                     {
-                        // Get MoveData
-                        List<CommandData> command = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()) };
-
-                        foreach(int i in TCP_BallGameManagerGetterAdapter.MoveDataIndexList)
-                        {
-                            command.Add(new CommandData(3, datas[index + 2].text));
-                            command.Add(new CommandData(3, i.ToString()));
-                        }
+                        TCP_BallClient.TurnEndChecking();
                     }
 
-                    datas.RemoveRange(index, 4);
+                    datas.RemoveRange(index, 3);
                     break;
 
                 default:
@@ -501,7 +511,7 @@ public class TCP_BallCommand : MonoBehaviour
                         return null;
                     }
 
-                    if (datas[1].command == 1)
+                    if (datas[index + 1].command == 1)
                     {
                         TCP_BallServer.CheckID(clients, datas[index + 1].text);
                     }
@@ -548,6 +558,32 @@ public class TCP_BallCommand : MonoBehaviour
                     }
 
                     index += 2;
+                    break;
+
+                // Handle in server
+                case TCP_BallHeader.CheckMoveData:
+                    if (datas.Count < 2 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+                    if
+                    (
+                        datas[index + 1].command != 3
+                    )
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        return null;
+                    }
+                    index++;
+                    while
+                        (
+                            datas.Count >= (1 + index) &&
+                            datas[index + 1].command == 3
+                        )
+                    {
+                        index++;
+                    }
                     break;
 
                 default:

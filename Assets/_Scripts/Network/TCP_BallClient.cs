@@ -15,6 +15,7 @@ public class TCP_BallClient
             return instance != null && instance.socket != null && instance.socket.Connected && instance.stream != null;
         }
     }
+    public static bool turnEnded = false;
 
     private TcpClient socket;
     private string id;
@@ -139,7 +140,7 @@ public class TCP_BallClient
                 data += reader.ReadLine();
                 if (data != null)
                 {
-                    List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data, this);
+                    List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
                 }
             }
             reader.DiscardBufferedData();
@@ -177,5 +178,6 @@ public class TCP_BallClient
             new CommandData(0, ((int)TCP_BallHeader.TurnCheckedPing).ToString()) ,
             new CommandData(1, instance.id)
         });
+        turnEnded = true;
     }
 }
