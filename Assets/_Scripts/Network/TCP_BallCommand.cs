@@ -422,7 +422,7 @@ public class TCP_BallCommand : MonoBehaviour
                         // Check movedata is complete
                         int moveDataMaxCount = int.Parse(datas[index + 1].text);
                         Debug.LogWarning(moveDataMaxCount + ", " + TCP_BallGameManagerGetterAdapter.MoveDataListCount());
-                        if (moveDataMaxCount == TCP_BallGameManagerGetterAdapter.MoveDataListCount())
+                        if (moveDataMaxCount == TCP_BallGameManagerGetterAdapter.MoveDataListCount() || TCP_BallCore.networkMode == NetworkMode.Server)
                         {
                             instance.turnEnd.Invoke(moveDataMaxCount, /*score*/int.Parse(datas[index + 2].text));
                             TCP_BallClient.TurnEndChecking();

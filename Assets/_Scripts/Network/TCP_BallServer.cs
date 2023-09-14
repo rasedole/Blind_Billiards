@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.Windows;
 
@@ -269,6 +270,7 @@ public class TCP_BallServer
                         return;
                     }
                     string data = pair.Value.reader.ReadLine();
+                    pair.Value.reader.DiscardBufferedData();
 
                     if (data != null)
                     {
@@ -306,6 +308,7 @@ public class TCP_BallServer
 
                                     // Other client replay MoveData and go to next turn
                                     case TCP_BallHeader.TurnCheckedPing:
+                                        Debug.LogWarning("!!" + commands[index + 1].text);
                                         roomPlayer[commands[index + 1].text].turnCheck = true;
                                         commands.RemoveRange(index, 2);
                                         break;
@@ -393,6 +396,7 @@ public class TCP_BallServer
                     return;
                 }
                 string data = pendingClients[pendingClientsIndex].reader.ReadLine();
+                pendingClients[pendingClientsIndex].reader.DiscardBufferedData();
                 if (data != null)
                 {
                     List<CommandData> commands = TCP_BallCommand.ServerReceiveEvent(data, pendingClients[pendingClientsIndex]);
@@ -539,10 +543,11 @@ public class TCP_BallServer
             values = new List<TCP_BallServerConnectClients>();
             for(int i = 0; i < roomPlayer.Keys.Count; i++)
             {
-                if (!roomPlayer[roomPlayer.Keys.ToList()[i]].turnCheck)
+                TCP_BallServerConnectClients playerNow = roomPlayer[roomPlayer.Keys.ToList()[i]];
+                if (playerNow != null && !playerNow.turnCheck)
                 {
-                    Debug.LogWarning(i + "!");
-                    values.Add(roomPlayer[roomPlayer.Keys.ToList()[i]]);
+                    Debug.LogWarning(roomPlayer.Keys.ToList()[i] + "!");
+                    values.Add(playerNow);
                 }
             }
 
