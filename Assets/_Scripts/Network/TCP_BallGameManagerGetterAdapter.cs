@@ -63,10 +63,22 @@ public static class TCP_BallGameManagerGetterAdapter
     public static List<int> MoveDataNullList(int maxCount)
     {
         List<int> indexList = new();
-        for(int i = maxCount; i < GameManager.Instance.ballMoveData.Count; i++)
+
+        Dictionary<int, MoveData> _dataDic = new();
+
+        foreach(var _moveData in GameManager.Instance.ballMoveData)
         {
-            indexList.Add(i);
+            _dataDic.Add(_moveData.index, _moveData);
         }
+
+        for(int i = 0; i < maxCount; i++)
+        {
+            if (!_dataDic.ContainsKey(i))
+            {
+                indexList.Add(i);
+            }
+        }
+        
         return indexList;
     }
 
