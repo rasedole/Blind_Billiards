@@ -12,8 +12,6 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
 
-    //public TMP_Text scoreTextUI;
-
     private void Awake()
     {
         if (Instance == null)
@@ -33,32 +31,19 @@ public class ScoreManager : MonoBehaviour
             if(data.id == ball.name)
             {
                 data.score++;
-                //UI_InGame.ScoreChange(data.id, data.score);
+                UI_InGame.ScoreChange(data.id, data.score);
+                break;
             }
         }
 
-        UpdateScore();
+        //UpdateScore();
     }
 
-    public void UpdateScore()
-    {
-        //string tmpText = "Rank 1st\n";
-        //string tmpID = "------";
-        //int tmpScore = 0;
-        //foreach(var data in GameManager.Instance.entryPlayerDataList)
-        //{
-        //    if(data.score > tmpScore)
-        //    {
-        //        tmpID = data.id;
-        //        tmpScore = data.score;
-        //    }
-        //}
-        //tmpText += tmpID + " " + tmpScore;
-        //scoreTextUI.text = tmpText;
-
-        foreach(var data in GameManager.Instance.entryPlayerDataList) 
-        {
-            UI_InGame.ScoreChange(data.id, data.score);
-        }
-    }
+    //public void UpdateScore()
+    //{
+    //    foreach(var data in GameManager.Instance.entryPlayerDataList) 
+    //    {
+    //        UI_InGame.ScoreChange(data.id, data.score);
+    //    }
+    //}
 }

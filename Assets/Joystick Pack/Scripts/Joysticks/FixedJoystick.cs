@@ -51,21 +51,10 @@ public class FixedJoystick : Joystick
         base.OnPointerUp(eventData);
 
         //조이스틱의 버튼을 떼는 순간 BallShoot을 실행
-        if (TCP_BallCore.networkMode == NetworkMode.None)
+        if ((TCP_BallCore.networkMode == NetworkMode.None || GameManager.Instance.myID == TurnManager.Instance.GetTurnBall().name) && !GuestReplayer.replaying)
         {
             GetComponent<BallShoot>().Shoot();
         }
-        else
-        {
-            if(GameManager.Instance.myID == TurnManager.Instance.GetTurnBall().name)
-            {
-                if(!GuestReplayer.replaying)
-                {
-                    TCP_BallCore.ShootTheBall(GetComponent<BallShoot>().direction);
-                }
-            }
-        }
-        GetComponent<BallLineRender>().ResetLineRender();
         GetComponent<BallLineRender>().isClicked = false;
     }
 

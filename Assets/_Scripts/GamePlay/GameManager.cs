@@ -14,10 +14,13 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public List<GameObject> gamePlayers;
-    public List<BallEntryPlayerData> entryPlayerDataList = new List<BallEntryPlayerData>();
+    public List<BallEntryPlayerData> entryPlayerDataList = new();
 
     //속성추가 : 공을 발사한 이후부터 공이 모두 멈추고 턴을 넘겨주는 사이에도 조작할 수 없도록 하기 위해서 bool 변수로 isNobodyMove 선언
     public bool isNobodyMove = true;
+
+    //Client용
+    public bool isAlreadyShoot = false;
 
     //속성3 : MoveData List, 공을 발사했을 때의 시간
     public List<MoveData> ballMoveData;
@@ -51,83 +54,62 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
-
-        //if(TCP_BallCore.networkMode == NetworkMode.None)
-        //{
-        //gamePlayers = GameObject.FindGameObjectsWithTag("Player");
-        //}
-    }
-
-    private void Start()
-    {
-        //if(TCP_BallCore.networkMode == NetworkMode.None)
-        //{
-        //    for (int i = 0; i < gamePlayers.Count; i++)
-        //    {
-        //        if (i == 0)
-        //        {
-        //            gamePlayers[i].GetComponent<BallDoll>().showcaseColor = ballColors[i];
-        //            gamePlayers[i].GetComponent<BallDoll>().Init(ballColors[i], BallShowMode.MyPlayer);
-        //        }
-        //        else
-        //        {
-        //            gamePlayers[i].GetComponent<BallDoll>().showcaseColor = ballColors[i];
-        //            gamePlayers[i].GetComponent<BallDoll>().Init(ballColors[i], BallShowMode.OtherPlayer);
-        //        }
-        //    }
-        //}
-
-        myID += Random.Range(0.0f, 1.0f);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        else
         {
-            if(chatInput.text != null)
-            {
-                UI_InGame.Chatting(myID, chatInput.text);
-            }
-            chatInput.text = null;
+            Destroy(this);
         }
     }
 
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.KeypadEnter))
+    //    {
+    //        if (chatInput.text != null)
+    //        {
+    //            UI_InGame.Chatting(myID, chatInput.text);
+    //        }
+    //        chatInput.text = null;
+    //    }
+    //}
+
+    //Client는 작동X
     public IEnumerator CheckMovement(float time = 0)
     {
         yield return new WaitForSeconds(time);
-        foreach (var ball in gamePlayers)
+        if(TCP_BallCore.networkMode != NetworkMode.Client)
         {
-            isNobodyMove = true;
-            if (ball.GetComponent<BallMove>().isMove == true)
+            foreach (var ball in gamePlayers)
             {
-                isNobodyMove = false;
-                break;
+                isNobodyMove = true;
+                if (ball.GetComponent<BallMove>().isMove == true)
+                {
+                    isNobodyMove = false;
+                    break;
+                }
             }
-        }
-        if (isNobodyMove)
-        {
-            TurnManager.Instance.EndTurn();
+            if (isNobodyMove)
+            {
+                if (TCP_BallCore.networkMode == NetworkMode.None)
+                {
+                    TurnManager.Instance.EndTurn();
+                }
+                else if (TCP_BallCore.networkMode == NetworkMode.Server)
+                {
+                    //TurnEnd에 현재 공의 점수로 바꿔야함
+                    foreach(var ball in entryPlayerDataList)
+                    {
+                        if(ball.id == TurnManager.Instance.GetTurnBall().name)
+                        {
+                            TCP_BallServer.TurnEnd(ball.score);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 
-    public void SoloPlaySet(int turn)
-    {
-        for (int i = 0; i < gamePlayers.Count; i++)
-        {
-            BallDoll ballDollGO = gamePlayers[i].GetComponent<BallDoll>();
-            if (i == turn)
-            {
-                ballDollGO.Init(ballDollGO.showcaseColor, BallShowMode.MyPlayer);
-            }
-            else
-            {
-                ballDollGO.Init(ballDollGO.showcaseColor, BallShowMode.OtherPlayer);
-                ballDollGO.CollisionEvent();
-            }
-        }
-    }
-
-    public void MultiPlaySet()
+    public void InitSetting()
     {
         for (int i = 0; i < gamePlayers.Count; i++)
         {
@@ -145,26 +127,24 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("You Call MultiPlaySet at SoloPlay");
+                if (i == TurnManager.Instance.currentTurn)
+                {
+                    ballDollGO.Init(ballDollGO.showcaseColor, BallShowMode.MyPlayer);
+                }
+                else
+                {
+                    ballDollGO.Init(ballDollGO.showcaseColor, BallShowMode.OtherPlayer);
+                    ballDollGO.CollisionEvent();
+                }
             }
         }
+
+        joystick.GetComponent<BallLineRender>().ResetBallStatus();
     }
 
     public void AddPlayerData(string playerID)
     {
-        if (entryPlayerDataList != null)
-        {
-            //foreach (var playerData in entryPlayerDataList)
-            //{
-            //    if (playerData.id == playerID)
-            //    {
-            //        Debug.Log("이미 존재하는 플레이어를 추가하려고 했습니다.");
-            //        return;
-            //    }
-            //}
-        }
-
-        BallEntryPlayerData data = new BallEntryPlayerData();
+        BallEntryPlayerData data = new();
         int randomNum = Random.Range(0, ballColors.Count);
 
         data.color = ballColors[randomNum];
@@ -197,7 +177,7 @@ public class GameManager : MonoBehaviour
                     return;
                 }
             }
-            Debug.Log("There no player data has ID : " + playerID);
+            Debug.Log("There is no player data ID : " + playerID);
         }
         else
         {
@@ -207,38 +187,29 @@ public class GameManager : MonoBehaviour
 
     public void RemoveRoomPlayer(List<string> playerID)
     {
-        for(int i = 0; i < playerID.Count; i++)
+        if (entryPlayerDataList != null)
         {
-            foreach(var playerData in entryPlayerDataList)
+            for (int i = 0; i < playerID.Count; i++)
             {
-                if (playerData.id == playerID[i])
+                foreach (var playerData in entryPlayerDataList)
                 {
-                    entryPlayerDataList.Remove(playerData);
-                    break;
+                    if (playerData.id == playerID[i])
+                    {
+                        entryPlayerDataList.Remove(playerData);
+                        break;
+                    }
                 }
+                Debug.Log("There is no player data ID : " + playerID[i]);
             }
+        }
+        else
+        {
+            Debug.Log("PlayerData is empty");
         }
     }
 
     public void MakeBallByData()
     {
-        //RemoveSameID();
-
-        //셔플
-        //for (int i = 0; i < entryPlayerDataList.Count; i++)
-        //{
-        //    int randomNum = Random.Range(0, entryPlayerDataList.Count);
-        //    BallEntryPlayerData tempData = entryPlayerDataList[i];
-        //    entryPlayerDataList[i] = entryPlayerDataList[randomNum];
-        //    entryPlayerDataList[randomNum] = tempData;
-        //}
-
-        //셔플한 순서 index에 입력
-        //for (int i = 0; i < entryPlayerDataList.Count; i++)
-        //{
-        //    entryPlayerDataList[i].index = i;
-        //}
-
         foreach (var playerData in entryPlayerDataList)
         {
             GameObject ballGO = Instantiate(colorBallPrefab);
@@ -249,56 +220,53 @@ public class GameManager : MonoBehaviour
             ballGO.name = playerData.id;
         }
 
-        foreach(var ball in gamePlayers)
+        if (TCP_BallCore.networkMode != NetworkMode.None)
         {
-            guestReplayer.balls.Add(ball.GetComponent<BallDoll>());
+            foreach (var ball in gamePlayers)
+            {
+                guestReplayer.balls.Add(ball.GetComponent<BallDoll>());
+            }
         }
-
-        if (TCP_BallCore.networkMode == NetworkMode.None)
-        {
-            SoloPlaySet(0);
-        }
-        else
-        {
-            MultiPlaySet();
-        }
-
-        TurnManager.Instance.GetListFromGameManager();
-
-        joystick.GetComponent<BallLineRender>().ResetBallStatus();
     }
 
     public void StartGameSolo(int playerNumber)
     {
-        Debug.Log("StartGameSolo 시작");
         MakeLocalPlayer(playerNumber);
-        Debug.Log("MakeLocalPlayer 완료");
-        TurnManager.Instance.GetListFromGameManager();
-        Debug.Log("TurnManager에게 플레이어 목록 전송 완료");
         MakeBallByData();
-        Debug.Log("공 생성 완료");
+        TurnManager.Instance.GetListFromGameManager();
+        InitSetting();
+        UI_InGame.MakeNew(entryPlayerDataList);
     }
 
     public void StartGameFromRoom()
     {
-        TurnManager.Instance.GetListFromGameManager();
         MakeBallByData();
+        TurnManager.Instance.GetListFromGameManager();
+        InitSetting();
         UI_InGame.MakeNew(entryPlayerDataList);
     }
 
     public void StartGameFromRoomClient()
     {
-        TurnManager.Instance.GetListFromGameManager();
         MakeBallByData();
+        TurnManager.Instance.GetListFromGameManager();
+        InitSetting();
         UI_InGame.MakeNew(entryPlayerDataList);
     }
 
     public void MakeLocalPlayer(int _playerNumber)
     {
-        for(int i = 0; i < _playerNumber; i++)
+        for (int i = 0; i < _playerNumber; i++)
         {
-            int randomID = Random.Range(0, 10000);
-            AddPlayerData("LocalPlayer"+randomID);
+            int randomID = Random.Range(0, 999);
+            foreach(var data in entryPlayerDataList)
+            {
+                if(("LocalPlayer" + randomID) == data.id)
+                {
+                    randomID += 1000;
+                }
+            }
+            AddPlayerData("LocalPlayer" + randomID);
         }
     }
 
@@ -314,24 +282,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RemoveSameID()
-    {
-        for(int i = 0; i < entryPlayerDataList.Count-1; i++)
-        {
-            for(int j = i+1; j < entryPlayerDataList.Count; j++)
-            {
-                if (entryPlayerDataList[i].id == entryPlayerDataList[j].id)
-                {
-                    RemovePlayerData(entryPlayerDataList[i].id);
-                }
-            }
-        }
-    }
-
     public void GetAllPlayerFromServer(List<BallEntryPlayerData> datas)
     {
         entryPlayerDataList = datas;
-        if(TCP_BallUI.gameState == GameState.Room)
+        if (TCP_BallUI.gameState == GameState.Room)
         {
             UI_RoomManager.MakeNew(datas);
         }
@@ -339,7 +293,7 @@ public class GameManager : MonoBehaviour
 
     public void GetLastPlayerFromServer(BallEntryPlayerData data)
     {
-        if(TCP_BallCore.networkMode != NetworkMode.Server)
+        if (TCP_BallCore.networkMode != NetworkMode.Server)
         {
             entryPlayerDataList.Add(data);
         }
@@ -361,7 +315,7 @@ public class GameManager : MonoBehaviour
 
     public void AddMoveData(MoveData _moveData)
     {
-        if(ballMoveData == null)
+        if (ballMoveData == null)
         {
             _moveData.index = 0;
         }
@@ -372,70 +326,34 @@ public class GameManager : MonoBehaviour
         ballMoveData.Add(_moveData);
     }
 
-    public void SetSpawnPointAndStartOrder()
-    {
-        ShuffleSpawnPoint();
-    }
-
-    public void ShuffleSpawnPoint()
-    {
-        for(int i = 0; i < spawnPoints.Length; i++)
-        {
-            int randomNum = Random.Range(0, spawnPoints.Length);
-            Transform tmp = spawnPoints[randomNum];
-            spawnPoints[randomNum] = spawnPoints[i];
-            spawnPoints[i] = tmp;
-        }
-    }
-
-    //public void ShootBallInNetwork(Vector3 _shootDirection)
-    //{
-    //    Debug.Log("Test Ball Shoot");
-
-    //    if (GameManager.Instance.isNobodyMove)
-    //    {
-    //        GameManager.Instance.shootTime = Time.time;
-    //        Debug.Log(TurnManager.Instance.GetTurnBall().name);
-    //        TCP_BallCore.ShootTheBall(_shootDirection * 50);
-    //        //TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
-    //        GameManager.Instance.isNobodyMove = false;
-
-    //        foreach (var balls in GameManager.Instance.gamePlayers)
-    //        {
-    //            GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
-    //        }
-
-    //        StartCoroutine(GameManager.Instance.CheckMovement(1));
-    //    }
-    //}
-
     public int GetIndexOfBall(string id)
     {
-        foreach(var ball in entryPlayerDataList)
+        foreach (var ball in entryPlayerDataList)
         {
-            if(ball.id == id)
+            if (ball.id == id)
             {
                 return ball.index;
             }
         }
+        Debug.LogError("There is no ball in data has ID " + id);
         return -1;
     }
 
     public void ClearPlayerData()
     {
         entryPlayerDataList.Clear();
-        if(entryPlayerDataList != null)
-        {
-            //Debug.LogError("플레이어 데이터 초기화에 실패했습니다.");
-        }
     }
 
     public void ClearMoveData()
     {
         ballMoveData.Clear();
-        if(ballMoveData != null)
+    }
+
+    public void ClearBall()
+    {
+        foreach(var ball in gamePlayers)
         {
-            //Debug.LogError("BallMove 데이터 초기화에 실패했습니다.");
+            Destroy(ball);
         }
     }
 }

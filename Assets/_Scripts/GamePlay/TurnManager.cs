@@ -37,52 +37,27 @@ public class TurnManager : MonoBehaviour
     //순서1 : 턴을 다음 턴으로 넘긴다.
     public void EndTurn()
     {
-        foreach(var data in GameManager.Instance.entryPlayerDataList)
-        {
-            if(data.id == GetTurnBall().name)
-            {
-                Debug.LogError("Call Server TurnEnd");
-                TCP_BallServer.TurnEnd(data.score);
-                break;
-            }
-        }
-
         currentTurn++;
         if(currentTurn >= GameManager.Instance.gamePlayers.Count)
         {
             currentTurn = 0;
         }
 
-        Debug.LogError("CurrentTurn: " + currentTurn);
-        GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
-        UIManager.Instance.UpdateTurn(currentTurn);
-        if(TCP_BallCore.networkMode == NetworkMode.None)
-        {
-            GameManager.Instance.SoloPlaySet(currentTurn);
-        }
-
+        Debug.Log("CurrentTurn: " + currentTurn);
+        GameManager.Instance.InitSetting();
         GameManager.Instance.ClearMoveData();
-
-        //GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
-
-        //if(GetTurnBall().name != GameManager.Instance.myID)
-        //{
-        //    GameManager.Instance.joystick.gameObject.SetActive(false);
-        //}
-        //else
-        //{
-        //    GameManager.Instance.joystick.gameObject.SetActive(true);
-        //}
     }
 
     public void EndTurn(int _countOfMoveData, int _differenceOfScore)
     {
-        Debug.LogError("Call Client TurnEnd");
-
-        if(TCP_BallCore.networkMode != NetworkMode.Server)
+        Debug.LogError("Call TurnEnd");
+        if(TCP_BallCore.networkMode == NetworkMode.Server)
         {
-            //GameManager.Instance.ClearMoveData();
-
+            EndTurn();
+            return;
+        }
+        else
+        {
             Debug.LogError(_countOfMoveData);
             Debug.LogError(GameManager.Instance.ballMoveData.Count);
 
@@ -98,22 +73,18 @@ public class TurnManager : MonoBehaviour
                 ScoreManager.Instance.PlusScore(GetTurnBall());
             }
 
+            GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
+
             currentTurn++;
-            if(currentTurn >= GameManager.Instance.gamePlayers.Count)
+            if (currentTurn >= GameManager.Instance.gamePlayers.Count)
             {
                 currentTurn = 0;
             }
-            Debug.LogError("Current Turn : "+currentTurn);
-            GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
-            UIManager.Instance.UpdateTurn(currentTurn);
-            if (TCP_BallCore.networkMode == NetworkMode.None)
-            {
-                GameManager.Instance.SoloPlaySet(currentTurn);
-            }
 
-            GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
+            Debug.Log("CurrentTurn: " + currentTurn);
+            GameManager.Instance.InitSetting();
+            GameManager.Instance.ClearMoveData();
         }
-
     }
 
     //순서2 : 턴에 해당하는 공을 반환한다.
@@ -121,16 +92,8 @@ public class TurnManager : MonoBehaviour
     {
         if(ballList == null)
         {
+            Debug.LogError("BallList is Empty!");
             return null;
-        }
-        if(currentTurn >= ballList.Count)
-        {
-            int tempTurn = currentTurn;
-            while(tempTurn >= ballList.Count)
-            {
-                tempTurn -= ballList.Count;
-            }
-            return ballList[tempTurn];
         }
         return ballList[currentTurn];
     }
@@ -139,6 +102,7 @@ public class TurnManager : MonoBehaviour
     {
         if(ballList == null)
         {
+            Debug.LogError("BallList is Empty!");
             return null;
         }
         return ballList[turn];
@@ -159,14 +123,5 @@ public class TurnManager : MonoBehaviour
     public void GetListFromGameManager()
     {
         ballList = GameManager.Instance.gamePlayers;
-
-        //if (GetTurnBall().name != GameManager.Instance.myID)
-        //{
-        //    GameManager.Instance.joystick.gameObject.SetActive(false);
-        //}
-        //else
-        //{
-        //    GameManager.Instance.joystick.gameObject.SetActive(true);
-        //}
     }
 }
