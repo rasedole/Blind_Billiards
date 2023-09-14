@@ -41,13 +41,10 @@ public class BallMove : MonoBehaviour
 
             if (rigidbody.velocity.magnitude < 0.01f)
             {
-                if(TCP_BallCore.networkMode == NetworkMode.Server)
+                if(TCP_BallCore.networkMode == NetworkMode.Server && !GuestReplayer.replaying)
                 {
-                    if (!GuestReplayer.replaying)
-                    {
-                        TCP_BallServer.Moved(GetComponent<BallHit>().moveData);
-                        GameManager.Instance.AddMoveData(GetComponent<BallHit>().moveData);
-                    }
+                    TCP_BallServer.Moved(GetComponent<BallHit>().moveData);
+                    GameManager.Instance.AddMoveData(GetComponent<BallHit>().moveData);
                 }
                 isMove = false;
                 StartCoroutine(GameManager.Instance.CheckMovement());

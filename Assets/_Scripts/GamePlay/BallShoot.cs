@@ -48,78 +48,44 @@ public class BallShoot : MonoBehaviour
 
     public void Shoot()
     {
-        if (TCP_BallCore.networkMode != NetworkMode.Client)
+        if(TCP_BallCore.networkMode == NetworkMode.None)
         {
             if (GameManager.Instance.isNobodyMove)
             {
-                if(GameManager.Instance.CheckMyBall() || TCP_BallCore.networkMode == NetworkMode.None)
+                GameManager.Instance.shootTime = Time.time;
+                TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(_direction * power, ForceMode.Impulse);
+                GameManager.Instance.isNobodyMove = false;
+
+                foreach(var balls in GameManager.Instance.gamePlayers)
                 {
-                    GameManager.Instance.shootTime = Time.time;
-                    Debug.Log("Shoot!");
-                    TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(_direction * power, ForceMode.Impulse);
-                    GameManager.Instance.isNobodyMove = false;
-
-                    if (TCP_BallCore.networkMode == NetworkMode.Server)
-                    {
-                        foreach (var balls in GameManager.Instance.gamePlayers)
-                        {
-                            GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
-                        }
-                    }
-                    StartCoroutine(GameManager.Instance.CheckMovement(1));
-
+                    GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
                 }
             }
+            GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetLineRender();
+            StartCoroutine(GameManager.Instance.CheckMovement(1));
         }
         else
         {
-            //서버에게 direction값을 보낸다.
+            if((TCP_BallCore.networkMode != NetworkMode.Client || !GameManager.Instance.isAlreadyShoot) && GameManager.Instance.isNobodyMove)
+            {
+                TCP_BallCore.ShootTheBall(direction);
+                GameManager.Instance.isAlreadyShoot = true;
+            }
         }
     }
 
-    //서버용 슛
-    //public void Shoot(Vector3 clientDirection)
-    //{
-    //    if (TCP_BallCore.networkMode != NetworkMode.Server)
-    //    {
-    //        return;
-    //    }
-
-    //    if (GameManager.Instance.isNobodyMove)
-    //    {
-    //        GameManager.Instance.shootTime = Time.time;
-    //        Debug.Log("Shoot!");
-    //        TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
-    //        GameManager.Instance.isNobodyMove = false;
-
-    //        foreach (var balls in GameManager.Instance.gamePlayers)
-    //        {
-    //            GameManager.Instance.ballMoveData.Add(balls.GetComponent<BallHit>().moveData);
-    //        }
-
-    //        StartCoroutine(GameManager.Instance.CheckMovement(1));
-    //    }
-    //}
-
     public void ShootBall(Vector3 clientDirection)
     {
-        //GameManager.Instance.ballMoveData.Clear();
+        GameManager.Instance.shootTime = Time.time;
+        TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
+        GameManager.Instance.isNobodyMove = false;
 
-        GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetLineRender();
-
-        if (GameManager.Instance.isNobodyMove)
+        foreach (var balls in GameManager.Instance.gamePlayers)
         {
-            GameManager.Instance.shootTime = Time.time;
-            TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
-            GameManager.Instance.isNobodyMove = false;
-
-            foreach (var balls in GameManager.Instance.gamePlayers)
-            {
-                GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
-                TCP_BallServer.Moved(balls.GetComponent<BallHit>().moveData);
-            }
-
-            StartCoroutine(GameManager.Instance.CheckMovement(1));
+            GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
+            TCP_BallServer.Moved(balls.GetComponent<BallHit>().moveData);
         }
+        GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetLineRender();
+        StartCoroutine(GameManager.Instance.CheckMovement(1));
     }
 }

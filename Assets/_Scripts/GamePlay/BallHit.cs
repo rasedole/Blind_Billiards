@@ -35,33 +35,29 @@ public class BallHit : MonoBehaviour
         {
             _moveData.startPos = transform.position;
         }
-        _moveData.ballIndex = GameManager.Instance.GetIndexOfBall(name);
+        _moveData.ballIndex = GameManager.Instance.GetIndexOfBall(this.name);
         _moveData.startTime = Time.time - GameManager.Instance.shootTime;
     }
 
     //충돌이 발생할 시 MoveDate구조체를 게임데이터에게 쌓는다.
     private void OnCollisionEnter(Collision collision)
     {
-        if (!GameManager.Instance.isNobodyMove)
+        if (!GameManager.Instance.isNobodyMove && !GuestReplayer.replaying)
         {
-            if (!GuestReplayer.replaying)
+            if (TCP_BallCore.networkMode == NetworkMode.Server)
             {
-                if (TCP_BallCore.networkMode == NetworkMode.Server)
-                {
-                    TCP_BallServer.Moved(moveData);
-                    GameManager.Instance.AddMoveData(moveData);
+                TCP_BallServer.Moved(moveData);
+                GameManager.Instance.AddMoveData(moveData);
+            }
+            if(TCP_BallCore.networkMode != NetworkMode.Client)
+            {
+                GetComponent<BallDoll>().CollisionEvent();
 
-                }
-                if(TCP_BallCore.networkMode != NetworkMode.Client)
+                if(collision.gameObject.tag is "Player")
                 {
-                    GetComponent<BallDoll>().CollisionEvent();
-
-                    if(collision.gameObject.tag == "Player")
+                    if(TurnManager.Instance.GetTurnBall() == this.gameObject)
                     {
-                        if(TurnManager.Instance.GetTurnBall() == this.gameObject)
-                        {
-                            ScoreManager.Instance.PlusScore(this.gameObject);
-                        }
+                        ScoreManager.Instance.PlusScore(this.gameObject);
                     }
                 }
             }
