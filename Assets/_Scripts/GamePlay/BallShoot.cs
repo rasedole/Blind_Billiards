@@ -76,6 +76,8 @@ public class BallShoot : MonoBehaviour
 
     public void ShootBall(Vector3 clientDirection)
     {
+        GameManager.Instance.ClearMoveData();
+
         GameManager.Instance.shootTime = Time.time;
         TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
         GameManager.Instance.isNobodyMove = false;

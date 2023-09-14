@@ -83,7 +83,6 @@ public class TurnManager : MonoBehaviour
 
             Debug.Log("CurrentTurn: " + currentTurn);
             GameManager.Instance.InitSetting();
-            GameManager.Instance.ClearMoveData();
         }
     }
 

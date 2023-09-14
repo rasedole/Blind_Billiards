@@ -315,7 +315,6 @@ public class TCP_BallServer
                                     case TCP_BallHeader.CheckMoveData:
 
                                         List<int> lostIndexList = new List<int>();
-                                        Debug.LogWarning(lostIndexList.Count + "");
                                         while
                                             (
                                                 commands.Count >= (2 + index) &&
