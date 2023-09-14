@@ -306,7 +306,6 @@ public class TCP_BallServer
 
                                     // Other client replay MoveData and go to next turn
                                     case TCP_BallHeader.TurnCheckedPing:
-
                                         roomPlayer[commands[index + 1].text].turnCheck = true;
                                         commands.RemoveRange(index, 2);
                                         break;
@@ -523,32 +522,28 @@ public class TCP_BallServer
             Debug.LogError("You are not server!");
         }
 
+        foreach (TCP_BallServerConnectClients player in roomPlayer.Values)
+        {
+            player.turnCheck = false;
+        }
+
         TCP_BallCore.TurnCheck(TurnEndChecking(score, 0.3f, moveDataIndex));
     }
     private static IEnumerator TurnEndChecking(int score, float pingTime, int moveDataCount)
     {
         WaitForSeconds wait = new WaitForSeconds(pingTime);
-        List<string> keys = roomPlayer.Keys.ToList();
-        List<TCP_BallServerConnectClients> values = new List<TCP_BallServerConnectClients>();
-        foreach (string key in keys)
+        List<string> keys = new List<string>();
+        List<TCP_BallServerConnectClients> values;
+        do
         {
-            if (roomPlayer[key] != null)
+            values = new List<TCP_BallServerConnectClients>();
+            for(int i = 0; i < roomPlayer.Keys.Count; i++)
             {
-                roomPlayer[key].turnCheck = false;
-                values.Add(roomPlayer[key]);
-            }
-        }
-        while (values.Count > 0)
-        {
-            int index = 0;
-            while (index < values.Count)
-            {
-                if (values[index].turnCheck)
+                if (!roomPlayer[roomPlayer.Keys.ToList()[i]].turnCheck)
                 {
-                    values.RemoveAt(index);
-                    continue;
+                    Debug.LogWarning(i + "!");
+                    values.Add(roomPlayer[roomPlayer.Keys.ToList()[i]]);
                 }
-                index++;
             }
 
             Broadcast
@@ -563,7 +558,8 @@ public class TCP_BallServer
             );
 
             yield return wait;
-        }
+        } while (values.Count > 0) ;
+        values.Clear();
 
         TCP_BallCore.TurnCheckClear();
         moveDataIndex = 0;

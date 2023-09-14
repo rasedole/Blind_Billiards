@@ -346,6 +346,7 @@ public class GameManager : MonoBehaviour
 
     public void ClearMoveData()
     {
+        Debug.LogWarning("!");
         ballMoveData.Clear();
     }
 

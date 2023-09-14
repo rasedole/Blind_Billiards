@@ -86,7 +86,6 @@ public static class TCP_BallGameManagerGetterAdapter
         List<MoveData> moveList = new();
         for(int i = 0; i < lndexList.Count; i++)
         {
-            Debug.LogWarning(lndexList[i] + ", " + GameManager.Instance.ballMoveData.Count);
             moveList.Add(GameManager.Instance.ballMoveData[lndexList[i]]);
         }
         return moveList;

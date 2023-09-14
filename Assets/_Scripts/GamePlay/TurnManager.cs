@@ -45,7 +45,6 @@ public class TurnManager : MonoBehaviour
 
         Debug.Log("CurrentTurn: " + currentTurn);
         GameManager.Instance.InitSetting();
-        GameManager.Instance.ClearMoveData();
     }
 
     public void EndTurn(int _countOfMoveData, int _differenceOfScore)
