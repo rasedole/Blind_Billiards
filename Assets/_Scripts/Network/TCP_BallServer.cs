@@ -308,6 +308,24 @@ public class TCP_BallServer
                                     case TCP_BallHeader.TurnCheckedPing:
 
                                         roomPlayer[commands[index + 1].text].turnCheck = true;
+                                        commands.RemoveRange(index, 2);
+                                        break;
+
+                                    // Client request move data
+                                    case TCP_BallHeader.CheckMoveData:
+
+                                        List<int> lostIndexList = new List<int>();
+                                        while
+                                            (
+                                                commands.Count >= (3 + index) &&
+                                                commands[index + 2].command == 3
+                                            )
+                                        {
+                                            lostIndexList.Add(int.Parse(commands[index + 2].text));
+                                            commands.RemoveAt(index + 2);
+                                        }
+                                        CallbackMoveData(TCP_BallGameManagerGetterAdapter.MoveDataListCallback(lostIndexList), pair.Value);
+                                        commands.RemoveRange(index, 2);
                                         break;
 
                                     default:
@@ -463,21 +481,39 @@ public class TCP_BallServer
             Debug.LogError("You are not server!");
         }
 
-        Broadcast
+        SendMoveData
         (
-            new List<CommandData>()
-            {
-                new CommandData(0, ((int)TCP_BallHeader.BallMove).ToString()),
-                new CommandData(3, moveDataIndex.ToString()),
-                new CommandData(4, moveData.ballIndex.ToString()),
-                new CommandData(5, moveData.startPos.x.ToString()),
-                new CommandData(6, moveData.startPos.y.ToString()),
-                new CommandData(7, moveData.startPos.z.ToString()),
-                new CommandData(8, moveData.startTime.ToString())
-            },
+            new List<MoveData>() { moveData },
             roomPlayer.Values.ToList()
         );
         moveDataIndex++;
+    }
+    private static void SendMoveData(List<MoveData> moveDataList, List<TCP_BallServerConnectClients> clientList)
+    {
+        List < CommandData > commands = new List<CommandData>();
+        foreach (MoveData moveData in moveDataList)
+        {
+            commands.Add(new CommandData(0, ((int)TCP_BallHeader.BallMove).ToString()));
+            commands.Add(new CommandData(3, moveDataIndex.ToString()));
+            commands.Add(new CommandData(4, moveData.ballIndex.ToString()));
+            commands.Add(new CommandData(5, moveData.startPos.x.ToString()));
+            commands.Add(new CommandData(6, moveData.startPos.y.ToString()));
+            commands.Add(new CommandData(7, moveData.startPos.z.ToString()));
+            commands.Add(new CommandData(8, moveData.startTime.ToString()));
+        }
+        Broadcast
+        (
+            commands,
+            clientList
+        );
+    }
+    private static void CallbackMoveData(List<MoveData> moveDataList, TCP_BallServerConnectClients client)
+    {
+        SendMoveData
+        (
+            moveDataList,
+            new List<TCP_BallServerConnectClients>() { client }
+        );
     }
 
     public static void TurnEnd(int score, int turn = 0)

@@ -142,7 +142,7 @@ public class TCP_BallCommand : MonoBehaviour
     }
 
     /* ========== Client ========== */
-    public static List<CommandData> ClientReceiveEvent(string rawData, TCP_BallClient tcp_BallClient)
+    public static List<CommandData> ClientReceiveEvent(string rawData)
     {
         Debug.Log("ClientReceiveEvent > " + rawData);
         List<CommandData> datas = CommandCore.Decode(instance.command, rawData);
@@ -418,20 +418,27 @@ public class TCP_BallCommand : MonoBehaviour
                     }
 
                     // Check movedata is complete
-                    if (int.Parse(datas[index + 2].text) == TCP_BallGameManagerGetterAdapter.MoveDataListCount)
+                    int turn = int.Parse(datas[index + 1].text);
+                    int moveDataMaxCount = int.Parse(datas[index + 2].text);
+                    if (moveDataMaxCount == TCP_BallGameManagerGetterAdapter.MoveDataListCount(turn))
                     {
-                        instance.turnEnd.Invoke(int.Parse(datas[index + 1].text), int.Parse(datas[index + 3].text));
+                        instance.turnEnd.Invoke(turn, moveDataMaxCount);
                     }
                     else
                     {
                         // Get MoveData
-                        List<CommandData> command = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()) };
+                        List<CommandData> command = new List<CommandData>() 
+                        { 
+                            new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()),
+                            new CommandData(3, datas[index + 2].text)
+                        };
 
-                        foreach(int i in TCP_BallGameManagerGetterAdapter.MoveDataIndexList)
+                        foreach (int i in TCP_BallGameManagerGetterAdapter.MoveDataNullList(moveDataMaxCount))
                         {
-                            command.Add(new CommandData(3, datas[index + 2].text));
                             command.Add(new CommandData(3, i.ToString()));
                         }
+
+                        TCP_BallClient.Send(command);
                     }
 
                     datas.RemoveRange(index, 4);
@@ -501,7 +508,7 @@ public class TCP_BallCommand : MonoBehaviour
                         return null;
                     }
 
-                    if (datas[1].command == 1)
+                    if (datas[index + 1].command == 1)
                     {
                         TCP_BallServer.CheckID(clients, datas[index + 1].text);
                     }
@@ -548,6 +555,33 @@ public class TCP_BallCommand : MonoBehaviour
                     }
 
                     index += 2;
+                    break;
+
+                // Handle in server
+                case TCP_BallHeader.CheckMoveData:
+                    if (datas.Count < 3 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+                    if
+                    (
+                        datas[index + 1].command != 3 ||
+                        datas[index + 2].command != 3
+                    )
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        return null;
+                    }
+                    index += 2;
+                    while
+                        (
+                            datas.Count >= (1 + index) &&
+                            datas[index + 1].command == 3
+                        )
+                    {
+                        index++;
+                    }
                     break;
 
                 default:

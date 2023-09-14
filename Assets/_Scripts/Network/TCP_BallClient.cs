@@ -139,7 +139,7 @@ public class TCP_BallClient
                 data += reader.ReadLine();
                 if (data != null)
                 {
-                    List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data, this);
+                    List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
                 }
             }
             reader.DiscardBufferedData();
