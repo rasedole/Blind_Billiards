@@ -55,7 +55,7 @@ public static class TCP_BallGameManagerGetterAdapter
         }
     }
 
-    public static int MoveDataListCount(int turn)
+    public static int MoveDataListCount()
     {
         return 0;
     }

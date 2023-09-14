@@ -384,7 +384,8 @@ public class TCP_BallCommand : MonoBehaviour
                         return null;
                     }
 
-                    if(TCP_BallCore.networkMode == NetworkMode.Client)
+                    TCP_BallClient.turnEnded = false;
+                    if (TCP_BallCore.networkMode == NetworkMode.Client)
                     {
                         MoveData moveData = new MoveData();
                         moveData.index = int.Parse(datas[index + 1].text);
@@ -402,46 +403,48 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Server's ball stopped moving
                 case TCP_BallHeader.TurnEnd:
-                    if (datas.Count < 4 + index)
+                    if (datas.Count < 3 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
                         return null;
                     }
                     if (
                         datas[index + 1].command != 3 ||
-                        datas[index + 2].command != 3 ||
-                        datas[index + 3].command != 4
+                        datas[index + 2].command != 4
                         )
                     {
                         TCP_BallCore.messageEvent.Invoke("Type error!");
                         return null;
                     }
 
-                    // Check movedata is complete
-                    int turn = int.Parse(datas[index + 1].text);
-                    int moveDataMaxCount = int.Parse(datas[index + 2].text);
-                    if (moveDataMaxCount == TCP_BallGameManagerGetterAdapter.MoveDataListCount(turn))
+                    if (!TCP_BallClient.turnEnded)
                     {
-                        instance.turnEnd.Invoke(turn, moveDataMaxCount);
+                        // Check movedata is complete
+                        int moveDataMaxCount = int.Parse(datas[index + 1].text);
+                        if (moveDataMaxCount == TCP_BallGameManagerGetterAdapter.MoveDataListCount())
+                        {
+                            instance.turnEnd.Invoke(moveDataMaxCount, /*score*/int.Parse(datas[index + 2].text));
+                            TCP_BallClient.TurnEndChecking();
+                        }
+                        else
+                        {
+                            // Get MoveData
+                            List<CommandData> command = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()) };
+
+                            foreach (int i in TCP_BallGameManagerGetterAdapter.MoveDataNullList(moveDataMaxCount))
+                            {
+                                command.Add(new CommandData(3, i.ToString()));
+                            }
+
+                            TCP_BallClient.Send(command);
+                        }
                     }
                     else
                     {
-                        // Get MoveData
-                        List<CommandData> command = new List<CommandData>() 
-                        { 
-                            new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()),
-                            new CommandData(3, datas[index + 2].text)
-                        };
-
-                        foreach (int i in TCP_BallGameManagerGetterAdapter.MoveDataNullList(moveDataMaxCount))
-                        {
-                            command.Add(new CommandData(3, i.ToString()));
-                        }
-
-                        TCP_BallClient.Send(command);
+                        TCP_BallClient.TurnEndChecking();
                     }
 
-                    datas.RemoveRange(index, 4);
+                    datas.RemoveRange(index, 3);
                     break;
 
                 default:
@@ -559,21 +562,20 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Handle in server
                 case TCP_BallHeader.CheckMoveData:
-                    if (datas.Count < 3 + index)
+                    if (datas.Count < 2 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
                         return null;
                     }
                     if
                     (
-                        datas[index + 1].command != 3 ||
-                        datas[index + 2].command != 3
+                        datas[index + 1].command != 3
                     )
                     {
                         TCP_BallCore.messageEvent.Invoke("Type error!");
                         return null;
                     }
-                    index += 2;
+                    index++;
                     while
                         (
                             datas.Count >= (1 + index) &&

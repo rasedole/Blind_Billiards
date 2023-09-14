@@ -317,15 +317,15 @@ public class TCP_BallServer
                                         List<int> lostIndexList = new List<int>();
                                         while
                                             (
-                                                commands.Count >= (3 + index) &&
-                                                commands[index + 2].command == 3
+                                                commands.Count >= (2 + index) &&
+                                                commands[index + 1].command == 3
                                             )
                                         {
-                                            lostIndexList.Add(int.Parse(commands[index + 2].text));
-                                            commands.RemoveAt(index + 2);
+                                            lostIndexList.Add(int.Parse(commands[index + 1].text));
+                                            commands.RemoveAt(index + 1);
                                         }
                                         CallbackMoveData(TCP_BallGameManagerGetterAdapter.MoveDataListCallback(lostIndexList), pair.Value);
-                                        commands.RemoveRange(index, 2);
+                                        commands.RemoveAt(index);
                                         break;
 
                                     default:
@@ -516,17 +516,16 @@ public class TCP_BallServer
         );
     }
 
-    public static void TurnEnd(int score, int turn = 0)
+    public static void TurnEnd(int score)
     {
         if (TCP_BallCore.networkMode != NetworkMode.Server)
         {
             Debug.LogError("You are not server!");
         }
 
-        TCP_BallCore.TurnCheck(turn, TurnEndChecking(score, turn, 0.3f, moveDataIndex));
-        moveDataIndex = 0;
+        TCP_BallCore.TurnCheck(TurnEndChecking(score, 0.3f, moveDataIndex));
     }
-    private static IEnumerator TurnEndChecking(int score, int turn, float pingTime, int moveDataCount)
+    private static IEnumerator TurnEndChecking(int score, float pingTime, int moveDataCount)
     {
         WaitForSeconds wait = new WaitForSeconds(pingTime);
         List<string> keys = roomPlayer.Keys.ToList();
@@ -556,10 +555,9 @@ public class TCP_BallServer
             (
                 new List<CommandData>()
                 {
-                new CommandData(0, ((int)TCP_BallHeader.TurnEnd).ToString()),
-                new CommandData(3, turn.ToString()),
-                new CommandData(3, moveDataCount.ToString()),
-                new CommandData(4, score.ToString())
+                    new CommandData(0, ((int)TCP_BallHeader.TurnEnd).ToString()),
+                    new CommandData(3, moveDataCount.ToString()),
+                    new CommandData(4, score.ToString())
                 },
                 values
             );
@@ -568,6 +566,7 @@ public class TCP_BallServer
         }
 
         TCP_BallCore.TurnCheckClear();
+        moveDataIndex = 0;
         yield return null;
     }
 
