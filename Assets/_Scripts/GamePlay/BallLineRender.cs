@@ -28,29 +28,11 @@ public class BallLineRender : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isClicked && GameManager.Instance.isNobodyMove)
+        if (TCP_BallCore.networkMode != NetworkMode.Client || !GameManager.Instance.isAlreadyShoot)
         {
-            if (TCP_BallCore.networkMode == NetworkMode.None)
+            if (isClicked && GameManager.Instance.isNobodyMove)
             {
-                Vector3 offset = new(-joystick.Horizontal, 0, -joystick.Vertical);
-                lineRay = new(ballPosition, offset.normalized);
-                int _layerMask = 1 << LayerMask.NameToLayer("Wall");
-                if (Physics.Raycast(lineRay, out hitinfo, 10, _layerMask))
-                {
-                    //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
-                    lineRenderer.SetPosition(0, ballPosition);
-                    lineRenderer.SetPosition(1, ballPosition + offset * hitinfo.distance);
-                }
-                else
-                {
-                    //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
-                    lineRenderer.SetPosition(0, ballPosition);
-                    lineRenderer.SetPosition(1, ballPosition + offset * 2);
-                }
-            }
-            else if ((GameManager.Instance.myID == TurnManager.Instance.GetTurnBall().name) && !GuestReplayer.replaying)
-            {
-                if (GameManager.Instance.CheckMyBall())
+                if (TCP_BallCore.networkMode == NetworkMode.None)
                 {
                     Vector3 offset = new(-joystick.Horizontal, 0, -joystick.Vertical);
                     lineRay = new(ballPosition, offset.normalized);
@@ -68,12 +50,36 @@ public class BallLineRender : MonoBehaviour
                         lineRenderer.SetPosition(1, ballPosition + offset * 2);
                     }
                 }
+                else if ((GameManager.Instance.myID == TurnManager.Instance.GetTurnBall().name) && !GuestReplayer.replaying)
+                {
+                    if (GameManager.Instance.CheckMyBall())
+                    {
+                        Vector3 offset = new(-joystick.Horizontal, 0, -joystick.Vertical);
+                        lineRay = new(ballPosition, offset.normalized);
+                        int _layerMask = 1 << LayerMask.NameToLayer("Wall");
+                        if (Physics.Raycast(lineRay, out hitinfo, 10, _layerMask))
+                        {
+                            //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
+                            lineRenderer.SetPosition(0, ballPosition);
+                            lineRenderer.SetPosition(1, ballPosition + offset * hitinfo.distance);
+                        }
+                        else
+                        {
+                            //순서2-2. 해당 방향을 LineRenderer에 넣어준다.
+                            lineRenderer.SetPosition(0, ballPosition);
+                            lineRenderer.SetPosition(1, ballPosition + offset * 2);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ResetLineRender();
             }
         }
         else
         {
-            lineRenderer.SetPosition(0, ballPosition);
-            lineRenderer.SetPosition(1, ballPosition);
+            ResetLineRender();
         }
     }
 

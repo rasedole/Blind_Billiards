@@ -102,6 +102,7 @@ public class GuestReplayer : MonoBehaviour
             GameManager.Instance.InitSetting();
 
             GameManager.Instance.ClearMoveData();
+            Debug.LogError(GameManager.Instance.ballMoveData.Count + "BallMoveCount");
 
             Debug.LogError("Replay End");
         }

@@ -60,18 +60,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.KeypadEnter))
-    //    {
-    //        if (chatInput.text != null)
-    //        {
-    //            UI_InGame.Chatting(myID, chatInput.text);
-    //        }
-    //        chatInput.text = null;
-    //    }
-    //}
-
     //Client는 작동X
     public IEnumerator CheckMovement(float time = 0)
     {
@@ -96,15 +84,28 @@ public class GameManager : MonoBehaviour
                 else if (TCP_BallCore.networkMode == NetworkMode.Server)
                 {
                     //TurnEnd에 현재 공의 점수로 바꿔야함
-                    foreach(var ball in entryPlayerDataList)
+                    StartCoroutine(CheckTurnEnd());
+                }
+            }
+        }
+    }
+
+    private IEnumerator CheckTurnEnd()
+    {
+        bool trigger = true;
+        while (trigger)
+        {
+            yield return new WaitForSeconds(1f);
+            if (TCP_BallCore.allClientTurnChecked)
+            {
+                foreach (var ball in entryPlayerDataList)
+                {
+                    if (ball.id == TurnManager.Instance.GetTurnBall().name)
                     {
-                        if(ball.id == TurnManager.Instance.GetTurnBall().name)
-                        {
-                            TCP_BallServer.TurnEnd(ball.score - ScoreManager.Instance.savedScore);
-                            //TCP_BallServer.TurnEnd(0);
-                            Debug.Log(ball.score + "BallScore - " + ScoreManager.Instance.savedScore + "PastScore");
-                            break;
-                        }
+                        TCP_BallServer.TurnEnd(ball.score - ScoreManager.Instance.savedScore);
+                        Debug.Log(ball.score + "BallScore - " + ScoreManager.Instance.savedScore + "PastScore");
+                        trigger = false;
+                        break;
                     }
                 }
             }

@@ -80,6 +80,7 @@ public class TurnManager : MonoBehaviour
             }
 
             Debug.LogError("CurrentTurn: " + currentTurn);
+            GameManager.Instance.InitSetting();
             Debug.LogError("TurnEnd InitSetting");
         }
     }
