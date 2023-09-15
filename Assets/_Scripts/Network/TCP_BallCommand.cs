@@ -177,7 +177,7 @@ public class TCP_BallCommand : MonoBehaviour
                         TCP_BallCore.messageEvent.Invoke("Type error!");
                         return null;
                     }
-                    datas.RemoveRange(index, 2);
+                    index += 2;
                     break;
 
                 // Server has new player entry
@@ -421,7 +421,6 @@ public class TCP_BallCommand : MonoBehaviour
                     {
                         // Check movedata is complete
                         int moveDataMaxCount = int.Parse(datas[index + 1].text);
-                        Debug.LogWarning(moveDataMaxCount + ", " + TCP_BallGameManagerGetterAdapter.MoveDataListCount());
                         if (moveDataMaxCount == TCP_BallGameManagerGetterAdapter.MoveDataListCount() || TCP_BallCore.networkMode == NetworkMode.Server)
                         {
                             instance.turnEnd.Invoke(moveDataMaxCount, /*score*/int.Parse(datas[index + 2].text));

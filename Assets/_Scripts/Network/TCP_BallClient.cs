@@ -141,6 +141,18 @@ public class TCP_BallClient
                 if (data != null)
                 {
                     List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
+                    int index = 0;
+
+                    while (index < commands.Count)
+                    {
+                        switch (Enum.Parse<TCP_BallHeader>(commands[0].text))
+                        {
+                            case TCP_BallHeader.SetID:
+                                id = commands[index + 1].text;
+                                commands.RemoveRange(index, 2);
+                                break;
+                        }
+                    }
                 }
             }
             reader.DiscardBufferedData();

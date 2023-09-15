@@ -10,7 +10,15 @@ public class TCP_BallServerConnectClients
     public StreamWriter writer;
     public StreamReader reader;
     public NetworkStream stream;
-    public bool turnCheck;
+    public bool turnCheck
+    {
+        get { return _turnCheck; }
+        set 
+        {
+            Debug.Log(value + "");
+            _turnCheck = value; 
+        }
+    }
 
     public TCP_BallServerConnectClients(TcpClient _client)
     {
@@ -19,6 +27,8 @@ public class TCP_BallServerConnectClients
         writer = new StreamWriter(stream);
         reader = new StreamReader(stream, true);
     }
+
+    private bool _turnCheck;
 
     public void Disconnect()
     {

@@ -308,7 +308,6 @@ public class TCP_BallServer
 
                                     // Other client replay MoveData and go to next turn
                                     case TCP_BallHeader.TurnCheckedPing:
-                                        Debug.LogWarning("!!" + commands[index + 1].text);
                                         roomPlayer[commands[index + 1].text].turnCheck = true;
                                         commands.RemoveRange(index, 2);
                                         break;
@@ -546,7 +545,6 @@ public class TCP_BallServer
                 TCP_BallServerConnectClients playerNow = roomPlayer[roomPlayer.Keys.ToList()[i]];
                 if (playerNow != null && !playerNow.turnCheck)
                 {
-                    Debug.LogWarning(roomPlayer.Keys.ToList()[i] + "!");
                     values.Add(playerNow);
                 }
             }

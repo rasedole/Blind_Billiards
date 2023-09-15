@@ -104,6 +104,15 @@ public class UI_InGame : MonoBehaviour
         {
             foreach(string idNow in scoreList.Keys)
             {
+                if((roomPool[idNow] == null))
+                {
+                    Debug.LogWarning(idNow + " null!");
+                }
+                else if (scores[scores.Count - 1] == null)
+                {
+                    Debug.LogWarning("scores null! > count " + scores.Count);
+                }
+                Debug.LogWarning(idNow + "(" + roomPool[idNow].score + ") == " + scores[scores.Count - 1]);
                 if (int.Parse(roomPool[idNow].score) == scores[scores.Count - 1])
                 {
                     // Found this id rank
