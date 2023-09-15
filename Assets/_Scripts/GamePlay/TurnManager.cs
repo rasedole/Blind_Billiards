@@ -49,6 +49,11 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn(int _countOfMoveData, int _differenceOfScore)
     {
+        foreach(var data in GameManager.Instance.ballMoveData)
+        {
+            Debug.LogError("Index : " + data.index + "Ball Time : " + data.startTime + "Ball Pos : " + data.startPos + "Ball Index : " + data.ballIndex);
+        }
+
         Debug.LogError("Call TurnEnd");
         if(TCP_BallCore.networkMode == NetworkMode.Server)
         {

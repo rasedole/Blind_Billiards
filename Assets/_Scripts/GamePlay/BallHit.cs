@@ -18,7 +18,17 @@ public class BallHit : MonoBehaviour
                 _moveData.startPos = transform.position;
             }
             _moveData.ballIndex = GameManager.Instance.GetIndexOfBall(name);
-            _moveData.startTime = Time.time - GameManager.Instance.shootTime;
+            if(TCP_BallCore.networkMode == NetworkMode.Client)
+            {
+                _moveData.startTime = Time.time - GameManager.Instance.shootTime;
+                Debug.LogError("Client Time is : " + Time.time + "  And ShootTime is " + GameManager.Instance.shootTime);
+            }
+            else
+            {
+                _moveData.startTime = Time.time - GameManager.Instance.shootTime;
+                Debug.LogError("Server Time is : " + Time.time + "  And ShootTime is " + GameManager.Instance.shootTime);
+            }
+
 
             return _moveData;
         }
