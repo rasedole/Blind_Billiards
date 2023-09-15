@@ -96,12 +96,21 @@ public class GuestReplayer : MonoBehaviour
             // Replay ends
             _replaying = false;
             GameManager.Instance.isAlreadyShoot = false;
+
+            GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
+
+            GameManager.Instance.InitSetting();
+
+            GameManager.Instance.ClearMoveData();
+
+            Debug.LogError("Replay End");
         }
     }
 
     public static void ReplayTurn(List<MoveData> _moveDatas)
     {
-        if(instance == null)
+        Debug.LogError("ReplayTurn");
+        if (instance == null)
         {
             Debug.LogError("There is no GuestReplayer!");
             return;
@@ -113,7 +122,8 @@ public class GuestReplayer : MonoBehaviour
 
     private void StartReplay()
     {
-        for(int i = 0; i < moveDatas.Count; i++)
+        Debug.LogError("StartReplay");
+        for (int i = 0; i < moveDatas.Count; i++)
         {
             if (moveDatas[i].index != i)
             {

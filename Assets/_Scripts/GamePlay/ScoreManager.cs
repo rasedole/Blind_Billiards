@@ -12,6 +12,8 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Instance;
 
+    public int savedScore = 0;
+
     private void Awake()
     {
         if (Instance == null)
@@ -31,7 +33,7 @@ public class ScoreManager : MonoBehaviour
             if(data.id == ball.name)
             {
                 data.score++;
-                UI_InGame.ScoreChange(data.id, data.score);
+                //UI_InGame.ScoreChange(data.id, data.score);
                 break;
             }
         }

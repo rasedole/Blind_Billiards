@@ -100,7 +100,9 @@ public class GameManager : MonoBehaviour
                     {
                         if(ball.id == TurnManager.Instance.GetTurnBall().name)
                         {
-                            TCP_BallServer.TurnEnd(ball.score);
+                            //TCP_BallServer.TurnEnd(ball.score - ScoreManager.Instance.savedScore);
+                            TCP_BallServer.TurnEnd(0);
+                            Debug.Log(ball.score + "BallScore - " + ScoreManager.Instance.savedScore + "PastScore");
                             break;
                         }
                     }
@@ -140,6 +142,7 @@ public class GameManager : MonoBehaviour
         }
 
         joystick.GetComponent<BallLineRender>().ResetBallStatus();
+
     }
 
     public void AddPlayerData(string playerID)

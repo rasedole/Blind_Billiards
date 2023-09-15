@@ -60,7 +60,6 @@ public class TurnManager : MonoBehaviour
             Debug.LogError(_countOfMoveData);
             Debug.LogError(GameManager.Instance.ballMoveData.Count);
 
-
             if (_countOfMoveData != GameManager.Instance.ballMoveData.Count)
             {
                 Debug.LogError("공 데이터에 오류가 발생했습니다.");
@@ -72,16 +71,16 @@ public class TurnManager : MonoBehaviour
                 ScoreManager.Instance.PlusScore(GetTurnBall());
             }
 
+            Debug.LogError("TurnEnd-Replay");
             GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
-
             currentTurn++;
             if (currentTurn >= GameManager.Instance.gamePlayers.Count)
             {
                 currentTurn = 0;
             }
 
-            Debug.Log("CurrentTurn: " + currentTurn);
-            GameManager.Instance.InitSetting();
+            Debug.LogError("CurrentTurn: " + currentTurn);
+            Debug.LogError("TurnEnd InitSetting");
         }
     }
 

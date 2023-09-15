@@ -48,7 +48,18 @@ public class BallShoot : MonoBehaviour
 
     public void Shoot()
     {
-        if(TCP_BallCore.networkMode == NetworkMode.None)
+        foreach (var ball in GameManager.Instance.entryPlayerDataList)
+        {
+            if (ball.id == TurnManager.Instance.GetTurnBall().name)
+            {
+                ScoreManager.Instance.savedScore = ball.score;
+                break;
+            }
+        }
+
+        GameManager.Instance.ClearMoveData();
+
+        if (TCP_BallCore.networkMode == NetworkMode.None)
         {
             if (GameManager.Instance.isNobodyMove)
             {

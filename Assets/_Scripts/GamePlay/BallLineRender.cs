@@ -91,5 +91,7 @@ public class BallLineRender : MonoBehaviour
         lineRenderer.endWidth = 0.05f;
         lineRenderer.endColor = TurnManager.Instance.GetTurnBall().GetComponent<BallDoll>().showcaseColor;
         ballPosition = TurnManager.Instance.GetTurnBall().transform.position;
+        Debug.LogError(ballPosition + "Ball Position + " + TurnManager.Instance.GetTurnBall().transform.position + "Real Ball Position");
+        ResetLineRender();
     }
 }
