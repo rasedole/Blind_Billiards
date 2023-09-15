@@ -49,6 +49,7 @@ public class BallShoot : MonoBehaviour
     public void Shoot()
     {
         GameManager.Instance.shootTime = Time.time;
+        Debug.LogError("Shoot Time : " + GameManager.Instance.shootTime);
         foreach (var ball in GameManager.Instance.entryPlayerDataList)
         {
             if (ball.id == TurnManager.Instance.GetTurnBall().name)
@@ -66,7 +67,7 @@ public class BallShoot : MonoBehaviour
                 TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(_direction * power, ForceMode.Impulse);
                 GameManager.Instance.isNobodyMove = false;
 
-                foreach(var balls in GameManager.Instance.gamePlayers)
+                foreach (var balls in GameManager.Instance.gamePlayers)
                 {
                     GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
                 }
@@ -76,7 +77,7 @@ public class BallShoot : MonoBehaviour
         }
         else
         {
-            if((TCP_BallCore.networkMode != NetworkMode.Client || !GameManager.Instance.isAlreadyShoot) && GameManager.Instance.isNobodyMove)
+            if ((TCP_BallCore.networkMode != NetworkMode.Client || !GameManager.Instance.isAlreadyShoot) && GameManager.Instance.isNobodyMove)
             {
                 GameManager.Instance.ClearMoveData();
                 TCP_BallCore.ShootTheBall(direction);

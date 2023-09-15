@@ -47,15 +47,46 @@ public class TurnManager : MonoBehaviour
         GameManager.Instance.InitSetting();
     }
 
+    private List<MoveData> SortMoveData(List<MoveData> moveDatas)
+    {
+        MoveData temp = new MoveData();
+        List<MoveData> outList = new List<MoveData>();
+        for(int i = 0; i < moveDatas.Count-1; i++)
+        {
+            for (int j = 0; j < moveDatas.Count-1-i; j++)
+            {
+                if (moveDatas[j].startTime > moveDatas[j + 1].startTime)
+                {
+                    temp = moveDatas[j+1];
+                    moveDatas[j + 1] = moveDatas[j];
+                    moveDatas[j] = temp;
+                }
+            }
+        }
+
+        for(int i = 0; i < moveDatas.Count; i++)
+        {
+            MoveData inMoveData = new MoveData();
+            inMoveData.index = i;
+            inMoveData.startPos = moveDatas[i].startPos;
+            inMoveData.startTime = moveDatas[i].startTime;
+            inMoveData.ballIndex = moveDatas[i].ballIndex;
+            outList.Add(inMoveData);
+        }
+
+        return outList;
+    }
+
     public void EndTurn(int _countOfMoveData, int _differenceOfScore)
     {
-        foreach(var data in GameManager.Instance.ballMoveData)
+        Debug.LogError("Call TurnEnd");
+
+        foreach (var data in GameManager.Instance.ballMoveData)
         {
             Debug.LogError("Index : " + data.index + "Ball Time : " + data.startTime + "Ball Pos : " + data.startPos + "Ball Index : " + data.ballIndex);
         }
 
-        Debug.LogError("Call TurnEnd");
-        if(TCP_BallCore.networkMode == NetworkMode.Server)
+        if (TCP_BallCore.networkMode == NetworkMode.Server)
         {
             EndTurn();
             return;
@@ -72,6 +103,9 @@ public class TurnManager : MonoBehaviour
             }
 
             ScoreManager.Instance.PlusScore(GetTurnBall(), _differenceOfScore);
+
+            Debug.LogError("Ball Move Data Sort");
+            GameManager.Instance.ballMoveData = SortMoveData(GameManager.Instance.ballMoveData);
 
             Debug.LogError("TurnEnd-Replay");
             GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);

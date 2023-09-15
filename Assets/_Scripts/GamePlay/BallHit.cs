@@ -18,16 +18,7 @@ public class BallHit : MonoBehaviour
                 _moveData.startPos = transform.position;
             }
             _moveData.ballIndex = GameManager.Instance.GetIndexOfBall(name);
-            if(TCP_BallCore.networkMode == NetworkMode.Client)
-            {
-                _moveData.startTime = Time.time - GameManager.Instance.shootTime;
-                Debug.LogError("Client Time is : " + Time.time + "  And ShootTime is " + GameManager.Instance.shootTime);
-            }
-            else
-            {
-                _moveData.startTime = Time.time - GameManager.Instance.shootTime;
-                Debug.LogError("Server Time is : " + Time.time + "  And ShootTime is " + GameManager.Instance.shootTime);
-            }
+            _moveData.startTime = Time.time - GameManager.Instance.shootTime;
 
 
             return _moveData;
@@ -47,6 +38,8 @@ public class BallHit : MonoBehaviour
         }
         _moveData.ballIndex = GameManager.Instance.GetIndexOfBall(this.name);
         _moveData.startTime = Time.time - GameManager.Instance.shootTime;
+
+        _moveData.index = -1;
     }
 
     //충돌이 발생할 시 MoveDate구조체를 게임데이터에게 쌓는다.

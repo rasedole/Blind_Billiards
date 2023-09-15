@@ -330,13 +330,16 @@ public class GameManager : MonoBehaviour
 
     public void AddMoveData(MoveData _moveData)
     {
-        if (ballMoveData == null)
+        if(_moveData.index == -1)
         {
-            _moveData.index = 0;
-        }
-        else
-        {
-            _moveData.index = ballMoveData.Count;
+            if (ballMoveData == null)
+            {
+                _moveData.index = 0;
+            }
+            else
+            {
+                _moveData.index = ballMoveData.Count;
+            }
         }
         ballMoveData.Add(_moveData);
     }
