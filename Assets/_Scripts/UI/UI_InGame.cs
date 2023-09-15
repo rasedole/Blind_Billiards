@@ -120,7 +120,7 @@ public class UI_InGame : MonoBehaviour
                 // Check mine
                 if (idNow == TCP_BallGameManagerGetterAdapter.myID)
                 {
-                    instance.headerText.text = "Rank " + rankNow + "\nScore " + score;
+                    instance.headerText.text = "Rank " + rankNow + "\nScore " + scoreNow;
                 }
 
                 rankNow++;
