@@ -99,12 +99,17 @@ public class GuestReplayer : MonoBehaviour
 
             GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
 
-            GameManager.Instance.InitSetting();
+
 
             GameManager.Instance.ClearMoveData();
             Debug.LogError(GameManager.Instance.ballMoveData.Count + "BallMoveCount");
 
             Debug.LogError("Replay End");
+
+            GameManager.Instance.InitSetting();
+
+            Debug.LogError("CurrentTurn: " + TurnManager.Instance.currentTurn);
+            Debug.LogError("TurnEnd InitSetting");
         }
     }
 

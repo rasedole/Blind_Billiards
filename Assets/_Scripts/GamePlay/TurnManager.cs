@@ -66,10 +66,7 @@ public class TurnManager : MonoBehaviour
                 return;
             }
 
-            for (int i = 0; i < _differenceOfScore; i++)
-            {
-                ScoreManager.Instance.PlusScore(GetTurnBall());
-            }
+            ScoreManager.Instance.PlusScore(GetTurnBall(), _differenceOfScore);
 
             Debug.LogError("TurnEnd-Replay");
             GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
@@ -78,10 +75,6 @@ public class TurnManager : MonoBehaviour
             {
                 currentTurn = 0;
             }
-
-            Debug.LogError("CurrentTurn: " + currentTurn);
-            GameManager.Instance.InitSetting();
-            Debug.LogError("TurnEnd InitSetting");
         }
     }
 
