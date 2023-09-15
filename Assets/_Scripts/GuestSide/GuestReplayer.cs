@@ -128,15 +128,15 @@ public class GuestReplayer : MonoBehaviour
 
     private void StartReplay()
     {
-        Debug.LogError("StartReplay");
-        for (int i = 0; i < moveDatas.Count; i++)
-        {
-            if (moveDatas[i].index != i)
-            {
-                Debug.LogError("MoveData index error!");
-                return;
-            }
-        }
+        //Debug.LogError("StartReplay");
+        //for (int i = 0; i < moveDatas.Count; i++)
+        //{
+        //    if (moveDatas[i].index != i)
+        //    {
+        //        Debug.LogError("MoveData index error!");
+        //        return;
+        //    }
+        //}
 
         // --Translate MoveData to ReplayData--
 

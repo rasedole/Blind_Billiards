@@ -49,7 +49,7 @@ public class BallShoot : MonoBehaviour
     public void Shoot()
     {
         GameManager.Instance.shootTime = Time.time;
-        Debug.LogError("Shoot Time : " + GameManager.Instance.shootTime);
+        //Debug.LogError("Shoot Time : " + GameManager.Instance.shootTime);
         foreach (var ball in GameManager.Instance.entryPlayerDataList)
         {
             if (ball.id == TurnManager.Instance.GetTurnBall().name)

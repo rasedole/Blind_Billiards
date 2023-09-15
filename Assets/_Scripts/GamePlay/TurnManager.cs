@@ -79,12 +79,12 @@ public class TurnManager : MonoBehaviour
 
     public void EndTurn(int _countOfMoveData, int _differenceOfScore)
     {
-        Debug.LogError("Call TurnEnd");
+        //Debug.LogError("Call TurnEnd");
 
-        foreach (var data in GameManager.Instance.ballMoveData)
-        {
-            Debug.LogError("Index : " + data.index + "Ball Time : " + data.startTime + "Ball Pos : " + data.startPos + "Ball Index : " + data.ballIndex);
-        }
+        //foreach (var data in GameManager.Instance.ballMoveData)
+        //{
+        //    Debug.LogError("Index : " + data.index + "Ball Time : " + data.startTime + "Ball Pos : " + data.startPos + "Ball Index : " + data.ballIndex);
+        //}
 
         if (TCP_BallCore.networkMode == NetworkMode.Server)
         {
@@ -93,8 +93,8 @@ public class TurnManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError(_countOfMoveData);
-            Debug.LogError(GameManager.Instance.ballMoveData.Count);
+            //Debug.LogError(_countOfMoveData);
+            //Debug.LogError(GameManager.Instance.ballMoveData.Count);
 
             if (_countOfMoveData != GameManager.Instance.ballMoveData.Count)
             {

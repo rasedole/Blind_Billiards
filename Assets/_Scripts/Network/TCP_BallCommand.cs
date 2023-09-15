@@ -438,7 +438,6 @@ public class TCP_BallCommand : MonoBehaviour
                             List<CommandData> command = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()) };
 
                             List<int> list = TCP_BallGameManagerGetterAdapter.MoveDataNullList(moveDataMaxCount);
-                            Debug.LogWarning(list.Count + "");
                             foreach (int i in list)
                             {
                                 command.Add(new CommandData(3, i.ToString()));

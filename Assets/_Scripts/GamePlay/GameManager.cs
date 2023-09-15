@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,7 +24,39 @@ public class GameManager : MonoBehaviour
     public bool isAlreadyShoot = false;
 
     //속성3 : MoveData List, 공을 발사했을 때의 시간
-    public List<MoveData> ballMoveData;
+    public List<MoveData> ballMoveData
+    {
+        get
+        {
+            if(_ballMoveData == null)
+            {
+                _ballMoveData = new Dictionary<int, MoveData> ();
+            }
+
+            return _ballMoveData.Values.ToList ();
+        }
+        set
+        {
+            if (_ballMoveData == null)
+            {
+                _ballMoveData = new Dictionary<int, MoveData>();
+            }
+
+            foreach (MoveData moveData in value)
+            {
+                if(_ballMoveData.ContainsKey(moveData.index))
+                {
+                    _ballMoveData[moveData.index] = moveData;
+                }
+                else
+                {
+                    _ballMoveData.Add(moveData.index, moveData);
+                }
+            }
+        }
+    }
+    private Dictionary<int, MoveData> _ballMoveData;
+
     [HideInInspector] public float shootTime;
 
     //속성5 : 색상 리스트
@@ -114,7 +147,7 @@ public class GameManager : MonoBehaviour
                     if (ball.id == TurnManager.Instance.GetTurnBall().name)
                     {
                         TCP_BallServer.TurnEnd(ball.score - ScoreManager.Instance.savedScore);
-                        Debug.LogError(ball.score + "BallScore - " + ScoreManager.Instance.savedScore + "PastScore");
+                        //Debug.LogError(ball.score + "BallScore - " + ScoreManager.Instance.savedScore + "PastScore");
                         trigger = false;
                         break;
                     }
@@ -330,9 +363,9 @@ public class GameManager : MonoBehaviour
 
     public void AddMoveData(MoveData _moveData)
     {
-        if(_moveData.index == -1)
+        if(_moveData.index < 0)
         {
-            if (ballMoveData == null)
+            if (ballMoveData == null || ballMoveData.Count < 1)
             {
                 _moveData.index = 0;
             }
@@ -341,7 +374,8 @@ public class GameManager : MonoBehaviour
                 _moveData.index = ballMoveData.Count;
             }
         }
-        ballMoveData.Add(_moveData);
+
+        ballMoveData = new List<MoveData>() { _moveData };
     }
 
     public int GetIndexOfBall(string id)
@@ -364,8 +398,11 @@ public class GameManager : MonoBehaviour
 
     public void ClearMoveData()
     {
-        Debug.LogWarning("!");
-        ballMoveData.Clear();
+        //Debug.LogWarning("!");
+        if(_ballMoveData != null)
+        {
+            _ballMoveData.Clear();
+        }
     }
 
     public void ClearBall()

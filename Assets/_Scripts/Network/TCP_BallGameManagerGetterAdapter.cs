@@ -62,31 +62,41 @@ public static class TCP_BallGameManagerGetterAdapter
     public static List<int> MoveDataNullList(int maxCount)
     {
         List<int> indexList = new();
+        List<int> removeList = new();
 
-        Dictionary<int, MoveData> _dataDic = new();
-
-        foreach(var _moveData in GameManager.Instance.ballMoveData)
+;       for (int i = 0; i < maxCount; i++)
         {
-            _dataDic.Add(_moveData.index, _moveData);
+            indexList.Add(i);
         }
 
-        for(int i = 0; i < maxCount; i++)
+        foreach (var _moveData in GameManager.Instance.ballMoveData)
         {
-            if (!_dataDic.ContainsKey(i))
+            removeList.Add(_moveData.index);
+        }
+
+        int offset = 0;
+        while (indexList.Count > offset && removeList.Count > 0)
+        {
+            if(indexList[offset] == removeList[0])
             {
-                indexList.Add(i);
+                removeList.RemoveAt(0);
+                indexList.RemoveAt(offset);
+            }
+            else
+            {
+                offset++;
             }
         }
-        
+
         return indexList;
     }
 
-    public static List<MoveData> MoveDataListCallback(List<int> lndexList)
+    public static List<MoveData> MoveDataListCallback(List<int> indexList)
     {
         List<MoveData> moveList = new();
-        for(int i = 0; i < lndexList.Count; i++)
+        for(int i = 0; i < indexList.Count; i++)
         {
-            moveList.Add(GameManager.Instance.ballMoveData[lndexList[i]]);
+            moveList.Add(GameManager.Instance.ballMoveData[indexList[i]]);
         }
         return moveList;
     }

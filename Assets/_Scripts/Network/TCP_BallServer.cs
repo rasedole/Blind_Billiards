@@ -496,19 +496,12 @@ public class TCP_BallServer
         foreach (MoveData moveData in moveDataList)
         {
             commands.Add(new CommandData(0, ((int)TCP_BallHeader.BallMove).ToString()));
-            commands.Add(new CommandData(3, moveDataIndex.ToString()));
+            commands.Add(new CommandData(3, moveData.index.ToString()));
             commands.Add(new CommandData(4, moveData.ballIndex.ToString()));
             commands.Add(new CommandData(5, moveData.startPos.x.ToString()));
             commands.Add(new CommandData(6, moveData.startPos.y.ToString()));
             commands.Add(new CommandData(7, moveData.startPos.z.ToString()));
             commands.Add(new CommandData(8, moveData.startTime.ToString()));
-
-            UI_InGame.Chatting("MoveData Send",
-                "\norder : " + moveDataIndex.ToString() +
-                "\nball num : " + moveData.ballIndex.ToString() +
-                "\nstartTime : " + moveData.startTime.ToString() +
-                "\nstartPos : (" + moveData.startPos.x.ToString() + ", " + moveData.startPos.y.ToString() + ", " + moveData.startPos.z.ToString() + ")"
-                );
         }
         Broadcast
         (
