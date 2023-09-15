@@ -48,6 +48,7 @@ public class BallShoot : MonoBehaviour
 
     public void Shoot()
     {
+        GameManager.Instance.shootTime = Time.time;
         foreach (var ball in GameManager.Instance.entryPlayerDataList)
         {
             if (ball.id == TurnManager.Instance.GetTurnBall().name)
@@ -56,8 +57,6 @@ public class BallShoot : MonoBehaviour
                 break;
             }
         }
-
-        GameManager.Instance.ClearMoveData();
 
         if (TCP_BallCore.networkMode == NetworkMode.None)
         {
@@ -79,6 +78,7 @@ public class BallShoot : MonoBehaviour
         {
             if((TCP_BallCore.networkMode != NetworkMode.Client || !GameManager.Instance.isAlreadyShoot) && GameManager.Instance.isNobodyMove)
             {
+                GameManager.Instance.ClearMoveData();
                 TCP_BallCore.ShootTheBall(direction);
                 GameManager.Instance.isAlreadyShoot = true;
             }
@@ -88,10 +88,10 @@ public class BallShoot : MonoBehaviour
     public void ShootBall(Vector3 clientDirection)
     {
         GameManager.Instance.ClearMoveData();
-
         GameManager.Instance.shootTime = Time.time;
         TurnManager.Instance.GetTurnBall().GetComponent<Rigidbody>().AddForce(clientDirection * power, ForceMode.Impulse);
         GameManager.Instance.isNobodyMove = false;
+
 
         foreach (var balls in GameManager.Instance.gamePlayers)
         {
