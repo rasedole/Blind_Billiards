@@ -532,6 +532,7 @@ public class TCP_BallServer
 
         TCP_BallCore.TurnCheck(TurnEndChecking(score, 0.3f, moveDataIndex));
     }
+
     private static IEnumerator TurnEndChecking(int score, float pingTime, int moveDataCount)
     {
         WaitForSeconds wait = new WaitForSeconds(pingTime);

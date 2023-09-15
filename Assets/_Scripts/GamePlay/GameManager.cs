@@ -58,6 +58,17 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+
+        //StartCoroutine(CheckClientsTurnEnd());
+    }
+
+    private IEnumerator CheckClientsTurnEnd()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(3f);
+            Debug.LogError(TCP_BallCore.allClientTurnChecked);
+        }
     }
 
     //Client는 작동X
@@ -103,7 +114,7 @@ public class GameManager : MonoBehaviour
                     if (ball.id == TurnManager.Instance.GetTurnBall().name)
                     {
                         TCP_BallServer.TurnEnd(ball.score - ScoreManager.Instance.savedScore);
-                        Debug.Log(ball.score + "BallScore - " + ScoreManager.Instance.savedScore + "PastScore");
+                        Debug.LogError(ball.score + "BallScore - " + ScoreManager.Instance.savedScore + "PastScore");
                         trigger = false;
                         break;
                     }
@@ -365,17 +376,17 @@ public class GameManager : MonoBehaviour
     public void EndGameSolo()
     {
         List<RankingResultUI.RankData> rankDatas = new();
-        RankingResultUI.RankData rankData = new();
+        //RankingResultUI.RankData rankData = new();
         //RankingResultUI.RankShow(rankDatas);
     }
 
     public void EndGameServer()
     {
-        RankingResultUI.RankData rankData = new();
+        //RankingResultUI.RankData rankData = new();
     }
 
     public void EndGameClient()
     {
-        RankingResultUI.RankData rankData = new();
+        //RankingResultUI.RankData rankData = new();
     }
 }

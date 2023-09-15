@@ -34,18 +34,23 @@ public class ScoreManager : MonoBehaviour
             {
                 data.score++;
                 UI_InGame.ScoreChange(data.id, data.score);
+
                 break;
             }
         }
-
-        //UpdateScore();
     }
 
-    //public void UpdateScore()
-    //{
-    //    foreach(var data in GameManager.Instance.entryPlayerDataList) 
-    //    {
-    //        UI_InGame.ScoreChange(data.id, data.score);
-    //    }
-    //}
+    public void PlusScore(GameObject ball, int _score)
+    {
+        foreach (var data in GameManager.Instance.entryPlayerDataList)
+        {
+            if (data.id == ball.name)
+            {
+                data.score = _score;
+                UI_InGame.ScoreChange(data.id, data.score);
+
+                break;
+            }
+        }
+    }
 }
