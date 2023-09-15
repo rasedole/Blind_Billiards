@@ -88,7 +88,7 @@ public class UI_InGame : MonoBehaviour
         scoreList[id] = score;
 
         // Turn off all ui
-        List<string> ids = new List<string>();
+        List<string> ids = scoreList.Keys.ToList();
         List<int> scores = scoreList.Values.ToList();
         int rankNow = 1;
         scores.Sort();
@@ -102,36 +102,32 @@ public class UI_InGame : MonoBehaviour
         // Calculate rank
         while (scores.Count > 0)
         {
-            foreach(string idNow in scoreList.Keys)
+            int scoreNow = scores[scores.Count - 1];
+            string idNow = "";
+
+            foreach(string index in ids)
             {
-                if((roomPool[idNow] == null))
+                if(scoreNow == int.Parse(roomPool[index].score))
                 {
-                    Debug.LogWarning(idNow + " null!");
-                }
-                else if (scores[scores.Count - 1] == null)
-                {
-                    Debug.LogWarning("scores null! > count " + scores.Count);
-                }
-                Debug.LogWarning(idNow + "(" + roomPool[idNow].score + ") == " + scores[scores.Count - 1]);
-                if (int.Parse(roomPool[idNow].score) == scores[scores.Count - 1])
-                {
-                    // Found this id rank
-                    ids.Add(idNow);
-
-                    // Check mine
-                    if (idNow == TCP_BallGameManagerGetterAdapter.myID)
-                    {
-                        instance.headerText.text = "Rank " + rankNow + "\nScore " + score;
-                    }
-
-                    // Sort UI
+                    idNow = index;
                     roomPool[idNow].transform.SetParent(instance.playersPos);
                     roomPool[idNow].gameObject.SetActive(true);
-
-                    scores.RemoveAt(scores.Count - 1);
-                    rankNow++;
                 }
             }
+
+            if(idNow != "")
+            {
+                // Check mine
+                if (idNow == TCP_BallGameManagerGetterAdapter.myID)
+                {
+                    instance.headerText.text = "Rank " + rankNow + "\nScore " + score;
+                }
+
+                rankNow++;
+                ids.Remove(idNow);
+            }
+
+            scores.RemoveAt(scores.Count - 1);
         }
     }
 
