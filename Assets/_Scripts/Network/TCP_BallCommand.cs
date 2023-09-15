@@ -397,6 +397,12 @@ public class TCP_BallCommand : MonoBehaviour
                         vector.z = float.Parse(datas[index + 5].text);
                         moveData.startPos = vector;
                         instance.ballMove.Invoke(moveData);
+                        UI_InGame.Chatting("MoveData Get", 
+                            "\norder : " + datas[index + 1].text + 
+                            "\nball num : " + datas[index + 2].text +
+                            "\nstartTime : " + datas[index + 6].text +
+                            "\nstartPos : (" + datas[index + 3].text + ", " + datas[index + 4].text + ", " + datas[index + 5].text + ")"
+                            );
                     }
                     datas.RemoveRange(index, 7);
                     break;
