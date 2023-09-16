@@ -476,10 +476,10 @@ public class GameManager : MonoBehaviour
     {
         if (TurnManager.Instance.gameTurn >= gameMaxTurn)
         {
-            gameObjects.SetActive(false);
-            gameUI.SetActive(true);
+            //gameObjects.SetActive(false);
+            //gameUI.SetActive(true);
 
-            RankingResultUI.instance.UpdateRankData(rankDataList);
+            RankingResultUI.StartRankUI(rankDataList);
         }
     }
 }

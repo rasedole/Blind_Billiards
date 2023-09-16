@@ -55,7 +55,17 @@ public class TurnManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
             Debug.LogWarning("Ending Check");
-            if ((TCP_BallCore.networkMode == NetworkMode.Client && !GuestReplayer.replaying) || (TCP_BallCore.networkMode == NetworkMode.Server && TCP_BallCore.allClientTurnChecked && GameManager.Instance.serverShootEnable) || TCP_BallCore.networkMode == NetworkMode.None)
+            if (
+                (
+                    TCP_BallCore.networkMode == NetworkMode.Client && 
+                    !GuestReplayer.replaying
+                ) || 
+                (
+                    TCP_BallCore.networkMode == NetworkMode.Server && 
+                    TCP_BallCore.allClientTurnChecked && 
+                    GameManager.Instance.serverShootEnable
+                ) || 
+                TCP_BallCore.networkMode == NetworkMode.None)
             {
                 trigger = false;
                 GameManager.Instance.GetComponent<TCP_BallUI>().GameEnd();

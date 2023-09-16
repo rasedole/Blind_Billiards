@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class RankingResultUI : MonoBehaviour
 {
-    private static RankingResultUI instance;
+    public static RankingResultUI instance;
 
     [SerializeField] GameObject[] rankObj;
 
@@ -137,4 +137,8 @@ public class RankingResultUI : MonoBehaviour
             obj.SetActive(true);
         }
     }
+    //public void UpdateRankData(List<RankData> rankDatas)
+    //{
+    //    RankShow(rankDatas);
+    //}
 }
