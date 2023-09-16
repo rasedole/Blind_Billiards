@@ -43,39 +43,39 @@ public class TurnManager : MonoBehaviour
             currentTurn = 0;
         }
 
-        Debug.Log("CurrentTurn: " + currentTurn);
+        Debug.LogError("CurrentTurn: " + currentTurn);
         GameManager.Instance.InitSetting();
     }
 
-    private List<MoveData> SortMoveData(List<MoveData> moveDatas)
-    {
-        MoveData temp = new MoveData();
-        List<MoveData> outList = new List<MoveData>();
-        for(int i = 0; i < moveDatas.Count-1; i++)
-        {
-            for (int j = 0; j < moveDatas.Count-1-i; j++)
-            {
-                if (moveDatas[j].startTime > moveDatas[j + 1].startTime)
-                {
-                    temp = moveDatas[j+1];
-                    moveDatas[j + 1] = moveDatas[j];
-                    moveDatas[j] = temp;
-                }
-            }
-        }
+    //private List<MoveData> SortMoveData(List<MoveData> moveDatas)
+    //{
+    //    MoveData temp = new MoveData();
+    //    List<MoveData> outList = new List<MoveData>();
+    //    for(int i = 0; i < moveDatas.Count-1; i++)
+    //    {
+    //        for (int j = 0; j < moveDatas.Count-1-i; j++)
+    //        {
+    //            if (moveDatas[j].startTime > moveDatas[j + 1].startTime)
+    //            {
+    //                temp = moveDatas[j+1];
+    //                moveDatas[j + 1] = moveDatas[j];
+    //                moveDatas[j] = temp;
+    //            }
+    //        }
+    //    }
 
-        for(int i = 0; i < moveDatas.Count; i++)
-        {
-            MoveData inMoveData = new MoveData();
-            inMoveData.index = i;
-            inMoveData.startPos = moveDatas[i].startPos;
-            inMoveData.startTime = moveDatas[i].startTime;
-            inMoveData.ballIndex = moveDatas[i].ballIndex;
-            outList.Add(inMoveData);
-        }
+    //    for(int i = 0; i < moveDatas.Count; i++)
+    //    {
+    //        MoveData inMoveData = new MoveData();
+    //        inMoveData.index = i;
+    //        inMoveData.startPos = moveDatas[i].startPos;
+    //        inMoveData.startTime = moveDatas[i].startTime;
+    //        inMoveData.ballIndex = moveDatas[i].ballIndex;
+    //        outList.Add(inMoveData);
+    //    }
 
-        return outList;
-    }
+    //    return outList;
+    //}
 
     public void EndTurn(int _countOfMoveData, int _differenceOfScore)
     {
@@ -104,15 +104,17 @@ public class TurnManager : MonoBehaviour
 
             ScoreManager.Instance.PlusScore(GetTurnBall(), _differenceOfScore);
 
-            Debug.LogError("Ball Move Data Sort");
-            GameManager.Instance.ballMoveData = SortMoveData(GameManager.Instance.ballMoveData);
+            Debug.Log("Ball Move Data Sort");
+            //GameManager.Instance.ballMoveData = SortMoveData(GameManager.Instance.ballMoveData);
 
-            Debug.LogError("TurnEnd-Replay");
+            Debug.Log("TurnEnd-Replay");
             GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
             currentTurn++;
+            Debug.LogError("CurrentTurn: " + currentTurn);
             if (currentTurn >= GameManager.Instance.gamePlayers.Count)
             {
                 currentTurn = 0;
+                Debug.LogError("CurrentTurn: " + currentTurn);
             }
         }
     }

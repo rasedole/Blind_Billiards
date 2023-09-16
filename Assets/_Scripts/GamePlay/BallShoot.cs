@@ -97,7 +97,7 @@ public class BallShoot : MonoBehaviour
         foreach (var balls in GameManager.Instance.gamePlayers)
         {
             GameManager.Instance.AddMoveData(balls.GetComponent<BallHit>().moveData);
-            TCP_BallServer.Moved(balls.GetComponent<BallHit>().moveData);
+            TCP_BallServer.Moved(GameManager.Instance.ballMoveData[GameManager.Instance.ballMoveData.Count - 1]);
         }
         GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetLineRender();
         StartCoroutine(GameManager.Instance.CheckMovement(1));

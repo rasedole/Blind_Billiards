@@ -102,20 +102,20 @@ public class GuestReplayer : MonoBehaviour
 
 
             GameManager.Instance.ClearMoveData();
-            Debug.LogError(GameManager.Instance.ballMoveData.Count + "BallMoveCount");
+            Debug.Log(GameManager.Instance.ballMoveData.Count + "BallMoveCount");
 
-            Debug.LogError("Replay End");
+            Debug.Log("Replay End");
 
             GameManager.Instance.InitSetting();
 
-            Debug.LogError("CurrentTurn: " + TurnManager.Instance.currentTurn);
-            Debug.LogError("TurnEnd InitSetting");
+            Debug.Log("CurrentTurn: " + TurnManager.Instance.currentTurn);
+            Debug.Log("TurnEnd InitSetting");
         }
     }
 
     public static void ReplayTurn(List<MoveData> _moveDatas)
     {
-        Debug.LogError("ReplayTurn");
+        Debug.Log("ReplayTurn");
         if (instance == null)
         {
             Debug.LogError("There is no GuestReplayer!");

@@ -30,10 +30,20 @@ public class GameManager : MonoBehaviour
         {
             if(_ballMoveData == null)
             {
-                _ballMoveData = new Dictionary<int, MoveData> ();
+                _ballMoveData = new Dictionary<int, MoveData>();
             }
 
-            return _ballMoveData.Values.ToList ();
+
+            List<MoveData> sortingList = new List<MoveData>();
+            List<int> sortedIndex = _ballMoveData.Keys.ToList();
+            sortedIndex.Sort();
+            foreach(int i in sortedIndex)
+            {
+                sortingList.Add(_ballMoveData[i]);
+            }
+            //= _ballMoveData.Values.ToList();
+
+            return sortingList;
         }
         set
         {
