@@ -29,7 +29,24 @@ public class TurnManager : MonoBehaviour
             _currentTurn = value;
         }
     }
+    public int gameTurn
+    {
+        get
+        {
+            return _gameTurn;
+        }
+        private set
+        {
+            _gameTurn = value;
+            if(_gameTurn >= GameManager.gameMaxTurn)
+            {
+                Debug.LogWarning("_gameTurn > gameMaxTurn");
+            }
+        }
+    }
+
     int _currentTurn;
+    int _gameTurn;
 
     //속성2 : 플레이어 공 리스트
     [SerializeField] List<GameObject> ballList;
@@ -40,6 +57,7 @@ public class TurnManager : MonoBehaviour
         currentTurn++;
         if(currentTurn >= GameManager.Instance.gamePlayers.Count)
         {
+            gameTurn++;
             currentTurn = 0;
         }
 
@@ -110,11 +128,12 @@ public class TurnManager : MonoBehaviour
             Debug.Log("TurnEnd-Replay");
             GuestReplayer.ReplayTurn(GameManager.Instance.ballMoveData);
             currentTurn++;
-            Debug.LogError("CurrentTurn: " + currentTurn);
+            Debug.Log("CurrentTurn: " + currentTurn);
             if (currentTurn >= GameManager.Instance.gamePlayers.Count)
             {
+                gameTurn++;
                 currentTurn = 0;
-                Debug.LogError("CurrentTurn: " + currentTurn);
+                Debug.Log("CurrentTurn: " + currentTurn);
             }
         }
     }
@@ -155,5 +174,6 @@ public class TurnManager : MonoBehaviour
     public void GetListFromGameManager()
     {
         ballList = GameManager.Instance.gamePlayers;
+        _gameTurn = 0;
     }
 }

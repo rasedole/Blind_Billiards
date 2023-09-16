@@ -12,7 +12,10 @@ public class TCP_BallClient
     {
         get
         {
-            return instance != null && instance.socket != null && instance.socket.Connected && instance.stream != null;
+            return instance != null &&
+                instance.socket != null &&
+                instance.socket.Connected &&
+                instance.stream != null;
         }
     }
     public static bool turnEnded = false;

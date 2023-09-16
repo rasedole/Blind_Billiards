@@ -99,8 +99,6 @@ public class GuestReplayer : MonoBehaviour
 
             GameManager.Instance.joystick.GetComponent<BallLineRender>().ResetBallStatus();
 
-
-
             GameManager.Instance.ClearMoveData();
             Debug.Log(GameManager.Instance.ballMoveData.Count + "BallMoveCount");
 

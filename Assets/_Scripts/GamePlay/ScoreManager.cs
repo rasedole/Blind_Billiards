@@ -46,7 +46,7 @@ public class ScoreManager : MonoBehaviour
         {
             if (data.id == ball.name)
             {
-                Debug.LogError(_score + "");
+                //Debug.LogError(_score + "");
                 data.score = _score;
                 UI_InGame.ScoreChange(data.id, data.score);
 

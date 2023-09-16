@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 {
     //싱글톤을 이용해서 쉽게 사용할 수 있도록 함
     public static GameManager Instance;
+    public static int gameMaxTurn = 4;
 
     public List<GameObject> gamePlayers;
     public List<BallEntryPlayerData> entryPlayerDataList = new();
@@ -156,7 +157,7 @@ public class GameManager : MonoBehaviour
                 {
                     if (ball.id == TurnManager.Instance.GetTurnBall().name)
                     {
-                        Debug.LogError(ball.score + "");
+                        //Debug.LogError(ball.score + "");
                         TCP_BallServer.TurnEnd(ball.score);
                         //Debug.LogError(ball.score + "BallScore - " + ScoreManager.Instance.savedScore + "PastScore");
                         trigger = false;
@@ -198,7 +199,7 @@ public class GameManager : MonoBehaviour
         }
 
         joystick.GetComponent<BallLineRender>().ResetBallStatus();
-
+        UI_InGame.SetNowTurnPlayer(TurnManager.Instance.currentTurn);
     }
 
     public void AddPlayerData(string playerID)

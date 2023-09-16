@@ -58,6 +58,23 @@ public class TCP_BallServer
             _maxPlayerCount = value;
         }
     }
+    public static int maxTurn
+    {
+        set
+        {
+            // Notify to other player
+            Broadcast
+                (
+                    new List<CommandData>()
+                    {
+                        new CommandData(0, ((int)TCP_BallHeader.RoomMaxTurnChanged).ToString()) ,
+                        new CommandData(3, value.ToString())
+                    },
+                    roomPlayer.Values.ToList()
+                );
+            _maxPlayerCount = value;
+        }
+    }
 
     private static Dictionary<string, TCP_BallServerConnectClients> roomPlayer;
     private static List<TCP_BallServerConnectClients> pendingClients;
@@ -65,6 +82,7 @@ public class TCP_BallServer
     private static TCP_BallServer instance;
     private static int _maxPlayerCount;
     private static int moveDataIndex = 0;
+    private static int _maxTurn;
 
     private TcpListener listener;
 
@@ -77,6 +95,7 @@ public class TCP_BallServer
         roomPlayer = new Dictionary<string, TCP_BallServerConnectClients>();
         pendingClients = new List<TCP_BallServerConnectClients>();
         _maxPlayerCount = PlayerPrefs.GetInt("room", 4);
+        _maxTurn = PlayerPrefs.GetInt("turn", 4);
 
         try
         {
@@ -171,6 +190,9 @@ public class TCP_BallServer
         // Add room max count to new client
         broadcastDataToNewClient.Add(new CommandData(0, ((int)TCP_BallHeader.RoomMaxCountChanged).ToString()));
         broadcastDataToNewClient.Add(new CommandData(3, _maxPlayerCount.ToString()));
+        // Add room max turn to new client
+        broadcastDataToNewClient.Add(new CommandData(0, ((int)TCP_BallHeader.RoomMaxTurnChanged).ToString()));
+        broadcastDataToNewClient.Add(new CommandData(3, _maxTurn.ToString()));
 
         // Broadcast to new client
         Broadcast

@@ -157,6 +157,7 @@ public class TCP_BallCommand : MonoBehaviour
                 return null;
             }
 
+            int value = 0;
             switch (Enum.Parse<TCP_BallHeader>(datas[index].text))
             {
                 // Check id
@@ -322,7 +323,6 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Server changed room max count
                 case TCP_BallHeader.RoomMaxCountChanged:
-                    int value = 0;
                     if (datas.Count < 1 + index)
                     {
                         TCP_BallCore.messageEvent.Invoke("No input value!");
@@ -397,12 +397,12 @@ public class TCP_BallCommand : MonoBehaviour
                         vector.z = float.Parse(datas[index + 5].text);
                         moveData.startPos = vector;
                         instance.ballMove.Invoke(moveData);
-                        UI_InGame.Chatting("MoveData Get", 
-                            "\norder : " + datas[index + 1].text + 
-                            "\nball num : " + datas[index + 2].text +
-                            "\nstartTime : " + datas[index + 6].text +
-                            "\nstartPos : (" + datas[index + 3].text + ", " + datas[index + 4].text + ", " + datas[index + 5].text + ")"
-                            );
+                        //UI_InGame.Chatting("MoveData Get", 
+                        //    "\norder : " + datas[index + 1].text + 
+                        //    "\nball num : " + datas[index + 2].text +
+                        //    "\nstartTime : " + datas[index + 6].text +
+                        //    "\nstartPos : (" + datas[index + 3].text + ", " + datas[index + 4].text + ", " + datas[index + 5].text + ")"
+                        //    );
                     }
                     datas.RemoveRange(index, 7);
                     break;
@@ -455,6 +455,33 @@ public class TCP_BallCommand : MonoBehaviour
                     }
 
                     datas.RemoveRange(index, 3);
+                    break;
+
+                // Server changed room max turn
+                case TCP_BallHeader.RoomMaxTurnChanged:
+                    if (datas.Count < 1 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+                    else if
+                        (
+                            datas[index + 1].command != 3 ||
+                            int.TryParse(datas[index + 1].text, out value)
+                        )
+                    {
+                        if (TCP_BallCore.networkMode != NetworkMode.Server)
+                        {
+                            instance.ui.SetRoomMaxTurn(datas[index + 1].text);
+                        }
+                    }
+                    else
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        return null;
+                    }
+
+                    datas.RemoveRange(index, 2);
                     break;
 
                 default:

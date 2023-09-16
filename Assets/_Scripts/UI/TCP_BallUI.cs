@@ -39,6 +39,8 @@ public class TCP_BallUI : MonoBehaviour
     private GameObject chatToggle;
     [SerializeField]
     private GameObject chatInput;
+    [SerializeField]
+    private TMP_InputField turnMaxCount;
 
     // Events
     [SerializeField]
@@ -131,6 +133,7 @@ public class TCP_BallUI : MonoBehaviour
 
         enterRoomEvent.Invoke();
         roomMaxCount.readOnly = (TCP_BallCore.networkMode == NetworkMode.Client);
+        turnMaxCount.readOnly = (TCP_BallCore.networkMode == NetworkMode.Client);
         roomInfo.text = ip.text + " / " + port.text;
         roomInfo.gameObject.SetActive(TCP_BallCore.networkMode != NetworkMode.None);
         roomGameStartButton.SetActive(TCP_BallCore.networkMode != NetworkMode.Client);
@@ -158,6 +161,7 @@ public class TCP_BallUI : MonoBehaviour
 
         _gameState = GameState.Room;
         roomMaxCount.text = PlayerPrefs.GetInt("room", 4).ToString();
+        turnMaxCount.text = PlayerPrefs.GetInt("turn", 4).ToString();
     }
 
     public void LastClient()
@@ -190,6 +194,7 @@ public class TCP_BallUI : MonoBehaviour
     public void SubmitRoom()
     {
         PlayerPrefs.SetInt("room", int.Parse(roomMaxCount.text));
+        PlayerPrefs.SetInt("turn", int.Parse(turnMaxCount.text));
     }
 
     public void ConnectFail()
@@ -200,6 +205,7 @@ public class TCP_BallUI : MonoBehaviour
     public void ExitRoom()
     {
         roomMaxCount.readOnly = false;
+        turnMaxCount.readOnly = false;
         if (TCP_BallCore.networkMode == NetworkMode.None)
         {
             exitRoomEventSolo.Invoke();
@@ -216,25 +222,37 @@ public class TCP_BallUI : MonoBehaviour
 
     public void SetRoomMaxPlayer(string maxPlayer)
     {
-        // Check min value
+        // Check value
         int count = int.Parse(maxPlayer);
         if (count < 2)
         {
-            roomMaxCount.SetTextWithoutNotify(2.ToString());
+            maxPlayer = 2.ToString();
         }
         else if(count > 9)
         {
-            roomMaxCount.SetTextWithoutNotify(9.ToString());
+            maxPlayer = 9.ToString();
         }
+        roomMaxCount.SetTextWithoutNotify(maxPlayer);
 
         // Check game mode
         if (TCP_BallCore.networkMode == NetworkMode.Server)
         {
             TCP_BallServer.maxPlayerCount = int.Parse(maxPlayer);
         }
-        else if (TCP_BallCore.networkMode == NetworkMode.Client)
+    }
+    public void SetRoomMaxTurn(string maxTurn)
+    {
+        // Check min value
+        if (int.Parse(maxTurn) < 1)
         {
-            roomMaxCount.SetTextWithoutNotify(maxPlayer);
+            maxTurn = 1.ToString();
+        }
+        turnMaxCount.SetTextWithoutNotify(maxTurn);
+
+        // Check game mode
+        if (TCP_BallCore.networkMode == NetworkMode.Server)
+        {
+            TCP_BallServer.maxTurn = int.Parse(maxTurn);
         }
     }
 
@@ -287,6 +305,9 @@ public class TCP_BallUI : MonoBehaviour
         {
             TCP_BallCommand.startGameSolo.Invoke(int.Parse(roomMaxCount.text));
         }
+
+        // This will be dangerous
+        GameManager.gameMaxTurn = int.Parse(turnMaxCount.text);
 
         startGame.Invoke();
     }

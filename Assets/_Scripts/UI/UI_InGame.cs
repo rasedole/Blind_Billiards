@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
+using UnityEngine.UI;
 
 public class UI_InGame : MonoBehaviour
 {
@@ -19,9 +19,15 @@ public class UI_InGame : MonoBehaviour
     private TMP_InputField chatting;
     [SerializeField]
     private Animator inGameWrapper;
+    [SerializeField]
+    private Image nowTurnPlayerColor;
+    [SerializeField]
+    private TextMeshProUGUI nowTurnPlayerID;
+    [SerializeField]
+    private TextMeshProUGUI gameTurn;
 
     private static Dictionary<string, UI_OnePlayerInRoom> roomPool = new Dictionary<string, UI_OnePlayerInRoom>();
-    private static Dictionary<string, int> scoreList = new Dictionary<string, int>();
+    private static Dictionary<string, InGameUIdata> uiDataList = new Dictionary<string, InGameUIdata>();
     private static UI_InGame instance;
 
     private void Awake()
@@ -56,10 +62,11 @@ public class UI_InGame : MonoBehaviour
                     ObjectPoolingManager.Pooling(instance.playerPrefab).GetComponent<UI_OnePlayerInRoom>()
                 );
             roomPool[player.id].Set(player.color, "0", instance.playersPos);
-            scoreList.Add(player.id, 0);
+            uiDataList.Add(player.id, new InGameUIdata(0, player.color, player.index));
         }
 
         instance.headerText.text = "Rank -\nScore " + 0;
+        SetNowTurnPlayer(0);
     }
 
     public static void ResetList()
@@ -78,18 +85,22 @@ public class UI_InGame : MonoBehaviour
             }
         }
         roomPool.Clear();
-        scoreList.Clear();
+        uiDataList.Clear();
     }
 
     public static void ScoreChange(string id, int score)
     {
         // Set score
         roomPool[id].score = score.ToString();
-        scoreList[id] = score;
+        uiDataList[id].score = score;
 
         // Turn off all ui
-        List<string> ids = scoreList.Keys.ToList();
-        List<int> scores = scoreList.Values.ToList();
+        List<string> ids = uiDataList.Keys.ToList();
+        List<int> scores = new List<int>();
+        foreach(InGameUIdata data in uiDataList.Values)
+        {
+            scores.Add(data.score);
+        }
         int rankNow = 1;
         scores.Sort();
 
@@ -134,5 +145,34 @@ public class UI_InGame : MonoBehaviour
     public static void Chatting(string id, string text)
     {
         instance.chatting.text += "[" + id + "] : " + text + "\n"; 
+    }
+
+    public static void SetNowTurnPlayer(int index)
+    {
+        //nowTurnPlayerColor nowTurnPlayerID
+        foreach(string id in uiDataList.Keys)
+        {
+            if (uiDataList[id].index == index)
+            {
+                uiDataList[id].color.a = 1f;
+                instance.nowTurnPlayerColor.color = uiDataList[id].color;
+                instance.nowTurnPlayerID.text = id + "ÀÇ Â÷·Ê";
+            }
+        }
+        instance.gameTurn.text = (TurnManager.Instance.gameTurn + 1) + " / " + GameManager.gameMaxTurn;
+    }
+}
+
+public class InGameUIdata
+{
+    public int score;
+    public Color color;
+    public int index;
+
+    public InGameUIdata(int score, Color color, int index)
+    {
+        this.score = score;
+        this.color = color;
+        this.index = index;
     }
 }
