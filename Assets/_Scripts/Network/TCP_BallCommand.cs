@@ -423,32 +423,35 @@ public class TCP_BallCommand : MonoBehaviour
                         return null;
                     }
 
-                    if (!TCP_BallClient.turnEnded)
+                    if (!GuestReplayer.replaying)
                     {
-                        // Check movedata is complete
-                        int moveDataMaxCount = int.Parse(datas[index + 1].text);
-                        if (moveDataMaxCount == TCP_BallGameManagerGetterAdapter.MoveDataListCount() || TCP_BallCore.networkMode == NetworkMode.Server)
+                        if (!TCP_BallClient.turnEnded)
                         {
-                            instance.turnEnd.Invoke(moveDataMaxCount, /*score*/int.Parse(datas[index + 2].text));
-                            TCP_BallClient.TurnEndChecking();
+                            // Check movedata is complete
+                            int moveDataMaxCount = int.Parse(datas[index + 1].text);
+                            if (moveDataMaxCount == TCP_BallGameManagerGetterAdapter.MoveDataListCount() || TCP_BallCore.networkMode == NetworkMode.Server)
+                            {
+                                instance.turnEnd.Invoke(moveDataMaxCount, /*score*/int.Parse(datas[index + 2].text));
+                                TCP_BallClient.TurnEndChecking();
+                            }
+                            else
+                            {
+                                // Get MoveData
+                                List<CommandData> command = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()) };
+
+                                List<int> list = TCP_BallGameManagerGetterAdapter.MoveDataNullList(moveDataMaxCount);
+                                foreach (int i in list)
+                                {
+                                    command.Add(new CommandData(3, i.ToString()));
+                                }
+
+                                TCP_BallClient.Send(command);
+                            }
                         }
                         else
                         {
-                            // Get MoveData
-                            List<CommandData> command = new List<CommandData>() { new CommandData(0, ((int)TCP_BallHeader.CheckMoveData).ToString()) };
-
-                            List<int> list = TCP_BallGameManagerGetterAdapter.MoveDataNullList(moveDataMaxCount);
-                            foreach (int i in list)
-                            {
-                                command.Add(new CommandData(3, i.ToString()));
-                            }
-
-                            TCP_BallClient.Send(command);
+                            TCP_BallClient.TurnEndChecking();
                         }
-                    }
-                    else
-                    {
-                        TCP_BallClient.TurnEndChecking();
                     }
 
                     datas.RemoveRange(index, 3);

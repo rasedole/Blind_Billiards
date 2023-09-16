@@ -156,7 +156,8 @@ public class GameManager : MonoBehaviour
                 {
                     if (ball.id == TurnManager.Instance.GetTurnBall().name)
                     {
-                        TCP_BallServer.TurnEnd(ball.score - ScoreManager.Instance.savedScore);
+                        Debug.LogError(ball.score + "");
+                        TCP_BallServer.TurnEnd(ball.score);
                         //Debug.LogError(ball.score + "BallScore - " + ScoreManager.Instance.savedScore + "PastScore");
                         trigger = false;
                         break;
