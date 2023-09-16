@@ -7,19 +7,16 @@ using UnityEngine;
 
 public class RankingResultUI : MonoBehaviour
 {
-    public static RankingResultUI instance;
+    private static RankingResultUI instance;
 
     [SerializeField] GameObject[] rankObj;
 
     private int maxRankingRow = 5;
 
     List<RankData> savedRankDatas;
-    public struct RankData
-    {
-        public string id;
-        public DateTime playTime;
-        public int score;
-    }
+
+    [SerializeField]
+    private Animator animator;
 
     void Awake()
     {
@@ -93,7 +90,10 @@ public class RankingResultUI : MonoBehaviour
         {
             // 필요없는 행 비활성화
             if (rankCount > maxRankingRow)
-                break;
+            {
+                obj.SetActive(false);
+                continue;
+            }
 
             obj.SetActive(true);
 
@@ -112,6 +112,7 @@ public class RankingResultUI : MonoBehaviour
 
             rankCount++;
         }
+        animator.Play("In");
     }
 
     // savedRankDatas PlayerPrefs 저장
@@ -132,13 +133,17 @@ public class RankingResultUI : MonoBehaviour
 
     private void ResetUI()
     {
-        foreach (GameObject obj in rankObj)
-        {
-            obj.SetActive(true);
-        }
+        animator.Play("Out");
     }
     //public void UpdateRankData(List<RankData> rankDatas)
     //{
     //    RankShow(rankDatas);
     //}
+}
+
+public struct RankData
+{
+    public string id;
+    public DateTime playTime;
+    public int score;
 }

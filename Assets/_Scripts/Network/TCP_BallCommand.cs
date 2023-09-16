@@ -30,9 +30,7 @@ public class TCP_BallCommand : MonoBehaviour
     [SerializeField]
     private UnityEvent _endGameSolo;
     [SerializeField]
-    private UnityEvent _startGameServer;
-    [SerializeField]
-    private UnityEvent _startGameClient;
+    private UnityEvent _startGameNetwork;
     [SerializeField]
     private UnityEvent<int> _startGameSolo;
     [SerializeField]
@@ -62,13 +60,9 @@ public class TCP_BallCommand : MonoBehaviour
     {
         get { return instance._endGameSolo; }
     }
-    public static UnityEvent startGameServer
+    public static UnityEvent startGameNetwork
     {
-        get { return instance._startGameServer; }
-    }
-    public static UnityEvent startGameClient
-    {
-        get { return instance._startGameClient; }
+        get { return instance._startGameNetwork; }
     }
     public static UnityEvent<int> startGameSolo
     {

@@ -66,7 +66,6 @@ public class UI_InGame : MonoBehaviour
         }
 
         instance.headerText.text = "Rank -\nScore " + 0;
-        SetNowTurnPlayer(0);
     }
 
     public static void ResetList()
@@ -161,13 +160,12 @@ public class UI_InGame : MonoBehaviour
         instance.gameTurn.text = (TurnManager.Instance.gameTurn + 1) + " / " + GameManager.gameMaxTurn;
         if (TurnManager.Instance.gameTurn >= GameManager.gameMaxTurn)
         {
-            if(TCP_BallCore.networkMode != NetworkMode.None)
+            RankingResultUI.StartRankUI(GameManager.MakeRankData());
+            if (TCP_BallCore.networkMode == NetworkMode.Server)
             {
-
             }
             else
             {
-
             }
         }
     }

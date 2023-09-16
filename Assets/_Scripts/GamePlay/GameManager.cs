@@ -27,8 +27,6 @@ public class GameManager : MonoBehaviour
     //Client용
     public bool isAlreadyShoot = false;
 
-    private List<RankingResultUI.RankData> rankDataList= new();
-
     //속성3 : MoveData List, 공을 발사했을 때의 시간
     public List<MoveData> ballMoveData
     {
@@ -96,7 +94,9 @@ public class GameManager : MonoBehaviour
 
     public TMP_InputField chatInput;
 
-    public GameObject gameUI;
+    //public GameObject gameUI;
+
+    private DateTime gameStartDate;
 
     private void Awake()
     {
@@ -112,14 +112,14 @@ public class GameManager : MonoBehaviour
         //StartCoroutine(CheckClientsTurnEnd());
     }
 
-    private IEnumerator CheckClientsTurnEnd()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(3f);
-            Debug.LogError(TCP_BallCore.allClientTurnChecked);
-        }
-    }
+    //private IEnumerator CheckClientsTurnEnd()
+    //{
+    //    while (true)
+    //    {
+    //        yield return new WaitForSeconds(3f);
+    //        Debug.LogError(TCP_BallCore.allClientTurnChecked);
+    //    }
+    //}
 
     //Client는 작동X
     public IEnumerator CheckMovement(float time = 0)
@@ -206,7 +206,7 @@ public class GameManager : MonoBehaviour
 
         joystick.GetComponent<BallLineRender>().ResetBallStatus();
         UI_InGame.SetNowTurnPlayer(TurnManager.Instance.currentTurn);
-        GameManager.Instance.serverShootEnable = true;
+        Instance.serverShootEnable = true;
     }
 
     public void AddPlayerData(string playerID)
@@ -299,26 +299,20 @@ public class GameManager : MonoBehaviour
     public void StartGameSolo(int playerNumber)
     {
         MakeLocalPlayer(playerNumber);
-        MakeBallByData();
-        TurnManager.Instance.GetListFromGameManager();
-        InitSetting();
-        UI_InGame.MakeNew(entryPlayerDataList);
+        InitAll();
     }
-
     public void StartGameFromRoom()
     {
-        MakeBallByData();
-        TurnManager.Instance.GetListFromGameManager();
-        InitSetting();
-        UI_InGame.MakeNew(entryPlayerDataList);
+        InitAll();
     }
-
-    public void StartGameFromRoomClient()
+    private void InitAll()
     {
         MakeBallByData();
         TurnManager.Instance.GetListFromGameManager();
         InitSetting();
         UI_InGame.MakeNew(entryPlayerDataList);
+        gameStartDate = DateTime.Now;
+        UI_InGame.SetNowTurnPlayer(0);
     }
 
     public void MakeLocalPlayer(int _playerNumber)
@@ -434,52 +428,39 @@ public class GameManager : MonoBehaviour
 
     public void EndGameSolo()
     {
-
-        //float playTimes = Time.time - startTime;
-        DateTime dateTime = DateTime.Now;
-        foreach (var ball in entryPlayerDataList)
-        {
-            RankingResultUI.RankData rankData = new();
-            rankData.playTime = dateTime;
-            rankData.score = ball.score;
-            rankDataList.Add(rankData);
-        }
+        MakeRankData();
     }
 
     public void EndGameServer()
     {
-        //float playTimes = Time.time - startTime;
-        DateTime dateTime = DateTime.Now;
-        foreach (var ball in entryPlayerDataList)
-        {
-            RankingResultUI.RankData rankData = new();
-            rankData.playTime = dateTime;
-            rankData.score = ball.score;
-            rankDataList.Add(rankData);
-        }
+        MakeRankData();
     }
 
     public void EndGameClient()
     {
-        //float playTimes = Time.time - startTime;
-        DateTime dateTime = DateTime.Now;
-        foreach (var ball in entryPlayerDataList)
+        MakeRankData();
+    }
+
+    public static List<RankData> MakeRankData()
+    {
+        List<RankData> rankDataList = new();
+        foreach (var ball in Instance.entryPlayerDataList)
         {
-            RankingResultUI.RankData rankData = new();
-            rankData.playTime = dateTime;
+            RankData rankData = new();
+            rankData.playTime = Instance.gameStartDate;
+            rankData.id = ball.id;
             rankData.score = ball.score;
             rankDataList.Add(rankData);
         }
+        return rankDataList;
     }
 
-    public void ChangeUI()
+    public static void ChangeUI()
     {
-        if (TurnManager.Instance.gameTurn >= gameMaxTurn)
-        {
-            //gameObjects.SetActive(false);
-            //gameUI.SetActive(true);
-
-            RankingResultUI.StartRankUI(rankDataList);
-        }
+        //if (TurnManager.Instance.gameTurn >= gameMaxTurn)
+        //{
+        //    //gameObjects.SetActive(false);
+        //    //gameUI.SetActive(true);
+        //}
     }
 }

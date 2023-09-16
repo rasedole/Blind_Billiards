@@ -81,15 +81,15 @@ public class TurnManager : MonoBehaviour
         if(currentTurn >= GameManager.Instance.gamePlayers.Count)
         {
             gameTurn++;
-            Debug.LogWarning(gameTurn);
-            Debug.LogWarning(GameManager.gameMaxTurn);
+            //Debug.LogWarning(gameTurn);
+            //Debug.LogWarning(GameManager.gameMaxTurn);
             currentTurn = 0;
         }
-        if(gameTurn >= GameManager.gameMaxTurn)
-        {
-            Debug.LogWarning(gameTurn);
-            StartCoroutine(WaitTurnEnd());
-        }
+        //if(gameTurn >= GameManager.gameMaxTurn)
+        //{
+        //    Debug.LogWarning(gameTurn);
+        //    StartCoroutine(WaitTurnEnd());
+        //}
 
         Debug.Log("CurrentTurn: " + currentTurn);
         GameManager.Instance.InitSetting();
@@ -177,14 +177,8 @@ public class TurnManager : MonoBehaviour
     //순서2 : 턴에 해당하는 공을 반환한다.
     public GameObject GetTurnBall()
     {
-        if(ballList == null)
-        {
-            Debug.LogError("BallList is Empty!");
-            return null;
-        }
-        return ballList[currentTurn];
+        return GetTurnBall(currentTurn);
     }
-
     public GameObject GetTurnBall(int turn)
     {
         if(ballList == null)

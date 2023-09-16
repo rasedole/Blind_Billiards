@@ -295,21 +295,17 @@ public class TCP_BallUI : MonoBehaviour
         chatInput.SetActive(TCP_BallCore.networkMode != NetworkMode.None);
         _gameState = GameState.InGame;
 
-        if (TCP_BallCore.networkMode == NetworkMode.Server)
+        // This will be dangerous
+        GameManager.gameMaxTurn = int.Parse(turnMaxCount.text);
+
+        if (TCP_BallCore.networkMode != NetworkMode.None)
         {
-            TCP_BallCommand.startGameServer.Invoke();
-        }
-        else if (TCP_BallCore.networkMode == NetworkMode.Client)
-        {
-            TCP_BallCommand.startGameClient.Invoke();
+            TCP_BallCommand.startGameNetwork.Invoke();
         }
         else
         {
             TCP_BallCommand.startGameSolo.Invoke(int.Parse(roomMaxCount.text));
         }
-
-        // This will be dangerous
-        GameManager.gameMaxTurn = int.Parse(turnMaxCount.text);
 
         startGame.Invoke();
     }
