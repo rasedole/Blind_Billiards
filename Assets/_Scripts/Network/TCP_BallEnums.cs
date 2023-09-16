@@ -20,6 +20,7 @@ public enum TCP_BallHeader
     TurnCheckedPing = 11,
     CheckMoveData = 12,
     RoomMaxTurnChanged = 13,
+    Chat = 14,
 
 }
 

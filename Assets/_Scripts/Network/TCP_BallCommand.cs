@@ -484,6 +484,30 @@ public class TCP_BallCommand : MonoBehaviour
                     datas.RemoveRange(index, 2);
                     break;
 
+                // Some client make chatting
+                case TCP_BallHeader.Chat:
+                    if (datas.Count < 3 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+                    if
+                    (
+                        datas[index + 1].command != 1 ||
+                        datas[index + 2].command != 2
+                    )
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        return null;
+                    }
+
+                    if(TCP_BallUI.gameState > GameState.Room)
+                    {
+                        UI_InGame.Chatting(datas[index + 1].text, datas[index + 2].text);
+                    }
+
+                    datas.RemoveRange(index, 3);
+                    break;
                 default:
                     break;
             }
@@ -557,7 +581,7 @@ public class TCP_BallCommand : MonoBehaviour
                         TCP_BallCore.messageEvent.Invoke("Type error!");
                         return null;
                     }
-                    datas.RemoveRange(0, 2);
+                    datas.RemoveRange(index, 2);
                     break;
 
                 // Handle in server
@@ -604,10 +628,7 @@ public class TCP_BallCommand : MonoBehaviour
                         TCP_BallCore.messageEvent.Invoke("No input value!");
                         return null;
                     }
-                    if
-                    (
-                        datas[index + 1].command != 3
-                    )
+                    if (datas[index + 1].command != 3)
                     {
                         TCP_BallCore.messageEvent.Invoke("Type error!");
                         return null;
@@ -621,6 +642,26 @@ public class TCP_BallCommand : MonoBehaviour
                     {
                         index++;
                     }
+                    break;
+
+                // Handle in server
+                case TCP_BallHeader.Chat:
+                    if (datas.Count < 3 + index)
+                    {
+                        TCP_BallCore.messageEvent.Invoke("No input value!");
+                        return null;
+                    }
+                    if
+                    (
+                        datas[index + 1].command != 1 ||
+                        datas[index + 2].command != 2
+                    )
+                    {
+                        TCP_BallCore.messageEvent.Invoke("Type error!");
+                        return null;
+                    }
+
+                    index += 3;
                     break;
 
                 default:

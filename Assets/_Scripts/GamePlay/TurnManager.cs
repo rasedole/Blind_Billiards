@@ -38,10 +38,6 @@ public class TurnManager : MonoBehaviour
         private set
         {
             _gameTurn = value;
-            if(_gameTurn >= GameManager.gameMaxTurn)
-            {
-                Debug.LogWarning("_gameTurn > gameMaxTurn");
-            }
         }
     }
 

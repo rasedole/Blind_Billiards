@@ -273,4 +273,9 @@ public class TCP_BallCore : MonoBehaviour
         instance.StopCoroutine(turnChecker);
         turnChecker = null;
     }
+
+    public static void SendChatting(string text)
+    {
+        TCP_BallClient.SendChatting(text);
+    }
 }

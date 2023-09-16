@@ -195,4 +195,14 @@ public class TCP_BallClient
         });
         turnEnded = true;
     }
+
+    public static void SendChatting(string text)
+    {
+        Send(new List<CommandData>()
+        {
+            new CommandData(0, ((int)TCP_BallHeader.Chat).ToString()),
+            new CommandData(1, instance.id),
+            new CommandData(2, text)
+        });
+    }
 }
