@@ -149,7 +149,6 @@ public class UI_InGame : MonoBehaviour
 
     public static void SetNowTurnPlayer(int index)
     {
-        //nowTurnPlayerColor nowTurnPlayerID
         foreach(string id in uiDataList.Keys)
         {
             if (uiDataList[id].index == index)
@@ -162,7 +161,14 @@ public class UI_InGame : MonoBehaviour
         instance.gameTurn.text = (TurnManager.Instance.gameTurn + 1) + " / " + GameManager.gameMaxTurn;
         if (TurnManager.Instance.gameTurn >= GameManager.gameMaxTurn)
         {
-            Debug.LogWarning("gameTurn > gameMaxTurn");
+            if(TCP_BallCore.networkMode != NetworkMode.None)
+            {
+
+            }
+            else
+            {
+
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ public class RankingResultUI : MonoBehaviour
     List<RankData> savedRankDatas;
     public struct RankData
     {
+        public string id;
         public DateTime playTime;
         public int score;
     }
@@ -62,6 +63,8 @@ public class RankingResultUI : MonoBehaviour
 
         // 변경된 순위 데이터 저장
         SaveRankData(rankDatas.Count);
+
+        Invoke("ResetUI", 6f);
     }
 
     // 게임한 인원수(1p/2p/..)에 해당하는 저장된 랭킹 데이터 받아오기
@@ -75,6 +78,7 @@ public class RankingResultUI : MonoBehaviour
             if (PlayerPrefs.HasKey("Rank " + headCount + "P " + i + "playtime"))
             {
                 rankData.playTime = DateTime.Parse(PlayerPrefs.GetString("Rank " + headCount + "P " + i + "playtime"));
+                rankData.id = PlayerPrefs.GetString("Rank " + headCount + "P " + i + "id");
                 rankData.score = PlayerPrefs.GetInt("Rank " + headCount + "P " + i + "score");
                 savedRankDatas.Add(rankData);
             }
@@ -91,18 +95,22 @@ public class RankingResultUI : MonoBehaviour
             if (rankCount > maxRankingRow)
                 break;
 
+            obj.SetActive(true);
+
             // 0번째 자식 == 순위
             obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = rankCount.ToString();
 
+            obj.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = savedRankDatas[rankCount - 1].id;
+
             // 1번째 자식 == 게임 시간
-            obj.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = savedRankDatas[rankCount - 1].playTime.ToString("yyyy-MM-dd HH:mm");
+            string date = savedRankDatas[rankCount - 1].playTime.ToString("yyyy-MM-dd") +
+                "\n" + savedRankDatas[rankCount - 1].playTime.ToString("HH:mm");
+            obj.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = date;
 
             // 2번째 자식 == 점수
-            obj.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = savedRankDatas[rankCount - 1].score.ToString();
+            obj.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = savedRankDatas[rankCount - 1].score.ToString();
 
             rankCount++;
-
-            obj.SetActive(true);
         }
     }
 
@@ -112,7 +120,21 @@ public class RankingResultUI : MonoBehaviour
         for (int i = 1; i <= maxRankingRow; i++)
         {
             PlayerPrefs.SetString("Rank " + headCount + "P " + i + "playTime", savedRankDatas[i - 1].playTime.ToString());
+            PlayerPrefs.SetString("Rank " + headCount + "P " + i + "id", savedRankDatas[i - 1].id);
             PlayerPrefs.SetString("Rank " + headCount + "P " + i + "score", savedRankDatas[i - 1].score.ToString());
+        }
+    }
+
+    public static void StartRankUI(List<RankData> rankDatas)
+    {
+        instance.RankShow(rankDatas);
+    }
+
+    private void ResetUI()
+    {
+        foreach (GameObject obj in rankObj)
+        {
+            obj.SetActive(true);
         }
     }
 }
