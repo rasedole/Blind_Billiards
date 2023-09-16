@@ -155,7 +155,7 @@ public class TurnManager : MonoBehaviour
                 currentTurn = 0;
                 Debug.Log("CurrentTurn: " + currentTurn);
 
-                if (gameTurn >= GameManager.gameMaxTurn)
+                if ((TCP_BallCore.networkMode == NetworkMode.Client && !GuestReplayer.replaying) || (TCP_BallCore.networkMode == NetworkMode.Server && TCP_BallCore.allClientTurnChecked && GameManager.Instance.serverShootEnable) || TCP_BallCore.networkMode == NetworkMode.None)
                 {
                     Debug.LogWarning(gameTurn);
                     StartCoroutine(WaitTurnEnd());
