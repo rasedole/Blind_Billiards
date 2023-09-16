@@ -160,6 +160,10 @@ public class UI_InGame : MonoBehaviour
             }
         }
         instance.gameTurn.text = (TurnManager.Instance.gameTurn + 1) + " / " + GameManager.gameMaxTurn;
+        if (TurnManager.Instance.gameTurn >= GameManager.gameMaxTurn)
+        {
+            Debug.LogWarning("gameTurn > gameMaxTurn");
+        }
     }
 }
 

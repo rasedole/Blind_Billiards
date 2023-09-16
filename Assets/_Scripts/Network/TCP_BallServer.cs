@@ -336,7 +336,6 @@ public class TCP_BallServer
 
                                     // Client request move data
                                     case TCP_BallHeader.CheckMoveData:
-
                                         List<int> lostIndexList = new List<int>();
                                         while
                                             (
@@ -349,6 +348,12 @@ public class TCP_BallServer
                                         }
                                         CallbackMoveData(TCP_BallGameManagerGetterAdapter.MoveDataListCallback(lostIndexList), pair.Value);
                                         commands.RemoveAt(index);
+                                        break;
+
+                                    // Some client make chatting
+                                    case TCP_BallHeader.Chat:
+                                        Broadcast(new List<CommandData>() { commands[index], commands[index + 1], commands[index + 2] }, roomPlayer.Values.ToList());
+                                        commands.RemoveRange(index, 3);
                                         break;
 
                                     default:
