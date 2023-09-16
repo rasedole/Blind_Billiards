@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -15,6 +16,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public static int gameMaxTurn = 4;
 
+    public bool serverShootEnable = true;
+
     public List<GameObject> gamePlayers;
     public List<BallEntryPlayerData> entryPlayerDataList = new();
 
@@ -24,12 +27,14 @@ public class GameManager : MonoBehaviour
     //Client용
     public bool isAlreadyShoot = false;
 
+    private List<RankingResultUI.RankData> rankDataList= new();
+
     //속성3 : MoveData List, 공을 발사했을 때의 시간
     public List<MoveData> ballMoveData
     {
         get
         {
-            if(_ballMoveData == null)
+            if (_ballMoveData == null)
             {
                 _ballMoveData = new Dictionary<int, MoveData>();
             }
@@ -38,7 +43,7 @@ public class GameManager : MonoBehaviour
             List<MoveData> sortingList = new List<MoveData>();
             List<int> sortedIndex = _ballMoveData.Keys.ToList();
             sortedIndex.Sort();
-            foreach(int i in sortedIndex)
+            foreach (int i in sortedIndex)
             {
                 sortingList.Add(_ballMoveData[i]);
             }
@@ -55,7 +60,7 @@ public class GameManager : MonoBehaviour
 
             foreach (MoveData moveData in value)
             {
-                if(_ballMoveData.ContainsKey(moveData.index))
+                if (_ballMoveData.ContainsKey(moveData.index))
                 {
                     _ballMoveData[moveData.index] = moveData;
                 }
@@ -90,7 +95,8 @@ public class GameManager : MonoBehaviour
     public TMP_InputField inputID;
 
     public TMP_InputField chatInput;
-    //public GameObject gameUI;
+
+    public GameObject gameUI;
 
     private void Awake()
     {
@@ -119,7 +125,7 @@ public class GameManager : MonoBehaviour
     public IEnumerator CheckMovement(float time = 0)
     {
         yield return new WaitForSeconds(time);
-        if(TCP_BallCore.networkMode != NetworkMode.Client)
+        if (TCP_BallCore.networkMode != NetworkMode.Client)
         {
             foreach (var ball in gamePlayers)
             {
@@ -200,12 +206,13 @@ public class GameManager : MonoBehaviour
 
         joystick.GetComponent<BallLineRender>().ResetBallStatus();
         UI_InGame.SetNowTurnPlayer(TurnManager.Instance.currentTurn);
+        GameManager.Instance.serverShootEnable = true;
     }
 
     public void AddPlayerData(string playerID)
     {
         BallEntryPlayerData data = new();
-        int randomNum = Random.Range(0, ballColors.Count);
+        int randomNum = UnityEngine.Random.Range(0, ballColors.Count);
 
         data.color = ballColors[randomNum];
         data.id = playerID;
@@ -318,10 +325,10 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < _playerNumber; i++)
         {
-            int randomID = Random.Range(0, 999);
-            foreach(var data in entryPlayerDataList)
+            int randomID = UnityEngine.Random.Range(0, 999);
+            foreach (var data in entryPlayerDataList)
             {
-                if(("LocalPlayer" + randomID) == data.id)
+                if (("LocalPlayer" + randomID) == data.id)
                 {
                     randomID += 1000;
                 }
@@ -375,7 +382,7 @@ public class GameManager : MonoBehaviour
 
     public void AddMoveData(MoveData _moveData)
     {
-        if(_moveData.index < 0)
+        if (_moveData.index < 0)
         {
             if (ballMoveData == null || ballMoveData.Count < 1)
             {
@@ -411,7 +418,7 @@ public class GameManager : MonoBehaviour
     public void ClearMoveData()
     {
         //Debug.LogWarning("!");
-        if(_ballMoveData != null)
+        if (_ballMoveData != null)
         {
             _ballMoveData.Clear();
         }
@@ -419,7 +426,7 @@ public class GameManager : MonoBehaviour
 
     public void ClearBall()
     {
-        foreach(var ball in gamePlayers)
+        foreach (var ball in gamePlayers)
         {
             Destroy(ball);
         }
@@ -427,18 +434,52 @@ public class GameManager : MonoBehaviour
 
     public void EndGameSolo()
     {
-        List<RankingResultUI.RankData> rankDatas = new();
-        //RankingResultUI.RankData rankData = new();
-        //RankingResultUI.RankShow(rankDatas);
+
+        //float playTimes = Time.time - startTime;
+        DateTime dateTime = DateTime.Now;
+        foreach (var ball in entryPlayerDataList)
+        {
+            RankingResultUI.RankData rankData = new();
+            rankData.playTime = dateTime;
+            rankData.score = ball.score;
+            rankDataList.Add(rankData);
+        }
     }
 
     public void EndGameServer()
     {
-        //RankingResultUI.RankData rankData = new();
+        //float playTimes = Time.time - startTime;
+        DateTime dateTime = DateTime.Now;
+        foreach (var ball in entryPlayerDataList)
+        {
+            RankingResultUI.RankData rankData = new();
+            rankData.playTime = dateTime;
+            rankData.score = ball.score;
+            rankDataList.Add(rankData);
+        }
     }
 
     public void EndGameClient()
     {
-        //RankingResultUI.RankData rankData = new();
+        //float playTimes = Time.time - startTime;
+        DateTime dateTime = DateTime.Now;
+        foreach (var ball in entryPlayerDataList)
+        {
+            RankingResultUI.RankData rankData = new();
+            rankData.playTime = dateTime;
+            rankData.score = ball.score;
+            rankDataList.Add(rankData);
+        }
+    }
+
+    public void ChangeUI()
+    {
+        if (TurnManager.Instance.gameTurn >= gameMaxTurn)
+        {
+            gameObjects.SetActive(false);
+            gameUI.SetActive(true);
+
+            RankingResultUI.instance.UpdateRankData(rankDataList);
+        }
     }
 }

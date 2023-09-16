@@ -51,6 +51,23 @@ public class TurnManager : MonoBehaviour
     //속성2 : 플레이어 공 리스트
     [SerializeField] List<GameObject> ballList;
 
+    private IEnumerator WaitTurnEnd()
+    {
+
+        bool trigger = true;
+        while (trigger)
+        {
+            yield return new WaitForSeconds(1);
+            Debug.LogWarning("Ending Check");
+            if ((TCP_BallCore.networkMode == NetworkMode.Client && !GuestReplayer.replaying) || (TCP_BallCore.networkMode == NetworkMode.Server && TCP_BallCore.allClientTurnChecked && GameManager.Instance.serverShootEnable) || TCP_BallCore.networkMode == NetworkMode.None)
+            {
+                trigger = false;
+                GameManager.Instance.GetComponent<TCP_BallUI>().GameEnd();
+            }
+        }
+
+    }
+
     //순서1 : 턴을 다음 턴으로 넘긴다.
     public void EndTurn()
     {
@@ -58,7 +75,14 @@ public class TurnManager : MonoBehaviour
         if(currentTurn >= GameManager.Instance.gamePlayers.Count)
         {
             gameTurn++;
+            Debug.LogWarning(gameTurn);
+            Debug.LogWarning(GameManager.gameMaxTurn);
             currentTurn = 0;
+        }
+        if(gameTurn >= GameManager.gameMaxTurn)
+        {
+            Debug.LogWarning(gameTurn);
+            StartCoroutine(WaitTurnEnd());
         }
 
         Debug.Log("CurrentTurn: " + currentTurn);
@@ -134,6 +158,12 @@ public class TurnManager : MonoBehaviour
                 gameTurn++;
                 currentTurn = 0;
                 Debug.Log("CurrentTurn: " + currentTurn);
+
+                if (gameTurn >= GameManager.gameMaxTurn)
+                {
+                    Debug.LogWarning(gameTurn);
+                    StartCoroutine(WaitTurnEnd());
+                }
             }
         }
     }

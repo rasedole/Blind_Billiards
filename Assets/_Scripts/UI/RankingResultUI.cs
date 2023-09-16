@@ -7,13 +7,13 @@ using UnityEngine;
 
 public class RankingResultUI : MonoBehaviour
 {
-    private static RankingResultUI instance;
+    public static RankingResultUI instance;
 
     [SerializeField] GameObject[] rankObj;
 
     private int maxRankingRow = 5;
 
-    List<RankData> savedRankDatas;
+    List<RankData> savedRankDatas = new List<RankData>();
     public struct RankData
     {
         public DateTime playTime;
@@ -114,5 +114,10 @@ public class RankingResultUI : MonoBehaviour
             PlayerPrefs.SetString("Rank " + headCount + "P " + i + "playTime", savedRankDatas[i - 1].playTime.ToString());
             PlayerPrefs.SetString("Rank " + headCount + "P " + i + "score", savedRankDatas[i - 1].score.ToString());
         }
+    }
+
+    public void UpdateRankData(List<RankData> rankDatas)
+    {
+        RankShow(rankDatas);
     }
 }
