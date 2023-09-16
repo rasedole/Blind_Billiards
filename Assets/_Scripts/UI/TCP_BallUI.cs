@@ -263,6 +263,8 @@ public class TCP_BallUI : MonoBehaviour
 
     public void GameEnd()
     {
+        Debug.LogWarning("Call Game End");
+
         exitGame.Invoke();
         if (TCP_BallCore.networkMode == NetworkMode.None)
         {

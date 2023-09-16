@@ -55,7 +55,10 @@ public class FixedJoystick : Joystick
         {
             if(TCP_BallCore.networkMode == NetworkMode.None || TCP_BallCore.allClientTurnChecked)
             {
-                GetComponent<BallShoot>().Shoot();
+                if(TCP_BallCore.networkMode != NetworkMode.Server || GameManager.Instance.serverShootEnable)
+                {
+                    GetComponent<BallShoot>().Shoot();
+                }
             }
         }
         GetComponent<BallLineRender>().isClicked = false;
