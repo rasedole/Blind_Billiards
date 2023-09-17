@@ -420,25 +420,18 @@ public class GameManager : MonoBehaviour
 
     public void ClearBall()
     {
-        foreach (var ball in gamePlayers)
+        while(gamePlayers.Count > 0)
         {
-            Destroy(ball);
+            GameObject obj = gamePlayers[0];
+            gamePlayers.RemoveAt(0);
+            Destroy(obj);
         }
+        gamePlayers.Clear();
     }
 
-    public void EndGameSolo()
+    public void GameAbort()
     {
-        MakeRankData();
-    }
-
-    public void EndGameServer()
-    {
-        MakeRankData();
-    }
-
-    public void EndGameClient()
-    {
-        MakeRankData();
+        //MakeRankData();
     }
 
     public static List<RankData> MakeRankData()
@@ -455,12 +448,12 @@ public class GameManager : MonoBehaviour
         return rankDataList;
     }
 
-    public static void ChangeUI()
-    {
-        //if (TurnManager.Instance.gameTurn >= gameMaxTurn)
-        //{
-        //    //gameObjects.SetActive(false);
-        //    //gameUI.SetActive(true);
-        //}
-    }
+    //public static void ChangeUI()
+    //{
+    //    if (TurnManager.Instance.gameTurn >= gameMaxTurn)
+    //    {
+    //        gameObjects.SetActive(false);
+    //        gameUI.SetActive(true);
+    //    }
+    //}
 }

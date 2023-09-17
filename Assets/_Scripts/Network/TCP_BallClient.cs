@@ -95,6 +95,7 @@ public class TCP_BallClient
             }
             if (client.stream != null)
             {
+                client.stream.Dispose();
                 client.stream.Close();
                 client.stream = null;
             }
@@ -120,6 +121,7 @@ public class TCP_BallClient
             }
             if (instance.stream != null)
             {
+                instance.stream.Dispose();
                 instance.stream.Close();
                 instance.stream = null;
             }
@@ -137,28 +139,39 @@ public class TCP_BallClient
     {
         if (ready)
         {
-            string data = "";
-            while (stream.DataAvailable)
+            try
             {
-                data += reader.ReadLine();
-                if (data != null)
+                string data = "";
+                while (stream.DataAvailable)
                 {
-                    List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
-                    int index = 0;
-
-                    while (index < commands.Count)
+                    data += reader.ReadLine();
+                    reader.DiscardBufferedData();
+                    if (data != null)
                     {
-                        switch (Enum.Parse<TCP_BallHeader>(commands[0].text))
+                        List<CommandData> commands = TCP_BallCommand.ClientReceiveEvent(data);
+                        int index = 0;
+
+                        while (index < commands.Count)
                         {
-                            case TCP_BallHeader.SetID:
-                                id = commands[index + 1].text;
-                                commands.RemoveRange(index, 2);
-                                break;
+                            switch (Enum.Parse<TCP_BallHeader>(commands[0].text))
+                            {
+                                case TCP_BallHeader.SetID:
+                                    id = commands[index + 1].text;
+                                    commands.RemoveRange(index, 2);
+                                    break;
+                            }
                         }
                     }
                 }
             }
-            reader.DiscardBufferedData();
+            catch
+            {
+                if (!GuestReplayer.replaying)
+                {
+                    DisconnectClient();
+                    TCP_BallUI.GameOver();
+                }
+            }
         }
     }
 

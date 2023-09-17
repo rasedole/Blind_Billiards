@@ -67,10 +67,7 @@ public class RankingResultUI : MonoBehaviour
         // 화면에 보여주기.
         ShowRankData();
 
-        if (TCP_BallCore.networkMode != NetworkMode.Server)
-        {
-            Invoke("ResetUI", 6f);
-        }
+        Invoke("ResetUI", 6f);
     }
 
     // 게임한 인원수(1p/2p/..)에 해당하는 저장된 랭킹 데이터 받아오기
@@ -152,6 +149,10 @@ public class RankingResultUI : MonoBehaviour
     private void ResetUI()
     {
         animator.Play("Out");
+        if(TCP_BallCore.networkMode == NetworkMode.Server)
+        {
+            TCP_BallUI.GameOver();
+        }
         uiShow = false;
     }
     //public void UpdateRankData(List<RankData> rankDatas)

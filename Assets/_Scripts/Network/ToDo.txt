@@ -8,3 +8,5 @@
 
 서버 강종시 클라 NullReferenceException: Object reference not set to an instance of an object
 클라측 업데이트 > stream 널판정
+
+클라가 게임 안끄고 재시작시 공 남음

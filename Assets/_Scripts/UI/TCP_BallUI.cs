@@ -68,7 +68,13 @@ public class TCP_BallUI : MonoBehaviour
 
 
     private static GameState _gameState = GameState.None;
+    private static TCP_BallUI instance;
 
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -268,7 +274,6 @@ public class TCP_BallUI : MonoBehaviour
         exitGame.Invoke();
         if (TCP_BallCore.networkMode == NetworkMode.None)
         {
-            TCP_BallCommand.endGameSolo.Invoke();
             return;
         }
 
@@ -277,15 +282,44 @@ public class TCP_BallUI : MonoBehaviour
         {
             TCP_BallCore.CloseServer();
             TCP_BallClient.DisconnectClient();
-            TCP_BallCommand.endGameServer.Invoke();
         }
         else if (TCP_BallCore.networkMode == NetworkMode.Client)
         {
             TCP_BallClient.DisconnectClient();
-            TCP_BallCommand.endGameClient.Invoke();
         }
 
+        TCP_BallCommand.abortGame.Invoke();
         exitRoomEventNetwork.Invoke();
+    }
+
+    public static void GameOver()
+    {
+        instance._GameOver();
+    }
+
+    private void _GameOver()
+    {
+        exitGame.Invoke();
+        if (TCP_BallCore.networkMode == NetworkMode.None)
+        {
+            return;
+        }
+
+        if (TCP_BallCore.networkMode == NetworkMode.Server)
+        {
+            TCP_BallCore.CloseServer();
+            TCP_BallClient.DisconnectClient();
+        }
+        else if (TCP_BallCore.networkMode == NetworkMode.Client)
+        {
+            TCP_BallClient.DisconnectClient();
+        }
+
+        TCP_BallCommand.abortGame.Invoke();
+        exitRoomEventNetwork.Invoke();
+
+        _gameState = GameState.Connect;
+        TCP_BallCore.NetworkModeReset();
     }
 
     public void GameStart()

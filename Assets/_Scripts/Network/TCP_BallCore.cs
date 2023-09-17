@@ -205,7 +205,7 @@ public class TCP_BallCore : MonoBehaviour
     {
         _networkMode = NetworkMode.Client;
     }
-    public void NetworkModeReset()
+    public static void NetworkModeReset()
     {
         _networkMode = NetworkMode.None;
     }
@@ -216,6 +216,7 @@ public class TCP_BallCore : MonoBehaviour
         {
             server.CloseServer();
         }
+        server = null;
     }
 
     // For button
@@ -255,6 +256,7 @@ public class TCP_BallCore : MonoBehaviour
                         new CommandData(7, shootValue.z.ToString())
                     }
                 ));
+            UI_InGame.Chatting("SYSTEM", "공을 발사했습니다. 잠시 기다려주세요.");
         }
     }
 

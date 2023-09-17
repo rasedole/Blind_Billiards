@@ -24,11 +24,7 @@ public class TCP_BallCommand : MonoBehaviour
     [SerializeField]
     private UnityEvent<List<string>> removeRoomPlayerEvent;
     [SerializeField]
-    private UnityEvent _endGameServer;
-    [SerializeField]
-    private UnityEvent _endGameClient;
-    [SerializeField]
-    private UnityEvent _endGameSolo;
+    private UnityEvent _abortGame;
     [SerializeField]
     private UnityEvent _startGameNetwork;
     [SerializeField]
@@ -48,17 +44,9 @@ public class TCP_BallCommand : MonoBehaviour
     {
         get { return instance._serverEntryNewClientEvent; }
     }
-    public static UnityEvent endGameServer
+    public static UnityEvent abortGame
     {
-        get { return instance._endGameServer; }
-    }
-    public static UnityEvent endGameClient
-    {
-        get { return instance._endGameClient; }
-    }
-    public static UnityEvent endGameSolo
-    {
-        get { return instance._endGameSolo; }
+        get { return instance._abortGame; }
     }
     public static UnityEvent startGameNetwork
     {
@@ -196,13 +184,9 @@ public class TCP_BallCommand : MonoBehaviour
                     {
                         instance.clientAddOtherPlayerEvent.Invoke(playerData);
                         datas.RemoveRange(index, 6);
+                        break;
                     }
-                    else
-                    {
-                        return null;
-                    }
-
-                    break;
+                    return null;
 
                 // Get all player list
                 case TCP_BallHeader.AllPlayerList:
@@ -344,7 +328,10 @@ public class TCP_BallCommand : MonoBehaviour
 
                 // Server closed
                 case TCP_BallHeader.ServerDisconnect:
-                    instance.ui.GameEnd();
+                    if(!(TurnManager.Instance.gameTurn >= GameManager.gameMaxTurn && GuestReplayer.replaying))
+                    {
+                        instance.ui.GameEnd();
+                    }
                     datas.RemoveAt(index);
                     break;
 

@@ -594,6 +594,11 @@ public class TCP_BallServer
 
         TCP_BallCore.TurnCheckClear();
         moveDataIndex = 0;
+        if (TurnManager.Instance.gameTurn >= GameManager.gameMaxTurn)
+        {
+            RankingResultUI.StartRankUI(GameManager.MakeRankData());
+            TCP_BallUI.GameOver();
+        }
         yield return null;
     }
 
