@@ -25,4 +25,13 @@ public class OneRankRow : MonoBehaviour
     {
         
     }
+
+    public void Set(string _num, string _id, string _date, string _score)
+    {
+        gameObject.SetActive(true);
+        num.text = _num;
+        id.text = _id;
+        date.text = _date;
+        score.text = _score;
+    }
 }

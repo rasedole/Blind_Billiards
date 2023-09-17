@@ -9,7 +9,8 @@ public class RankingResultUI : MonoBehaviour
 {
     private static RankingResultUI instance;
 
-    [SerializeField] GameObject[] rankObj;
+    [SerializeField]
+    private OneRankRow[] rankRows;
 
     private int maxRankingRow = 5;
 
@@ -33,7 +34,7 @@ public class RankingResultUI : MonoBehaviour
     void Start()
     {
         savedRankDatas = new List<RankData>();
-        maxRankingRow = rankObj.Length;
+        maxRankingRow = rankRows.Length;
     }
 
     public void RankShow(List<RankData> rankDatas)
@@ -76,14 +77,14 @@ public class RankingResultUI : MonoBehaviour
     void LoadRankData(int headCount)
     {
         RankData rankData = new RankData();
-        maxRankingRow = rankObj.Length;
+        maxRankingRow = rankRows.Length;
         for (int i = 0; i < maxRankingRow; i++)
         {
             // 저장 key 형식예시 : Rank 1P 1 playtime
             //         형식     : Rank | 플레이어수 | 랭킹(order) | playTime/score
-            if (PlayerPrefs.HasKey("Rank " + headCount + "P " + i + "playtime"))
+            if (PlayerPrefs.HasKey("Rank " + headCount + "P " + i + "playTime"))
             {
-                rankData.playTime = DateTime.Parse(PlayerPrefs.GetString("Rank " + headCount + "P " + i + "playtime"));
+                rankData.playTime = DateTime.Parse(PlayerPrefs.GetString("Rank " + headCount + "P " + i + "playTime"));
                 rankData.id = PlayerPrefs.GetString("Rank " + headCount + "P " + i + "id");
                 rankData.score = PlayerPrefs.GetInt("Rank " + headCount + "P " + i + "score");
                 savedRankDatas.Add(rankData);
@@ -93,32 +94,30 @@ public class RankingResultUI : MonoBehaviour
 
     void ShowRankData()
     {
-        int rankCount = 1;
+        int rankCount = 0;
 
-        foreach (GameObject obj in rankObj)
+        foreach (OneRankRow obj in rankRows)
         {
             // 필요없는 행 비활성화
-            if (rankCount > maxRankingRow)
+            if (rankCount >= savedRankDatas.Count)
             {
-                obj.SetActive(false);
+                obj.gameObject.SetActive(false);
                 continue;
             }
 
-            obj.SetActive(true);
-
             // 0번째 자식 == 순위
-            obj.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (rankCount + 1).ToString();
-
-            obj.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = savedRankDatas[rankCount].id;
-
-            // 1번째 자식 == 게임 시간
+            // 1번째 자식 == id
+            // 2번째 자식 == 게임 시간
+            // 3번째 자식 == 점수
             string date = savedRankDatas[rankCount].playTime.ToString("yyyy-MM-dd") +
                 "\n" + savedRankDatas[rankCount].playTime.ToString("HH:mm");
-            obj.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = date;
-
-            // 2번째 자식 == 점수
-            obj.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = savedRankDatas[rankCount].score.ToString();
-
+            obj.Set
+                (
+                    (rankCount + 1).ToString(),
+                    savedRankDatas[rankCount].id,
+                    date,
+                    savedRankDatas[rankCount].score.ToString()
+                );
             rankCount++;
         }
         animator.Play("In");
@@ -127,12 +126,11 @@ public class RankingResultUI : MonoBehaviour
     // savedRankDatas PlayerPrefs 저장
     void SaveRankData(int headCount)
     {
-        maxRankingRow = rankObj.Length;
+        maxRankingRow = rankRows.Length;
         for (int i = 0; i < maxRankingRow; i++)
         {
             if (savedRankDatas.Count <= i)
             {
-                Debug.LogWarning("out!");
                 break;
             }
             PlayerPrefs.SetString("Rank " + headCount + "P " + i + "playTime", savedRankDatas[i].playTime.ToString());
