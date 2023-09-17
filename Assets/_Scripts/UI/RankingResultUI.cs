@@ -82,11 +82,11 @@ public class RankingResultUI : MonoBehaviour
         {
             // 저장 key 형식예시 : Rank 1P 1 playtime
             //         형식     : Rank | 플레이어수 | 랭킹(order) | playTime/score
-            if (PlayerPrefs.HasKey("Rank " + headCount + "P " + i + "playTime"))
+            if (PlayerPrefs.HasKey("Rank(" + headCount + ")P(" + i + ")Turn(" + GameManager.gameMaxTurn + ")" + "playTime"))
             {
-                rankData.playTime = DateTime.Parse(PlayerPrefs.GetString("Rank " + headCount + "P " + i + "playTime"));
-                rankData.id = PlayerPrefs.GetString("Rank " + headCount + "P " + i + "id");
-                rankData.score = PlayerPrefs.GetInt("Rank " + headCount + "P " + i + "score");
+                rankData.playTime = DateTime.Parse(PlayerPrefs.GetString("Rank(" + headCount + ")P(" + i + ")Turn(" + GameManager.gameMaxTurn + ")" + "playTime"));
+                rankData.id = PlayerPrefs.GetString("Rank(" + headCount + ")P(" + i + ")Turn(" + GameManager.gameMaxTurn + ")" + "id");
+                rankData.score = PlayerPrefs.GetInt("Rank(" + headCount + ")P(" + i + ")Turn(" + GameManager.gameMaxTurn + ")" + "score");
                 savedRankDatas.Add(rankData);
             }
         }
@@ -133,9 +133,9 @@ public class RankingResultUI : MonoBehaviour
             {
                 break;
             }
-            PlayerPrefs.SetString("Rank " + headCount + "P " + i + "playTime", savedRankDatas[i].playTime.ToString());
-            PlayerPrefs.SetString("Rank " + headCount + "P " + i + "id", savedRankDatas[i].id);
-            PlayerPrefs.SetString("Rank " + headCount + "P " + i + "score", savedRankDatas[i].score.ToString());
+            PlayerPrefs.SetString("Rank(" + headCount + ")P(" + i + ")Turn(" + GameManager.gameMaxTurn + ")" + "playTime", savedRankDatas[i].playTime.ToString());
+            PlayerPrefs.SetString("Rank(" + headCount + ")P(" + i + ")Turn(" + GameManager.gameMaxTurn + ")" + "id", savedRankDatas[i].id);
+            PlayerPrefs.SetString("Rank(" + headCount + ")P(" + i + ")Turn(" + GameManager.gameMaxTurn + ")" + "score", savedRankDatas[i].score.ToString());
         }
         //Debug.LogWarning(savedRankDatas.Count + ", !" + maxRankingRow);
     }
