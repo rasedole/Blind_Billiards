@@ -19,6 +19,10 @@ public class BallDoll : MonoBehaviour
     private BallShowMode showMode;
     [SerializeField]
     private Rigidbody _rigidbody;
+    [SerializeField]
+    private AudioClip _audioClip;
+    [SerializeField]
+    private AudioSource _audioSource;
 
     private IEnumerator enumerator;
 
@@ -83,6 +87,7 @@ public class BallDoll : MonoBehaviour
             enumerator = Hide();
             StartCoroutine(enumerator);
         }
+        _audioSource.PlayOneShot(_audioClip);
     }
 
     private IEnumerator Hide()

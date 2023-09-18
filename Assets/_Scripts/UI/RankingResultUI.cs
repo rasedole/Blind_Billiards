@@ -18,6 +18,10 @@ public class RankingResultUI : MonoBehaviour
 
     [SerializeField]
     private Animator animator;
+    [SerializeField]
+    private AudioClip _audioClip;
+    [SerializeField]
+    private AudioSource _audioSource;
 
     private bool uiShow;
 
@@ -118,6 +122,7 @@ public class RankingResultUI : MonoBehaviour
             rankCount++;
         }
         animator.Play("In");
+        _audioSource.PlayOneShot(_audioClip);
     }
 
     // savedRankDatas PlayerPrefs ¿˙¿Â
